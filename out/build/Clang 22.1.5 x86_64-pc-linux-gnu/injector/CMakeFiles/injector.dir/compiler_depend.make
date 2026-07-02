@@ -136,6 +136,7 @@ injector/CMakeFiles/injector.dir/injector.c.o: /home/lightswisp/Documents/mchack
   /usr/include/ctype.h \
   /usr/include/dirent.h \
   /usr/include/dlfcn.h \
+  /usr/include/elf.h \
   /usr/include/endian.h \
   /usr/include/fcntl.h \
   /usr/include/features-time64.h \
@@ -143,6 +144,7 @@ injector/CMakeFiles/injector.dir/injector.c.o: /home/lightswisp/Documents/mchack
   /usr/include/gnu/stubs-64.h \
   /usr/include/gnu/stubs.h \
   /usr/include/inttypes.h \
+  /usr/include/libgen.h \
   /usr/include/linux/limits.h \
   /usr/include/signal.h \
   /usr/include/stdbit.h \
@@ -211,6 +213,8 @@ injector/CMakeFiles/injector.dir/injector.c.o: /home/lightswisp/Documents/mchack
 
 /usr/include/linux/limits.h:
 
+/usr/include/libgen.h:
+
 /usr/include/inttypes.h:
 
 /usr/include/gnu/stubs-64.h:
@@ -218,6 +222,8 @@ injector/CMakeFiles/injector.dir/injector.c.o: /home/lightswisp/Documents/mchack
 /usr/include/features-time64.h:
 
 /usr/include/endian.h:
+
+/usr/include/elf.h:
 
 /usr/include/dlfcn.h:
 

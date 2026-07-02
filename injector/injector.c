@@ -1,6 +1,8 @@
+#include "Zydis/Register.h"
 #include <signal.h>
 #define _GNU_SOURCE
 #include <linux/limits.h>
+#include <libgen.h>
 #include <inttypes.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -13,6 +15,7 @@
 #include <stdbool.h>
 #include <fcntl.h>
 #include <dlfcn.h>
+#include <elf.h>
 #include <sys/ptrace.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -96,7 +99,7 @@ void hexdump(const void *ptr, size_t buflen) {
     }
 }
 
-uintptr_t get_base(pid_t pid, const char *lib){
+uintptr_t get_base(pid_t pid, const char *lib, bool exact){
     FILE *fd = NULL;
     uintptr_t base_addr = 0;
     char path[PATH_MAX] = {0};
@@ -115,18 +118,28 @@ uintptr_t get_base(pid_t pid, const char *lib){
 
     while(fgets(maps_buf, sizeof(maps_buf), fd)){
         int n = sscanf(maps_buf, "%lx-%lx %4s %lx %254s %d %4095s", 
-          &maps.a_s, 
-          &maps.a_e, 
-          maps.perms, 
-          &maps.offset, 
-          maps.dev, 
-          &maps.inode, 
-          maps.pathname);
+            &maps.a_s, 
+            &maps.a_e, 
+            maps.perms, 
+            &maps.offset, 
+            maps.dev, 
+            &maps.inode, 
+            maps.pathname);
 
-          if(strstr(maps.pathname, lib) != NULL){
-            base_addr = maps.a_s;
-            break;
-          }
+        if(exact){
+            const char *bname = basename(maps.pathname);
+            if(bname == NULL) continue;
+            if(strcmp(bname, lib) == 0){
+                base_addr = maps.a_s;
+                break;
+            }
+        }
+        else{
+            if(strstr(maps.pathname, lib) != NULL){
+                base_addr = maps.a_s;
+                break;
+            }
+        }
     }
 
     fclose(fd);
@@ -197,15 +210,16 @@ ZyanU8 *generate_shellcode(uintptr_t rsp, uintptr_t dlopen_addr, const char *lib
          size_t instruction_size;
     } block_t;
 
-    // int3
     // mov rbx, 0x6767676767676767 | =====> this part is dynamic
     // push rbx                    |
     // ...
     // mov rdi, rsp 
     // mov rsi, RTLD_NOW
     // mov rax, dlopen_addr
+    // sub rsp, stack_mod
     // call rax
     // int3
+    ZydisEncoderRequest req; 
     ZyanU8 *shellcode = NULL;
     ZyanUSize temp_size = 0;
     size_t len = strlen(lib);
@@ -219,7 +233,10 @@ ZyanU8 *generate_shellcode(uintptr_t rsp, uintptr_t dlopen_addr, const char *lib
     aligned = align(aligned, 16);
     fprintf(stdout, "aligned: %lu\n", aligned);
 
-    size_t stack_alignment = align(rsp, 16);
+    uintptr_t stack_mod = rsp & 15; // mod(16)
+    if(stack_mod != 0){
+        fprintf(stdout, "warning! stack is misaligned\n");
+    }
 
     size_t pad = aligned - len;
     char *padded = dup_pad(lib, pad);
@@ -231,19 +248,6 @@ ZyanU8 *generate_shellcode(uintptr_t rsp, uintptr_t dlopen_addr, const char *lib
     block_t *blocks = calloc(instructions, sizeof(block_t));
     size_t current_block = 0;
 
-    ZydisEncoderRequest req; 
-    memset(&req, 0, sizeof(req)); 
-    req.mnemonic = ZYDIS_MNEMONIC_INT3; 
-    req.machine_mode = ZYDIS_MACHINE_MODE_LONG_64; 
-    req.operand_count = 0; 
-    blocks[current_block].instruction_size = ZYDIS_MAX_INSTRUCTION_LENGTH;
-    if (ZYAN_FAILED(ZydisEncoderEncodeInstruction(&req, blocks[current_block].encoded_instruction, &blocks[current_block].instruction_size))) 
-    { 
-        fprintf(stderr,"failed to encode int3 instruction\n"); 
-        goto end; 
-    } 
-    temp_size+=blocks[current_block].instruction_size;
-    current_block++;
 
     for(int i = aligned-8; i >= 0; i-=8){
 
@@ -339,22 +343,23 @@ ZyanU8 *generate_shellcode(uintptr_t rsp, uintptr_t dlopen_addr, const char *lib
     temp_size+=blocks[current_block].instruction_size;
     current_block++;
     
-
-    // int3
+    // sub rsp, stack_mod
     memset(&req, 0, sizeof(req)); 
-    req.mnemonic = ZYDIS_MNEMONIC_INT3; 
+    req.mnemonic = ZYDIS_MNEMONIC_SUB; 
     req.machine_mode = ZYDIS_MACHINE_MODE_LONG_64; 
-    req.operand_count = 0; 
+    req.operand_count = 2; 
+    req.operands[0].type = ZYDIS_OPERAND_TYPE_REGISTER; 
+    req.operands[0].reg.value = ZYDIS_REGISTER_RSP; 
+    req.operands[1].type = ZYDIS_OPERAND_TYPE_IMMEDIATE; 
+    req.operands[1].imm.u = stack_mod; 
     blocks[current_block].instruction_size = ZYDIS_MAX_INSTRUCTION_LENGTH;
     if (ZYAN_FAILED(ZydisEncoderEncodeInstruction(&req, blocks[current_block].encoded_instruction, &blocks[current_block].instruction_size))) 
     { 
-        fprintf(stderr,"failed to encode int3 instruction\n"); 
+        fprintf(stderr,"failed to encode sub instruction\n"); 
         goto end; 
     } 
     temp_size+=blocks[current_block].instruction_size;
     current_block++;
-
-
     
     // call dlopen
     memset(&req, 0, sizeof(req)); 
@@ -367,6 +372,20 @@ ZyanU8 *generate_shellcode(uintptr_t rsp, uintptr_t dlopen_addr, const char *lib
     if (ZYAN_FAILED(ZydisEncoderEncodeInstruction(&req, blocks[current_block].encoded_instruction, &blocks[current_block].instruction_size))) 
     { 
         fprintf(stderr,"failed to encode call instruction\n"); 
+        goto end; 
+    } 
+    temp_size+=blocks[current_block].instruction_size;
+    current_block++;
+
+    // int3
+    memset(&req, 0, sizeof(req)); 
+    req.mnemonic = ZYDIS_MNEMONIC_INT3; 
+    req.machine_mode = ZYDIS_MACHINE_MODE_LONG_64; 
+    req.operand_count = 0; 
+    blocks[current_block].instruction_size = ZYDIS_MAX_INSTRUCTION_LENGTH;
+    if (ZYAN_FAILED(ZydisEncoderEncodeInstruction(&req, blocks[current_block].encoded_instruction, &blocks[current_block].instruction_size))) 
+    { 
+        fprintf(stderr,"failed to encode int3 instruction\n"); 
         goto end; 
     } 
     temp_size+=blocks[current_block].instruction_size;
@@ -496,7 +515,7 @@ thread_t* save_threads_state(pid_t pid, size_t *thread_num){
     return states;
 }
 
-void handle_trap(pid_t pid, thread_t *states, size_t thread_num, uintptr_t old_rip, uint8_t *backup_buffer, size_t size){
+void handle_trap(pid_t pid, struct user_regs_struct *old_regs, uintptr_t old_entry, uint8_t *backup_buffer, size_t size){
     struct user_regs_struct regs;
     while(true){
         int status;
@@ -513,25 +532,17 @@ void handle_trap(pid_t pid, thread_t *states, size_t thread_num, uintptr_t old_r
                 if(tid != pid){
                     continue;
                 } 
-                thread_t *thread = NULL;
-                for(size_t i = 0; i < thread_num; i++){
-                    if(states[i].tid == tid){
-                        thread = &states[i];
-                        break;
-                    }
-                }
                 ptrace(PTRACE_GETREGS, tid, NULL, &regs);
 
                 // debug
                 fprintf(stdout, "rsp on interrupt: 0x%llx\n", regs.rsp); 
-                fprintf(stdout, "rsp saved: 0x%llx\n", thread->regs.rsp); 
 
                 handle = (void*)regs.rax;
-                pause_all_threads(pid, true);
+                //pause_all_threads(pid, true);
                 // restore instructions
-                write_memory(tid, old_rip, backup_buffer, size);
+                write_memory(tid, old_entry, backup_buffer, size);
                 fprintf(stdout, "restoring registers state\n");
-                ptrace(PTRACE_SETREGS, tid, NULL, thread->regs);
+                ptrace(PTRACE_SETREGS, tid, NULL, old_regs);
                 ptrace(PTRACE_CONT, tid, NULL, NULL);
                 break;
             }
@@ -544,7 +555,7 @@ void handle_trap(pid_t pid, thread_t *states, size_t thread_num, uintptr_t old_r
     }
 }
 
-bool inject(pid_t pid, const char *lib){
+bool inject(pid_t pid, const char *process_name, const char *lib){
     #define MAX_FUNCTION_SIZE 512
     int success = false;
     uint8_t instruction_buffer[MAX_FUNCTION_SIZE];
@@ -559,8 +570,10 @@ bool inject(pid_t pid, const char *lib){
     printf("attached to %d\n", pid);
 
     uintptr_t dlopen_offset, dlclose_offset;
-    uintptr_t external_module_base = get_base(pid, "libc.so");
-    uintptr_t local_module_base = get_base(getpid(), "libc.so");
+    uintptr_t external_process_base = get_base(pid, process_name, true);
+    Elf64_Ehdr *external_elf_header = (Elf64_Ehdr*)read_memory(pid, external_process_base, sizeof(Elf64_Ehdr));
+    uintptr_t external_module_base = get_base(pid, "libc.so", false);
+    uintptr_t local_module_base = get_base(getpid(), "libc.so", false);
 
     dlopen_offset  = (uintptr_t)dlopen  - local_module_base;
     dlclose_offset = (uintptr_t)dlclose - local_module_base;
@@ -572,31 +585,39 @@ bool inject(pid_t pid, const char *lib){
 
     fprintf(stdout, "dlopen memory address: %p\n", (void*)dlopen_addr);
     fprintf(stdout, "dlclose memory address: %p\n", (void*)dlclose_addr);
+    
+    // now let's read the entry point addr
+    uintptr_t external_entry = external_elf_header->e_entry + external_process_base;
+    fprintf(stdout, "base: 0x%lx\n", external_process_base);
+    fprintf(stdout, "sig: %s\n", external_elf_header->e_ident);
+    fprintf(stdout, "entry: 0x%lx\n", external_entry);
 
     ZyanUSize shellcode_size = 0;
     ZyanU8 *shellcode = generate_shellcode(regs.rsp, dlopen_addr, lib, &shellcode_size);
-    fprintf(stdout, "generated shellcode: %p\n", shellcode);
 
+    fprintf(stdout, "generated shellcode: %p\n", shellcode);
     hexdump((void*)shellcode, shellcode_size);
 
-    pause_all_threads(pid, false);
 
-    size_t thread_num = 0;
-    thread_t *threads = save_threads_state(pid, &thread_num);
-
-    // preserving instructions
-    uint8_t *backup_buffer = read_memory(pid, regs.rip, shellcode_size);
+    // preserving instructions, reading from entry point
+    uint8_t *backup_buffer = read_memory(pid, external_entry, shellcode_size);
     fprintf(stdout, "regs.rip = %llx | oldregs.rip = %llx\n", regs.rip, old_regs.rip);
     hexdump(backup_buffer, shellcode_size);
 
     // write shellcode
-    if(!write_memory(pid, regs.rip, shellcode, shellcode_size)) return false;
+    if(!write_memory(pid, external_entry, shellcode, shellcode_size)) return false;
     fprintf(stdout, "rsp = 0x%llx\n", regs.rsp);
 
-    resume_all_threads(pid);
-    handle_trap(pid, threads, thread_num, old_regs.rip, backup_buffer, shellcode_size);
+    regs.rip = external_entry;
+    // sometimes rip is substracted by 2 bytes which can cause segfaults
+    // https://gist.github.com/zhangyoufu/86910448ec92c7eca7e39186b79c98c2
+    regs.rax = -1;
+    fprintf(stdout, "set rip to 0x%llx\n", regs.rip);
+    ptrace(PTRACE_SETREGS, pid, NULL, &regs);
+    ptrace(PTRACE_CONT, pid, NULL, NULL);
+    handle_trap(pid, &old_regs, external_entry, backup_buffer, shellcode_size);
 
-    detach_all_threads(pid);
+    ptrace(PTRACE_DETACH, pid, NULL, NULL);
     success = true;
 
 end:
@@ -608,6 +629,7 @@ end:
 int main(void){
 
     #define LIB_NAME "libmchack.so"
+    #define PROCESS_NAME "java"
 
     char *absolute_path = realpath(LIB_NAME, NULL);
     fprintf(stdout,"absolute path: %s\n", absolute_path);
@@ -617,14 +639,14 @@ int main(void){
         goto end;
     }
 
-    pid_t pid = find_pid("java");
+    pid_t pid = find_pid(PROCESS_NAME);
     if(pid == -1){
         fprintf(stderr, "unable to find pid of java\n");
         goto end;
     }
 
     printf("java pid: %d\n", pid);
-    if(inject(pid, absolute_path) == false) goto end;
+    if(inject(pid, PROCESS_NAME, absolute_path) == false) goto end;
     fprintf(stdout,"handle: %p\n", handle);
 
     /* tail the log file output */
