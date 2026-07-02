@@ -1,0 +1,174 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "/home/lightswisp/Documents/mchack/release/injector"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"target_link_libraries"
+		],
+		"files" : 
+		[
+			"injector/CMakeLists.txt",
+			"injector/zydis/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 7,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 8,
+				"parent" : 0
+			},
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 168,
+				"parent" : 3
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 10
+	},
+	"compileDependencies" : 
+	[
+		{
+			"backtrace" : 2,
+			"id" : "Zydis::@bebc394ba7c12ad3aa46"
+		}
+	],
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 2,
+					"define" : "ZYCORE_STATIC_BUILD"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "ZYDIS_STATIC_BUILD"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 2,
+					"path" : "/home/lightswisp/Documents/mchack/injector/zydis/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore"
+				}
+			],
+			"language" : "C",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 2,
+			"id" : "Zydis::@bebc394ba7c12ad3aa46"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "Zycore::@3b75497f9bfe6e7f3d8c"
+		}
+	],
+	"id" : "injector::@29aa6a26553794152991",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-g",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "zydis/libZydis.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 4,
+				"fragment" : "zydis/zycore/libZycore.a",
+				"role" : "libraries"
+			}
+		],
+		"language" : "C"
+	},
+	"linkLibraries" : 
+	[
+		{
+			"backtrace" : 2,
+			"id" : "Zydis::@bebc394ba7c12ad3aa46"
+		}
+	],
+	"name" : "injector",
+	"nameOnDisk" : "injector",
+	"paths" : 
+	{
+		"build" : "injector",
+		"source" : "injector"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "injector/injector.c",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "EXECUTABLE"
+}

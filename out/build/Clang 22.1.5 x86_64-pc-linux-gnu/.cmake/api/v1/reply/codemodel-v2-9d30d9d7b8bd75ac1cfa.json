@@ -1,0 +1,250 @@
+{
+	"configurations" : 
+	[
+		{
+			"abstractTargets" : 
+			[
+				{
+					"directoryIndex" : 3,
+					"id" : "Doxygen::dot::@3b75497f9bfe6e7f3d8c",
+					"jsonFile" : "target-Doxygen__dot-Debug-4afebb5a55eaca8fa1be.json",
+					"name" : "Doxygen::dot",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "JNI::AWT::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-JNI__AWT-Debug-e68e835a94911ba0ba5c.json",
+					"name" : "JNI::AWT",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "JNI::JNI::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-JNI__JNI-Debug-a602be8c4ac88fb85ba7.json",
+					"name" : "JNI::JNI",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "JNI::JVM::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-JNI__JVM-Debug-28f14ff2a5e2d88dd610.json",
+					"name" : "JNI::JVM",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "Threads::Threads::@3b75497f9bfe6e7f3d8c",
+					"jsonFile" : "target-Threads__Threads-Debug-f8e2edf4b142030225e1.json",
+					"name" : "Threads::Threads",
+					"projectIndex" : 3
+				}
+			],
+			"directories" : 
+			[
+				{
+					"abstractTargetIndexes" : 
+					[
+						1,
+						2,
+						3
+					],
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-fd6451d79dc282e2f566.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10.0"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "injector",
+					"childIndexes" : 
+					[
+						2
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-injector-Debug-06d009426e893d421745.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10.0"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "injector",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "injector/zydis",
+					"childIndexes" : 
+					[
+						3
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-injector.zydis-Debug-7ff5de4d219724e7786b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 2,
+					"source" : "injector/zydis",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						4
+					],
+					"build" : "injector/zydis/zycore",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-injector.zydis.zycore-Debug-9d0019db2e290efe2b3b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 3,
+					"source" : "injector/zydis/dependencies/zycore",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"abstractTargetIndexes" : 
+					[
+						1,
+						2,
+						3
+					],
+					"childIndexes" : 
+					[
+						1
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "mchack",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"childIndexes" : 
+					[
+						2
+					],
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "injector",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"childIndexes" : 
+					[
+						3
+					],
+					"directoryIndexes" : 
+					[
+						2
+					],
+					"name" : "Zydis",
+					"parentIndex" : 1,
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"abstractTargetIndexes" : 
+					[
+						0,
+						4
+					],
+					"directoryIndexes" : 
+					[
+						3
+					],
+					"name" : "Zycore",
+					"parentIndex" : 2,
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 3,
+					"id" : "Zycore::@3b75497f9bfe6e7f3d8c",
+					"jsonFile" : "target-Zycore-Debug-a92931b6a5495d9f2dc6.json",
+					"name" : "Zycore",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "Zydis::@bebc394ba7c12ad3aa46",
+					"jsonFile" : "target-Zydis-Debug-970d328c95ec29eefe9a.json",
+					"name" : "Zydis",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "injector::@29aa6a26553794152991",
+					"jsonFile" : "target-injector-Debug-abb5be7b4e923572c9eb.json",
+					"name" : "injector",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "mchack::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-mchack-Debug-be68640beab6f220d17c.json",
+					"name" : "mchack",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu",
+		"source" : "/home/lightswisp/Documents/mchack"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 10
+	}
+}

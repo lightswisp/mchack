@@ -1,0 +1,1 @@
+/usr/bin/clang -g -Xlinker --dependency-file=CMakeFiles/injector.dir/link.d CMakeFiles/injector.dir/injector.c.o -o /home/lightswisp/Documents/mchack/release/injector  zydis/libZydis.a zydis/zycore/libZycore.a

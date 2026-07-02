@@ -1,0 +1,3 @@
+/home/lightswisp/Documents/mchack/CMakeFiles/mchack.dir
+/home/lightswisp/Documents/mchack/CMakeFiles/edit_cache.dir
+/home/lightswisp/Documents/mchack/CMakeFiles/rebuild_cache.dir
