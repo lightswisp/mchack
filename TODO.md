@@ -1,0 +1,5 @@
+- make logger as a separate module, so that cheat and injector can link against it 
+- fix rva calculation in injector
+- add stop/resume threads in cheat functionality. Because when we remove hooks, we crash 
+- add minecraft mappings to the cheat and json parser
+- implement cheat gui 

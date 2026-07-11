@@ -162,32 +162,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named mchack
-
-# Build rule for target.
-mchack: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 mchack
-.PHONY : mchack
-
-# fast build rule for target.
-mchack/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mchack.dir/build.make CMakeFiles/mchack.dir/build
-.PHONY : mchack/fast
-
-#=============================================================================
-# Target rules for targets named injector
-
-# Build rule for target.
-injector: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 injector
-.PHONY : injector
-
-# fast build rule for target.
-injector/fast:
-	$(MAKE) $(MAKESILENT) -f injector/CMakeFiles/injector.dir/build.make injector/CMakeFiles/injector.dir/build
-.PHONY : injector/fast
-
-#=============================================================================
 # Target rules for targets named Zydis
 
 # Build rule for target.
@@ -197,7 +171,7 @@ Zydis: cmake_check_build_system
 
 # fast build rule for target.
 Zydis/fast:
-	$(MAKE) $(MAKESILENT) -f injector/zydis/CMakeFiles/Zydis.dir/build.make injector/zydis/CMakeFiles/Zydis.dir/build
+	$(MAKE) $(MAKESILENT) -f src/libs/zydis/CMakeFiles/Zydis.dir/build.make src/libs/zydis/CMakeFiles/Zydis.dir/build
 .PHONY : Zydis/fast
 
 #=============================================================================
@@ -210,32 +184,34 @@ Zycore: cmake_check_build_system
 
 # fast build rule for target.
 Zycore/fast:
-	$(MAKE) $(MAKESILENT) -f injector/zydis/zycore/CMakeFiles/Zycore.dir/build.make injector/zydis/zycore/CMakeFiles/Zycore.dir/build
+	$(MAKE) $(MAKESILENT) -f src/libs/zydis/zycore/CMakeFiles/Zycore.dir/build.make src/libs/zydis/zycore/CMakeFiles/Zycore.dir/build
 .PHONY : Zycore/fast
 
-main.o: main.c.o
-.PHONY : main.o
+#=============================================================================
+# Target rules for targets named injector
 
-# target to build an object file
-main.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mchack.dir/build.make CMakeFiles/mchack.dir/main.c.o
-.PHONY : main.c.o
+# Build rule for target.
+injector: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 injector
+.PHONY : injector
 
-main.i: main.c.i
-.PHONY : main.i
+# fast build rule for target.
+injector/fast:
+	$(MAKE) $(MAKESILENT) -f src/injector/CMakeFiles/injector.dir/build.make src/injector/CMakeFiles/injector.dir/build
+.PHONY : injector/fast
 
-# target to preprocess a source file
-main.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mchack.dir/build.make CMakeFiles/mchack.dir/main.c.i
-.PHONY : main.c.i
+#=============================================================================
+# Target rules for targets named cheat
 
-main.s: main.c.s
-.PHONY : main.s
+# Build rule for target.
+cheat: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 cheat
+.PHONY : cheat
 
-# target to generate assembly for a file
-main.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mchack.dir/build.make CMakeFiles/mchack.dir/main.c.s
-.PHONY : main.c.s
+# fast build rule for target.
+cheat/fast:
+	$(MAKE) $(MAKESILENT) -f src/cheat/CMakeFiles/cheat.dir/build.make src/cheat/CMakeFiles/cheat.dir/build
+.PHONY : cheat/fast
 
 # Help Target
 help:
@@ -251,11 +227,8 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... Zycore"
 	@echo "... Zydis"
+	@echo "... cheat"
 	@echo "... injector"
-	@echo "... mchack"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
 .PHONY : help
 
 

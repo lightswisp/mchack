@@ -44,7 +44,9 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/cmake_install.cmake")
+  include("/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/cmake_install.cmake")
+  include("/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/injector/cmake_install.cmake")
+  include("/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/cheat/cmake_install.cmake")
 
 endif()
 

@@ -1,1 +1,0 @@
-/usr/bin/clang -fPIC -g -shared -Xlinker --dependency-file=CMakeFiles/mchack.dir/link.d -Wl,-soname,libmchack.so -o /home/lightswisp/Documents/mchack/release/libmchack.so CMakeFiles/mchack.dir/main.c.o

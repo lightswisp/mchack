@@ -1,200 +1,248 @@
 [
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu",
-  "command": "/usr/bin/clang -Dmchack_EXPORTS -I/usr/lib/jvm/default/include -I/usr/lib/jvm/default/include/linux -g -fPIC -o CMakeFiles/mchack.dir/main.c.o -c /home/lightswisp/Documents/mchack/main.c",
-  "file": "/home/lightswisp/Documents/mchack/main.c",
-  "output": "CMakeFiles/mchack.dir/main.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/src -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu11 -fPIC -Wall -Wextra -Wpedantic -o CMakeFiles/Zydis.dir/src/MetaInfo.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/src/MetaInfo.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/src/MetaInfo.c",
+  "output": "src/libs/zydis/CMakeFiles/Zydis.dir/src/MetaInfo.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -I/home/lightswisp/Documents/mchack/injector/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis\" -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -g -o CMakeFiles/injector.dir/injector.c.o -c /home/lightswisp/Documents/mchack/injector/injector.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/injector.c",
-  "output": "injector/CMakeFiles/injector.dir/injector.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/src -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu11 -fPIC -Wall -Wextra -Wpedantic -o CMakeFiles/Zydis.dir/src/Mnemonic.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/src/Mnemonic.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/src/Mnemonic.c",
+  "output": "src/libs/zydis/CMakeFiles/Zydis.dir/src/Mnemonic.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/injector/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis\" -I/home/lightswisp/Documents/mchack/injector/zydis/src -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -g -std=gnu11 -o CMakeFiles/Zydis.dir/src/MetaInfo.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/src/MetaInfo.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/src/MetaInfo.c",
-  "output": "injector/zydis/CMakeFiles/Zydis.dir/src/MetaInfo.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/src -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu11 -fPIC -Wall -Wextra -Wpedantic -o CMakeFiles/Zydis.dir/src/Register.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/src/Register.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/src/Register.c",
+  "output": "src/libs/zydis/CMakeFiles/Zydis.dir/src/Register.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/injector/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis\" -I/home/lightswisp/Documents/mchack/injector/zydis/src -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -g -std=gnu11 -o CMakeFiles/Zydis.dir/src/Mnemonic.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/src/Mnemonic.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/src/Mnemonic.c",
-  "output": "injector/zydis/CMakeFiles/Zydis.dir/src/Mnemonic.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/src -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu11 -fPIC -Wall -Wextra -Wpedantic -o CMakeFiles/Zydis.dir/src/SharedData.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/src/SharedData.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/src/SharedData.c",
+  "output": "src/libs/zydis/CMakeFiles/Zydis.dir/src/SharedData.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/injector/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis\" -I/home/lightswisp/Documents/mchack/injector/zydis/src -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -g -std=gnu11 -o CMakeFiles/Zydis.dir/src/Register.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/src/Register.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/src/Register.c",
-  "output": "injector/zydis/CMakeFiles/Zydis.dir/src/Register.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/src -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu11 -fPIC -Wall -Wextra -Wpedantic -o CMakeFiles/Zydis.dir/src/String.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/src/String.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/src/String.c",
+  "output": "src/libs/zydis/CMakeFiles/Zydis.dir/src/String.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/injector/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis\" -I/home/lightswisp/Documents/mchack/injector/zydis/src -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -g -std=gnu11 -o CMakeFiles/Zydis.dir/src/SharedData.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/src/SharedData.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/src/SharedData.c",
-  "output": "injector/zydis/CMakeFiles/Zydis.dir/src/SharedData.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/src -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu11 -fPIC -Wall -Wextra -Wpedantic -o CMakeFiles/Zydis.dir/src/Utils.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/src/Utils.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/src/Utils.c",
+  "output": "src/libs/zydis/CMakeFiles/Zydis.dir/src/Utils.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/injector/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis\" -I/home/lightswisp/Documents/mchack/injector/zydis/src -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -g -std=gnu11 -o CMakeFiles/Zydis.dir/src/String.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/src/String.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/src/String.c",
-  "output": "injector/zydis/CMakeFiles/Zydis.dir/src/String.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/src -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu11 -fPIC -Wall -Wextra -Wpedantic -o CMakeFiles/Zydis.dir/src/Zydis.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/src/Zydis.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/src/Zydis.c",
+  "output": "src/libs/zydis/CMakeFiles/Zydis.dir/src/Zydis.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/injector/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis\" -I/home/lightswisp/Documents/mchack/injector/zydis/src -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -g -std=gnu11 -o CMakeFiles/Zydis.dir/src/Utils.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/src/Utils.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/src/Utils.c",
-  "output": "injector/zydis/CMakeFiles/Zydis.dir/src/Utils.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/src -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu11 -fPIC -Wall -Wextra -Wpedantic -o CMakeFiles/Zydis.dir/src/Decoder.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/src/Decoder.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/src/Decoder.c",
+  "output": "src/libs/zydis/CMakeFiles/Zydis.dir/src/Decoder.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/injector/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis\" -I/home/lightswisp/Documents/mchack/injector/zydis/src -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -g -std=gnu11 -o CMakeFiles/Zydis.dir/src/Zydis.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/src/Zydis.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/src/Zydis.c",
-  "output": "injector/zydis/CMakeFiles/Zydis.dir/src/Zydis.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/src -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu11 -fPIC -Wall -Wextra -Wpedantic -o CMakeFiles/Zydis.dir/src/DecoderData.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/src/DecoderData.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/src/DecoderData.c",
+  "output": "src/libs/zydis/CMakeFiles/Zydis.dir/src/DecoderData.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/injector/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis\" -I/home/lightswisp/Documents/mchack/injector/zydis/src -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -g -std=gnu11 -o CMakeFiles/Zydis.dir/src/Decoder.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/src/Decoder.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/src/Decoder.c",
-  "output": "injector/zydis/CMakeFiles/Zydis.dir/src/Decoder.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/src -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu11 -fPIC -Wall -Wextra -Wpedantic -o CMakeFiles/Zydis.dir/src/Encoder.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/src/Encoder.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/src/Encoder.c",
+  "output": "src/libs/zydis/CMakeFiles/Zydis.dir/src/Encoder.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/injector/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis\" -I/home/lightswisp/Documents/mchack/injector/zydis/src -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -g -std=gnu11 -o CMakeFiles/Zydis.dir/src/DecoderData.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/src/DecoderData.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/src/DecoderData.c",
-  "output": "injector/zydis/CMakeFiles/Zydis.dir/src/DecoderData.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/src -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu11 -fPIC -Wall -Wextra -Wpedantic -o CMakeFiles/Zydis.dir/src/EncoderData.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/src/EncoderData.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/src/EncoderData.c",
+  "output": "src/libs/zydis/CMakeFiles/Zydis.dir/src/EncoderData.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/injector/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis\" -I/home/lightswisp/Documents/mchack/injector/zydis/src -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -g -std=gnu11 -o CMakeFiles/Zydis.dir/src/Encoder.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/src/Encoder.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/src/Encoder.c",
-  "output": "injector/zydis/CMakeFiles/Zydis.dir/src/Encoder.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/src -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu11 -fPIC -Wall -Wextra -Wpedantic -o CMakeFiles/Zydis.dir/src/Disassembler.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/src/Disassembler.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/src/Disassembler.c",
+  "output": "src/libs/zydis/CMakeFiles/Zydis.dir/src/Disassembler.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/injector/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis\" -I/home/lightswisp/Documents/mchack/injector/zydis/src -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -g -std=gnu11 -o CMakeFiles/Zydis.dir/src/EncoderData.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/src/EncoderData.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/src/EncoderData.c",
-  "output": "injector/zydis/CMakeFiles/Zydis.dir/src/EncoderData.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/src -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu11 -fPIC -Wall -Wextra -Wpedantic -o CMakeFiles/Zydis.dir/src/Formatter.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/src/Formatter.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/src/Formatter.c",
+  "output": "src/libs/zydis/CMakeFiles/Zydis.dir/src/Formatter.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/injector/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis\" -I/home/lightswisp/Documents/mchack/injector/zydis/src -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -g -std=gnu11 -o CMakeFiles/Zydis.dir/src/Disassembler.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/src/Disassembler.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/src/Disassembler.c",
-  "output": "injector/zydis/CMakeFiles/Zydis.dir/src/Disassembler.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/src -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu11 -fPIC -Wall -Wextra -Wpedantic -o CMakeFiles/Zydis.dir/src/FormatterBuffer.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/src/FormatterBuffer.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/src/FormatterBuffer.c",
+  "output": "src/libs/zydis/CMakeFiles/Zydis.dir/src/FormatterBuffer.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/injector/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis\" -I/home/lightswisp/Documents/mchack/injector/zydis/src -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -g -std=gnu11 -o CMakeFiles/Zydis.dir/src/Formatter.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/src/Formatter.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/src/Formatter.c",
-  "output": "injector/zydis/CMakeFiles/Zydis.dir/src/Formatter.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/src -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu11 -fPIC -Wall -Wextra -Wpedantic -o CMakeFiles/Zydis.dir/src/FormatterATT.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/src/FormatterATT.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/src/FormatterATT.c",
+  "output": "src/libs/zydis/CMakeFiles/Zydis.dir/src/FormatterATT.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/injector/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis\" -I/home/lightswisp/Documents/mchack/injector/zydis/src -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -g -std=gnu11 -o CMakeFiles/Zydis.dir/src/FormatterBuffer.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/src/FormatterBuffer.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/src/FormatterBuffer.c",
-  "output": "injector/zydis/CMakeFiles/Zydis.dir/src/FormatterBuffer.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/src -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu11 -fPIC -Wall -Wextra -Wpedantic -o CMakeFiles/Zydis.dir/src/FormatterBase.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/src/FormatterBase.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/src/FormatterBase.c",
+  "output": "src/libs/zydis/CMakeFiles/Zydis.dir/src/FormatterBase.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/injector/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis\" -I/home/lightswisp/Documents/mchack/injector/zydis/src -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -g -std=gnu11 -o CMakeFiles/Zydis.dir/src/FormatterATT.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/src/FormatterATT.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/src/FormatterATT.c",
-  "output": "injector/zydis/CMakeFiles/Zydis.dir/src/FormatterATT.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/src -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu11 -fPIC -Wall -Wextra -Wpedantic -o CMakeFiles/Zydis.dir/src/FormatterIntel.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/src/FormatterIntel.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/src/FormatterIntel.c",
+  "output": "src/libs/zydis/CMakeFiles/Zydis.dir/src/FormatterIntel.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/injector/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis\" -I/home/lightswisp/Documents/mchack/injector/zydis/src -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -g -std=gnu11 -o CMakeFiles/Zydis.dir/src/FormatterBase.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/src/FormatterBase.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/src/FormatterBase.c",
-  "output": "injector/zydis/CMakeFiles/Zydis.dir/src/FormatterBase.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/src -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu11 -fPIC -Wall -Wextra -Wpedantic -o CMakeFiles/Zydis.dir/src/Segment.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/src/Segment.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/src/Segment.c",
+  "output": "src/libs/zydis/CMakeFiles/Zydis.dir/src/Segment.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/injector/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis\" -I/home/lightswisp/Documents/mchack/injector/zydis/src -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -g -std=gnu11 -o CMakeFiles/Zydis.dir/src/FormatterIntel.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/src/FormatterIntel.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/src/FormatterIntel.c",
-  "output": "injector/zydis/CMakeFiles/Zydis.dir/src/FormatterIntel.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src -g -std=gnu11 -fPIC -fvisibility=hidden -Wall -Wextra -Wpedantic -o CMakeFiles/Zycore.dir/src/API/Memory.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/API/Memory.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/API/Memory.c",
+  "output": "src/libs/zydis/zycore/CMakeFiles/Zycore.dir/src/API/Memory.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -I/home/lightswisp/Documents/mchack/injector/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis\" -I/home/lightswisp/Documents/mchack/injector/zydis/src -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -g -std=gnu11 -o CMakeFiles/Zydis.dir/src/Segment.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/src/Segment.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/src/Segment.c",
-  "output": "injector/zydis/CMakeFiles/Zydis.dir/src/Segment.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src -g -std=gnu11 -fPIC -fvisibility=hidden -Wall -Wextra -Wpedantic -o CMakeFiles/Zycore.dir/src/API/Process.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/API/Process.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/API/Process.c",
+  "output": "src/libs/zydis/zycore/CMakeFiles/Zycore.dir/src/API/Process.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src -g -std=gnu11 -fvisibility=hidden -o CMakeFiles/Zycore.dir/src/API/Memory.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/API/Memory.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/API/Memory.c",
-  "output": "injector/zydis/zycore/CMakeFiles/Zycore.dir/src/API/Memory.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src -g -std=gnu11 -fPIC -fvisibility=hidden -Wall -Wextra -Wpedantic -o CMakeFiles/Zycore.dir/src/API/Synchronization.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/API/Synchronization.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/API/Synchronization.c",
+  "output": "src/libs/zydis/zycore/CMakeFiles/Zycore.dir/src/API/Synchronization.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src -g -std=gnu11 -fvisibility=hidden -o CMakeFiles/Zycore.dir/src/API/Process.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/API/Process.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/API/Process.c",
-  "output": "injector/zydis/zycore/CMakeFiles/Zycore.dir/src/API/Process.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src -g -std=gnu11 -fPIC -fvisibility=hidden -Wall -Wextra -Wpedantic -o CMakeFiles/Zycore.dir/src/API/Terminal.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/API/Terminal.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/API/Terminal.c",
+  "output": "src/libs/zydis/zycore/CMakeFiles/Zycore.dir/src/API/Terminal.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src -g -std=gnu11 -fvisibility=hidden -o CMakeFiles/Zycore.dir/src/API/Synchronization.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/API/Synchronization.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/API/Synchronization.c",
-  "output": "injector/zydis/zycore/CMakeFiles/Zycore.dir/src/API/Synchronization.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src -g -std=gnu11 -fPIC -fvisibility=hidden -Wall -Wextra -Wpedantic -o CMakeFiles/Zycore.dir/src/API/Thread.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/API/Thread.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/API/Thread.c",
+  "output": "src/libs/zydis/zycore/CMakeFiles/Zycore.dir/src/API/Thread.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src -g -std=gnu11 -fvisibility=hidden -o CMakeFiles/Zycore.dir/src/API/Terminal.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/API/Terminal.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/API/Terminal.c",
-  "output": "injector/zydis/zycore/CMakeFiles/Zycore.dir/src/API/Terminal.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src -g -std=gnu11 -fPIC -fvisibility=hidden -Wall -Wextra -Wpedantic -o CMakeFiles/Zycore.dir/src/Allocator.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/Allocator.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/Allocator.c",
+  "output": "src/libs/zydis/zycore/CMakeFiles/Zycore.dir/src/Allocator.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src -g -std=gnu11 -fvisibility=hidden -o CMakeFiles/Zycore.dir/src/API/Thread.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/API/Thread.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/API/Thread.c",
-  "output": "injector/zydis/zycore/CMakeFiles/Zycore.dir/src/API/Thread.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src -g -std=gnu11 -fPIC -fvisibility=hidden -Wall -Wextra -Wpedantic -o CMakeFiles/Zycore.dir/src/ArgParse.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/ArgParse.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/ArgParse.c",
+  "output": "src/libs/zydis/zycore/CMakeFiles/Zycore.dir/src/ArgParse.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src -g -std=gnu11 -fvisibility=hidden -o CMakeFiles/Zycore.dir/src/Allocator.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/Allocator.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/Allocator.c",
-  "output": "injector/zydis/zycore/CMakeFiles/Zycore.dir/src/Allocator.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src -g -std=gnu11 -fPIC -fvisibility=hidden -Wall -Wextra -Wpedantic -o CMakeFiles/Zycore.dir/src/Bitset.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/Bitset.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/Bitset.c",
+  "output": "src/libs/zydis/zycore/CMakeFiles/Zycore.dir/src/Bitset.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src -g -std=gnu11 -fvisibility=hidden -o CMakeFiles/Zycore.dir/src/ArgParse.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/ArgParse.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/ArgParse.c",
-  "output": "injector/zydis/zycore/CMakeFiles/Zycore.dir/src/ArgParse.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src -g -std=gnu11 -fPIC -fvisibility=hidden -Wall -Wextra -Wpedantic -o CMakeFiles/Zycore.dir/src/Format.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/Format.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/Format.c",
+  "output": "src/libs/zydis/zycore/CMakeFiles/Zycore.dir/src/Format.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src -g -std=gnu11 -fvisibility=hidden -o CMakeFiles/Zycore.dir/src/Bitset.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/Bitset.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/Bitset.c",
-  "output": "injector/zydis/zycore/CMakeFiles/Zycore.dir/src/Bitset.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src -g -std=gnu11 -fPIC -fvisibility=hidden -Wall -Wextra -Wpedantic -o CMakeFiles/Zycore.dir/src/List.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/List.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/List.c",
+  "output": "src/libs/zydis/zycore/CMakeFiles/Zycore.dir/src/List.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src -g -std=gnu11 -fvisibility=hidden -o CMakeFiles/Zycore.dir/src/Format.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/Format.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/Format.c",
-  "output": "injector/zydis/zycore/CMakeFiles/Zycore.dir/src/Format.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src -g -std=gnu11 -fPIC -fvisibility=hidden -Wall -Wextra -Wpedantic -o CMakeFiles/Zycore.dir/src/String.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/String.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/String.c",
+  "output": "src/libs/zydis/zycore/CMakeFiles/Zycore.dir/src/String.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src -g -std=gnu11 -fvisibility=hidden -o CMakeFiles/Zycore.dir/src/List.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/List.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/List.c",
-  "output": "injector/zydis/zycore/CMakeFiles/Zycore.dir/src/List.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src -g -std=gnu11 -fPIC -fvisibility=hidden -Wall -Wextra -Wpedantic -o CMakeFiles/Zycore.dir/src/Vector.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/Vector.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/Vector.c",
+  "output": "src/libs/zydis/zycore/CMakeFiles/Zycore.dir/src/Vector.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src -g -std=gnu11 -fvisibility=hidden -o CMakeFiles/Zycore.dir/src/String.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/String.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/String.c",
-  "output": "injector/zydis/zycore/CMakeFiles/Zycore.dir/src/String.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src -g -std=gnu11 -fPIC -fvisibility=hidden -Wall -Wextra -Wpedantic -o CMakeFiles/Zycore.dir/src/Zycore.c.o -c /home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/Zycore.c",
+  "file": "/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/src/Zycore.c",
+  "output": "src/libs/zydis/zycore/CMakeFiles/Zycore.dir/src/Zycore.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src -g -std=gnu11 -fvisibility=hidden -o CMakeFiles/Zycore.dir/src/Vector.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/Vector.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/Vector.c",
-  "output": "injector/zydis/zycore/CMakeFiles/Zycore.dir/src/Vector.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/injector",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu23 -fPIE -Wall -Wextra -Wpedantic -fsanitize=address,undefined -fno-omit-frame-pointer -g -o CMakeFiles/injector.dir/injector.c.o -c /home/lightswisp/Documents/mchack/src/injector/injector.c",
+  "file": "/home/lightswisp/Documents/mchack/src/injector/injector.c",
+  "output": "src/injector/CMakeFiles/injector.dir/injector.c.o"
 },
 {
-  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore",
-  "command": "/usr/bin/clang -DZYCORE_STATIC_BUILD -D_CRT_SECURE_NO_WARNINGS -D_GNU_SOURCE -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore\" -I/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src -g -std=gnu11 -fvisibility=hidden -o CMakeFiles/Zycore.dir/src/Zycore.c.o -c /home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/Zycore.c",
-  "file": "/home/lightswisp/Documents/mchack/injector/zydis/dependencies/zycore/src/Zycore.c",
-  "output": "injector/zydis/zycore/CMakeFiles/Zycore.dir/src/Zycore.c.o"
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/cheat",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -Dcheat_EXPORTS -I/usr/lib/jvm/default/include -I/usr/lib/jvm/default/include/linux -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu23 -fPIC -Wall -Wextra -Wpedantic -g -o CMakeFiles/cheat.dir/main.c.o -c /home/lightswisp/Documents/mchack/src/cheat/main.c",
+  "file": "/home/lightswisp/Documents/mchack/src/cheat/main.c",
+  "output": "src/cheat/CMakeFiles/cheat.dir/main.c.o"
+},
+{
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/cheat",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -Dcheat_EXPORTS -I/usr/lib/jvm/default/include -I/usr/lib/jvm/default/include/linux -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu23 -fPIC -Wall -Wextra -Wpedantic -g -o CMakeFiles/cheat.dir/core/message.c.o -c /home/lightswisp/Documents/mchack/src/cheat/core/message.c",
+  "file": "/home/lightswisp/Documents/mchack/src/cheat/core/message.c",
+  "output": "src/cheat/CMakeFiles/cheat.dir/core/message.c.o"
+},
+{
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/cheat",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -Dcheat_EXPORTS -I/usr/lib/jvm/default/include -I/usr/lib/jvm/default/include/linux -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu23 -fPIC -Wall -Wextra -Wpedantic -g -o CMakeFiles/cheat.dir/utils/logger.c.o -c /home/lightswisp/Documents/mchack/src/cheat/utils/logger.c",
+  "file": "/home/lightswisp/Documents/mchack/src/cheat/utils/logger.c",
+  "output": "src/cheat/CMakeFiles/cheat.dir/utils/logger.c.o"
+},
+{
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/cheat",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -Dcheat_EXPORTS -I/usr/lib/jvm/default/include -I/usr/lib/jvm/default/include/linux -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu23 -fPIC -Wall -Wextra -Wpedantic -g -o CMakeFiles/cheat.dir/hooks/hooks.c.o -c /home/lightswisp/Documents/mchack/src/cheat/hooks/hooks.c",
+  "file": "/home/lightswisp/Documents/mchack/src/cheat/hooks/hooks.c",
+  "output": "src/cheat/CMakeFiles/cheat.dir/hooks/hooks.c.o"
+},
+{
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/cheat",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -Dcheat_EXPORTS -I/usr/lib/jvm/default/include -I/usr/lib/jvm/default/include/linux -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu23 -fPIC -Wall -Wextra -Wpedantic -g -o CMakeFiles/cheat.dir/core/minecraft.c.o -c /home/lightswisp/Documents/mchack/src/cheat/core/minecraft.c",
+  "file": "/home/lightswisp/Documents/mchack/src/cheat/core/minecraft.c",
+  "output": "src/cheat/CMakeFiles/cheat.dir/core/minecraft.c.o"
+},
+{
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/cheat",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -Dcheat_EXPORTS -I/usr/lib/jvm/default/include -I/usr/lib/jvm/default/include/linux -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu23 -fPIC -Wall -Wextra -Wpedantic -g -o CMakeFiles/cheat.dir/core/player.c.o -c /home/lightswisp/Documents/mchack/src/cheat/core/player.c",
+  "file": "/home/lightswisp/Documents/mchack/src/cheat/core/player.c",
+  "output": "src/cheat/CMakeFiles/cheat.dir/core/player.c.o"
+},
+{
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/cheat",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -Dcheat_EXPORTS -I/usr/lib/jvm/default/include -I/usr/lib/jvm/default/include/linux -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu23 -fPIC -Wall -Wextra -Wpedantic -g -o CMakeFiles/cheat.dir/rendering/draw.c.o -c /home/lightswisp/Documents/mchack/src/cheat/rendering/draw.c",
+  "file": "/home/lightswisp/Documents/mchack/src/cheat/rendering/draw.c",
+  "output": "src/cheat/CMakeFiles/cheat.dir/rendering/draw.c.o"
+},
+{
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/cheat",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -Dcheat_EXPORTS -I/usr/lib/jvm/default/include -I/usr/lib/jvm/default/include/linux -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu23 -fPIC -Wall -Wextra -Wpedantic -g -o CMakeFiles/cheat.dir/jvm.c.o -c /home/lightswisp/Documents/mchack/src/cheat/jvm.c",
+  "file": "/home/lightswisp/Documents/mchack/src/cheat/jvm.c",
+  "output": "src/cheat/CMakeFiles/cheat.dir/jvm.c.o"
+},
+{
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/cheat",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -Dcheat_EXPORTS -I/usr/lib/jvm/default/include -I/usr/lib/jvm/default/include/linux -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu23 -fPIC -Wall -Wextra -Wpedantic -g -o CMakeFiles/cheat.dir/game.c.o -c /home/lightswisp/Documents/mchack/src/cheat/game.c",
+  "file": "/home/lightswisp/Documents/mchack/src/cheat/game.c",
+  "output": "src/cheat/CMakeFiles/cheat.dir/game.c.o"
 }
 ]

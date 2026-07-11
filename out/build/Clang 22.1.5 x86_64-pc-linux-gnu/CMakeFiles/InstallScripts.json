@@ -2,9 +2,10 @@
 	"InstallScripts" : 
 	[
 		"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/cmake_install.cmake",
-		"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/cmake_install.cmake",
-		"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/cmake_install.cmake",
-		"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/injector/zydis/zycore/cmake_install.cmake"
+		"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/cmake_install.cmake",
+		"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore/cmake_install.cmake",
+		"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/injector/cmake_install.cmake",
+		"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/cheat/cmake_install.cmake"
 	],
 	"Parallel" : false
 }
