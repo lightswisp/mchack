@@ -127,6 +127,7 @@ static ZydisMnemonic inverse_mnemonic(ZydisMnemonic mnemonic) {
 }
 
 bool hook_install(void *addr, void *detour, void **trampoline) {
+  LOGGER_LOG(LOG, "setting hook for %p", addr);
   bool status = false;
   if (hook_already_installed(addr))
     goto end;
@@ -301,7 +302,7 @@ bool hook_install(void *addr, void *detour, void **trampoline) {
   *trampoline = generated_trampoline.base;
 
   // set jmp hook
-  memcpy(addr, prologue_shellcode, sizeof(prologue_shellcode));
+  memcpy(prologue, prologue_shellcode, sizeof(prologue_shellcode));
 
   // save everything
   hooks[hook_idx].addr = addr;
@@ -319,6 +320,7 @@ end:
 }
 
 bool hook_remove(void *addr) {
+  LOGGER_LOG(LOG, "removing hook for %p", addr);
   if (addr == NULL)
     return false;
   // iterate over hooks and look for addr

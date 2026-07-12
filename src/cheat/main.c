@@ -71,7 +71,7 @@ end:
 __attribute__((destructor)) void __onunload() {
   LOGGER_LOG(WARNING, "module is unloading...");
   // stop all threads here
-  // remove_hooks();
+  remove_hooks();
   // resume all threads here
   detach_jvm();
 }
