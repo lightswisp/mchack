@@ -13,7 +13,8 @@ typedef struct {
 typedef struct {
   void *addr;        // addr of func
   void **trampoline; // dynamically allocated trampoline
-  size_t stolen_bytes;
+  uint8_t *stolen_bytes;
+  size_t stolen_bytes_size;
 } hook_t;
 
 bool hook_install(void *addr, void *detour, void **trampoline);

@@ -229,9 +229,9 @@
 },
 {
   "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/cheat",
-  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -Dcheat_EXPORTS -I/usr/lib/jvm/default/include -I/usr/lib/jvm/default/include/linux -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu23 -fPIC -Wall -Wextra -Wpedantic -g -o CMakeFiles/cheat.dir/gui/draw.c.o -c /home/lightswisp/Documents/mchack/src/cheat/gui/draw.c",
-  "file": "/home/lightswisp/Documents/mchack/src/cheat/gui/draw.c",
-  "output": "src/cheat/CMakeFiles/cheat.dir/gui/draw.c.o"
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -Dcheat_EXPORTS -I/usr/lib/jvm/default/include -I/usr/lib/jvm/default/include/linux -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu23 -fPIC -Wall -Wextra -Wpedantic -g -o CMakeFiles/cheat.dir/rendering/draw.c.o -c /home/lightswisp/Documents/mchack/src/cheat/rendering/draw.c",
+  "file": "/home/lightswisp/Documents/mchack/src/cheat/rendering/draw.c",
+  "output": "src/cheat/CMakeFiles/cheat.dir/rendering/draw.c.o"
 },
 {
   "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/cheat",

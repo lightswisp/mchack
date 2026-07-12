@@ -863,6 +863,7 @@ bool uninject() {
   hexdump(shellcode, shellcode_size);
 
   // preserving instructions, reading from entry point
+  LOGGER_LOG(LOG, "preserving entry point");
   backup_buffer = read_memory(context.pid, context.entry, shellcode_size);
   if (backup_buffer == NULL) {
     LOGGER_LOG(FATAL, "failed to backup memory!");
@@ -870,11 +871,13 @@ bool uninject() {
   }
 
   // write shellcode
+  LOGGER_LOG(LOG, "writing shellcode");
   if (!write_memory(context.pid, context.entry, shellcode, shellcode_size)) {
     LOGGER_LOG(FATAL, "failed to write memory at entry point");
     goto end;
   }
 
+  LOGGER_LOG(LOG, "setting registers");
   regs.rip = context.entry;
   regs.rax = -1;
   ptrace(PTRACE_SETREGS, context.pid, NULL, &regs);

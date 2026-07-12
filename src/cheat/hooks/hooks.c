@@ -278,6 +278,12 @@ bool hook_install(void *addr, void *detour, void **trampoline) {
     runtime_address += instruction.length;
   }
 
+  uint8_t *stolen_bytes = malloc(offset);
+  if (!stolen_bytes)
+    goto end;
+  // save stolen bytes
+  memcpy(stolen_bytes, prologue, offset);
+
   // original instructions + jump
   // we need to execute stolen instructions first
   // then we will have to jump to prologue+offset
@@ -300,21 +306,27 @@ bool hook_install(void *addr, void *detour, void **trampoline) {
   // save everything
   hooks[hook_idx].addr = addr;
   hooks[hook_idx].trampoline = trampoline;
-  hooks[hook_idx].stolen_bytes = offset;
+  hooks[hook_idx].stolen_bytes = stolen_bytes;
+  hooks[hook_idx].stolen_bytes_size = offset;
 
   status = true;
 end:
-  if (!status)
+  if (!status) {
     free(generated_trampoline.base);
+    free(stolen_bytes);
+  }
   return status;
 }
 
 bool hook_remove(void *addr) {
+  if (addr == NULL)
+    return false;
   // iterate over hooks and look for addr
   for (size_t i = 0; i < MAX_HOOKS; i++) {
     if (hooks[i].addr == addr) {
-      memcpy(addr, *hooks[i].trampoline, hooks[i].stolen_bytes);
+      memcpy(addr, hooks[i].stolen_bytes, hooks[i].stolen_bytes_size);
       free(*hooks[i].trampoline);
+      free(hooks[i].stolen_bytes);
       return true;
     }
   }
