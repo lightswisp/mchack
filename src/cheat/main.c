@@ -1,6 +1,7 @@
 #include <jni.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <signal.h>
 
 #include "core/message.h"
 #include "game.h"
@@ -31,11 +32,34 @@ __attribute__((constructor)) void __onload() {
   pthread_create(&g_thread, NULL, __main_thread, NULL);
 }
 
-bool set_hooks(void) { return set_draw_hook(); }
-bool remove_hooks(void) { return remove_draw_hook(); }
+bool set_hooks(void) {
+  LOGGER_LOG(LOG, "setting hooks..");
+  send_message("setting hooks..");
+  return set_draw_hook();
+}
+
+bool remove_hooks(void) {
+  LOGGER_LOG(LOG, "removing hooks..");
+  // send_message("remving hooks..");
+  return remove_draw_hook();
+}
+
+void handle_uninject([[maybe_unused]] int sig) {
+  LOGGER_LOG(WARNING, "caught uninjection signal");
+  remove_hooks();
+  LOGGER_LOG(LOG, "hooks are removed");
+  LOGGER_LOG(WARNING, "detaching from jvm");
+  detach_jvm();
+}
 
 /* our main loop */
-void *__main_thread(void *a __attribute__((unused))) {
+void *__main_thread([[maybe_unused]] void *a) {
+
+  struct sigaction sa;
+  sa.sa_handler = handle_uninject;
+  sigemptyset(&sa.sa_mask);
+  sa.sa_flags = 0;
+  sigaction(SIGUSR1, &sa, NULL);
 
   init_logger(MCHACK_LOG_PATH);
   if (!init_jvm()) {
@@ -50,12 +74,9 @@ void *__main_thread(void *a __attribute__((unused))) {
 
   LOGGER_LOG(LOG, "injected");
   send_message("injected!");
-  // 0x7f04bd007ff0
 
   // stop all threads here
 
-  LOGGER_LOG(LOG, "setting hooks..");
-  send_message("setting hooks..");
   if (!set_hooks()) {
     LOGGER_LOG(FATAL, "failed to set hooks");
     send_message("failed to set hooks");
@@ -68,10 +89,4 @@ end:
   return NULL;
 }
 
-__attribute__((destructor)) void __onunload() {
-  LOGGER_LOG(WARNING, "module is unloading...");
-  // stop all threads here
-  remove_hooks();
-  // resume all threads here
-  detach_jvm();
-}
+__attribute__((destructor)) void __onunload() { LOGGER_LOG(WARNING, "module is unloading..."); }

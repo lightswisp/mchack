@@ -25,7 +25,9 @@ add_library(cheat SHARED main.c
     jvm.c
     jvm.h
     game.h
-    game.c)
+    game.c
+    rendering/gui.c
+    rendering/gui.h)
 target_include_directories(cheat PRIVATE ${JNI_INCLUDE_DIRS})
 
 target_link_libraries(cheat PRIVATE OpenGL::GL)

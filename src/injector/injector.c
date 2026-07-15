@@ -901,6 +901,8 @@ end:
 
 void handle_sigint([[maybe_unused]] int signal) {
   LOGGER_LOG(LOG, "ctrl+c is pressed...");
+  kill(context.pid, SIGUSR1);
+  sleep(1);
   if (uninject())
     exit(EXIT_SUCCESS);
   exit(EXIT_FAILURE);
@@ -918,6 +920,8 @@ void init_context(pid_t pid, const char *lib_path, const char *process_name) {
 }
 
 bool read_logs(const char *path) {
+  // TODO
+  // Close all fds if we receive a signal
 #define MAX_EV 512
 #define EV_BUF_SIZE (MAX_EV * (sizeof(struct inotify_event) + NAME_MAX + 1))
 
@@ -988,6 +992,11 @@ int main(void) {
   sigaction(SIGINT, &act, NULL);
 
   char *absolute_path = realpath(MCHACK_LIB_NAME, NULL);
+  if (!absolute_path) {
+    LOGGER_LOG(FATAL, "absolute path is NULL, make sure that the library is in the same dir");
+    goto end;
+  }
+
   LOGGER_LOG(LOG, "absolute path: %s", absolute_path);
 
   if (geteuid() != 0) {
@@ -1017,6 +1026,7 @@ int main(void) {
     goto end;
 
   exit_status = EXIT_SUCCESS;
+
 end:
   return exit_status;
 }

@@ -146,19 +146,21 @@ bool hook_install(void *addr, void *detour, void **trampoline) {
       0xFF, 0XE0                                                  // jmp rax
   };
 
+#define RELATIVE_MEM_SHELLCODE_PROLOGUE_OFFSET (4)
   uint8_t relative_mem_shellcode_prologue[] = {
-      0x50,                                                       // push rax
-      0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // mov rax, final_addr
+      0x41, 0x57,                                                 // push r15
+      0x49, 0xBF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // mov r15, final_addr
   };
 
   uint8_t relative_mem_shellcode_epilogue[] = {
-      0x58 // pop rax
+      0x41, 0x5F // pop r15
   };
 
+#define COND_JMP_SHELLCODE_OFFSET (4)
   uint8_t cond_jmp_shellcode[] = {
-      0x50,                                                       // push rax
-      0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // mov rax, final_addr
-      0x48, 0x87, 0x04, 0x24,                                     // xchg [rsp], rax
+      0x41, 0x57,                                                 // push r15
+      0x49, 0xBF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // mov r15, final_addr
+      0x4C, 0x87, 0x3C, 0x24,                                     // xchg [rsp], r15
       0xC3                                                        // ret
   };
 
@@ -225,7 +227,8 @@ bool hook_install(void *addr, void *detour, void **trampoline) {
       if (operands[opx].type == ZYDIS_OPERAND_TYPE_MEMORY) {
 
         // set addr
-        memcpy(relative_mem_shellcode_prologue + 3, &final_addr, sizeof(final_addr));
+        memcpy(relative_mem_shellcode_prologue + RELATIVE_MEM_SHELLCODE_PROLOGUE_OFFSET, &final_addr,
+               sizeof(final_addr));
 
         memcpy(generated_trampoline.base + generated_trampoline.edge, relative_mem_shellcode_prologue,
                sizeof(relative_mem_shellcode_prologue));
@@ -260,7 +263,7 @@ bool hook_install(void *addr, void *detour, void **trampoline) {
         generated_trampoline.edge += encoded_length;
 
         // set addr
-        memcpy(cond_jmp_shellcode + 3, &final_addr, sizeof(final_addr));
+        memcpy(cond_jmp_shellcode + COND_JMP_SHELLCODE_OFFSET, &final_addr, sizeof(final_addr));
 
         memcpy(generated_trampoline.base + generated_trampoline.edge, cond_jmp_shellcode,
                sizeof(cond_jmp_shellcode));
@@ -310,6 +313,9 @@ bool hook_install(void *addr, void *detour, void **trampoline) {
   hooks[hook_idx].stolen_bytes = stolen_bytes;
   hooks[hook_idx].stolen_bytes_size = offset;
 
+  LOGGER_LOG(LOG, "trampoline @ %p", generated_trampoline.base);
+  LOGGER_LOG(LOG, "stolen bytes @ %p", stolen_bytes);
+
   status = true;
 end:
   if (!status) {
@@ -326,6 +332,10 @@ bool hook_remove(void *addr) {
   // iterate over hooks and look for addr
   for (size_t i = 0; i < MAX_HOOKS; i++) {
     if (hooks[i].addr == addr) {
+      if (!hook_protect(addr, hooks[i].stolen_bytes_size)) {
+        LOGGER_LOG(FATAL, "failed to protect memory");
+        return false;
+      }
       memcpy(addr, hooks[i].stolen_bytes, hooks[i].stolen_bytes_size);
       free(*hooks[i].trampoline);
       free(hooks[i].stolen_bytes);
