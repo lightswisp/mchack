@@ -4,6 +4,16 @@
 typedef struct {
   jclass mclass;
   jobject minstance;
+
+  struct {
+    jclass map_class;
+    jmethodID map_clear;
+
+    jclass list_class;
+    jmethodID list_size;
+    jmethodID list_get;
+  } collections;
+
   jobject local_player;
 } game_t;
 

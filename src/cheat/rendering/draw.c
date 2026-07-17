@@ -1,3 +1,4 @@
+#include <threads.h>
 #define NK_IMPLEMENTATION
 #define NK_GLFW_GL3_IMPLEMENTATION
 
@@ -43,6 +44,13 @@ void handle_input(GLFWwindow *win) {
 }
 
 void swap_buffers(GLFWwindow *win) {
+  if (atomic_load(&rctx.shutting_down)) {
+    LOGGER_LOG(LOG, "no more execution for us");
+    return glfwSwapBuffers_o(win);
+  }
+  // for synchronization between the rendering thread and our thread
+  atomic_store(&rctx.executing, true);
+
   if (!rctx.initialized) {
     LOGGER_LOG(LOG, "setting ctx");
     rctx.win = win;
@@ -94,6 +102,7 @@ void swap_buffers(GLFWwindow *win) {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bound_element_array_buffer);
   glBindVertexArray(bound_vao);
 
+  atomic_store(&rctx.executing, false);
   glfwSwapBuffers_o(win);
 }
 
@@ -109,6 +118,11 @@ bool set_draw_hook(void) {
 }
 
 bool remove_draw_hook(void) {
+  atomic_store(&rctx.shutting_down, true);
+  LOGGER_LOG(LOG, "now waiting for threads to synchronize...");
+  while (atomic_load(&rctx.executing) == true) {
+    thrd_yield();
+  }
   LOGGER_LOG(LOG, "restoring callbacks...");
   glfwSetKeyCallback(rctx.win, rctx.orig_key_callback);
   glfwSetCharCallback(rctx.win, rctx.orig_char_callback);

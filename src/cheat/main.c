@@ -10,6 +10,9 @@
 #include "rendering/draw.h"
 #include "utils/logger.h"
 
+/* hacks */
+#include "hacks/esp.h"
+
 #ifndef MCHACK_LOG_PATH
 #define MCHACK_LOG_PATH ""
 #error "log path is undefined"
@@ -17,6 +20,7 @@
 
 void *__main_thread(void *a);
 pthread_t g_thread;
+bool should_close = false;
 
 /* run this function on library load */
 __attribute__((constructor)) void __onload() {
@@ -46,6 +50,7 @@ bool remove_hooks(void) {
 
 void handle_uninject([[maybe_unused]] int sig) {
   LOGGER_LOG(WARNING, "caught uninjection signal");
+  should_close = true;
   remove_hooks();
   LOGGER_LOG(LOG, "hooks are removed");
   LOGGER_LOG(WARNING, "detaching from jvm");
@@ -75,15 +80,15 @@ void *__main_thread([[maybe_unused]] void *a) {
   LOGGER_LOG(LOG, "injected");
   send_message("injected!");
 
-  // stop all threads here
-
   if (!set_hooks()) {
     LOGGER_LOG(FATAL, "failed to set hooks");
     send_message("failed to set hooks");
     goto end;
   }
 
-  // resume all threads here
+  while (!should_close) {
+    draw_esp();
+  }
 
 end:
   return NULL;

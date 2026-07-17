@@ -175,3 +175,5 @@ void draw_gui(rendering_context_t *rctx) {
   nk_window_show(rctx->ctx, "mchack", rctx->open);
   nk_end(rctx->ctx);
 }
+
+menu_state_t *get_menu_state(void) { return &menu_state; }

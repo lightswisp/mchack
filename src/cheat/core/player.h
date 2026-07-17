@@ -1,4 +1,4 @@
-#pragma once
 #include <jni.h>
 
-jobject get_localplayer(JNIEnv *env, jclass mclass, jobject minstance);
+jobject get_players(jint *size);
+jstring get_name(jobject player, jint index);

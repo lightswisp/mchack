@@ -32,6 +32,7 @@ typedef struct {
   } scripts_settings;
 } menu_state_t;
 
+menu_state_t *get_menu_state(void);
 void setup_menu_theme(struct nk_context *ctx);
 void setup_resolution(rendering_context_t *rctx);
 void draw_gui(rendering_context_t *rctx);

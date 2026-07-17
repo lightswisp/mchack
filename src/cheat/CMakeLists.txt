@@ -18,8 +18,8 @@ add_library(cheat SHARED main.c
     hooks/hooks.c
     core/minecraft.c
     core/minecraft.h
-    core/player.h
-    core/player.c
+    core/localplayer.h
+    core/localplayer.c
     rendering/draw.c
     rendering/draw.h
     jvm.c
@@ -27,7 +27,11 @@ add_library(cheat SHARED main.c
     game.h
     game.c
     rendering/gui.c
-    rendering/gui.h)
+    rendering/gui.h
+    hacks/esp.c
+    hacks/esp.h
+    core/player.c
+    core/player.h)
 target_include_directories(cheat PRIVATE ${JNI_INCLUDE_DIRS})
 
 target_link_libraries(cheat PRIVATE OpenGL::GL)

@@ -10,6 +10,7 @@
 #define NK_INCLUDE_DEFAULT_FONT
 #include "nuklear.h"
 #include "nuklear_glfw_gl3.h"
+#include <stdatomic.h>
 
 #define MAX_VERTEX_BUFFER 512 * 1024
 #define MAX_ELEMENT_BUFFER 128 * 1024
@@ -21,6 +22,10 @@ typedef struct {
   int width, height;
   bool initialized;
   bool open;
+
+  _Atomic bool executing;
+  _Atomic bool shutting_down;
+
   GLFWkeyfun orig_key_callback;
   GLFWcharfun orig_char_callback;
   GLFWwindow *win;
