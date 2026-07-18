@@ -1,16 +1,17 @@
 #include "localplayer.h"
-#include "../utils/logger.h"
+#include "../jvm.h"
+#include "../game.h"
 
-jobject get_localplayer(JNIEnv *env, jclass mclass, jobject minstance) {
+jobject get_localplayer(JNIEnv *env, game_t *game) {
+
   jfieldID player_field =
-      (*env)->GetFieldID(env, mclass, "player", "Lnet/minecraft/client/player/LocalPlayer;");
+      (*env)->GetFieldID(env, game->minecraft.class, "player", "Lnet/minecraft/client/player/LocalPlayer;");
   if (player_field == NULL)
     return NULL;
-  jobject local_player = (*env)->GetObjectField(env, minstance, player_field);
+  jobject local_player = (*env)->GetObjectField(env, game->minecraft.instance, player_field);
 
   if (local_player == NULL)
     return NULL;
 
-  LOGGER_LOG(LOG, "local_player @ %p", local_player);
   return local_player;
 }

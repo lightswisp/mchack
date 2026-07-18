@@ -16,8 +16,6 @@ add_library(cheat SHARED main.c
     utils/logger.h
     hooks/hooks.h
     hooks/hooks.c
-    core/minecraft.c
-    core/minecraft.h
     core/localplayer.h
     core/localplayer.c
     rendering/draw.c
@@ -28,10 +26,25 @@ add_library(cheat SHARED main.c
     game.c
     rendering/gui.c
     rendering/gui.h
-    hacks/esp.c
-    hacks/esp.h
+    hacks/esp/esp.c
+    hacks/esp/esp.h
     core/player.c
-    core/player.h)
+    core/player.h
+    hacks/misc/fly.c
+    hacks/misc/sprint.c
+    hacks/misc/sprint.h
+    hacks/misc/fly.h
+    hacks/misc/nofall.c
+    hacks/misc/nofall.h
+    hacks/misc/misc.c
+    hacks/misc/misc.h
+    hacks/misc/infjump.c
+    hacks/misc/infjump.h
+    hacks/aimbot/aimbot.c
+    hacks/aimbot/aimbot.h
+    utils/math.h
+    core/updater.c
+    core/updater.h)
 target_include_directories(cheat PRIVATE ${JNI_INCLUDE_DIRS})
 
 target_link_libraries(cheat PRIVATE OpenGL::GL)

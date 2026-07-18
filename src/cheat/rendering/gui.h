@@ -25,6 +25,11 @@ typedef struct {
 
   struct {
     bool enabled;
+
+    bool fly;
+    bool sprint;
+    bool nofall;
+    bool inf_jump;
   } misc_settings;
 
   struct {

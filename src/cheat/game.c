@@ -1,13 +1,11 @@
 #include "game.h"
-#include "core/minecraft.h"
 #include "core/localplayer.h"
 #include "jvm.h"
 #include "utils/logger.h"
 
 static game_t g_game = {0};
 
-static bool init_collections(void) {
-  JNIEnv *env = get_env();
+static bool init_collections(JNIEnv *env) {
   jclass list_class = (*env)->FindClass(env, "java/util/List");
   if (!list_class) {
     LOGGER_LOG(FATAL, "failed to get list class");
@@ -35,37 +33,86 @@ static bool init_collections(void) {
     return false;
   }
 
-  g_game.collections.map_class = map_class;
-  g_game.collections.map_clear = map_clear;
-  g_game.collections.list_class = list_class;
-  g_game.collections.list_size = list_size;
-  g_game.collections.list_get = list_get;
+  g_game.collections.map.class = map_class;
+  g_game.collections.map.clear = map_clear;
+  g_game.collections.list.class = list_class;
+  g_game.collections.list.size = list_size;
+  g_game.collections.list.get = list_get;
 
+  return true;
+}
+
+static bool init_entity_renderer(JNIEnv *env) {
+  jmethodID get_entity_renderer =
+      (*env)->GetMethodID(env, g_game.minecraft.class, "getEntityRenderDispatcher",
+                          "()Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;");
+  if (!get_entity_renderer) {
+    LOGGER_LOG(FATAL, "failed to get entity renderer getter");
+    return false;
+  }
+  jobject entity_renderer_instance =
+      (*env)->CallObjectMethod(env, g_game.minecraft.instance, get_entity_renderer);
+  if (!entity_renderer_instance) {
+    LOGGER_LOG(FATAL, "failed to get enity renderer");
+    return false;
+  }
+  jclass entity_renderer = (*env)->GetObjectClass(env, entity_renderer_instance);
+
+  jmethodID set_render_hitboxes = (*env)->GetMethodID(env, entity_renderer, "setRenderHitBoxes", "(Z)V");
+  if (!set_render_hitboxes) {
+    LOGGER_LOG(FATAL, "failed to get set_render_hitboxes");
+    return false;
+  }
+
+  g_game.entity_renderer.class = entity_renderer;
+  g_game.entity_renderer.instance = entity_renderer_instance;
+  g_game.entity_renderer.set_render_hitboxes = set_render_hitboxes;
+
+  return true;
+}
+
+static bool init_minecraft(JNIEnv *env) {
+
+  jclass minecraft = (*env)->FindClass(env, "net/minecraft/client/Minecraft");
+  if (minecraft == NULL) {
+    LOGGER_LOG(FATAL, "failed to get minecraft class");
+    return false;
+  }
+
+  jmethodID get_instance =
+      (*env)->GetStaticMethodID(env, minecraft, "getInstance", "()Lnet/minecraft/client/Minecraft;");
+  jobject minecraft_instance = (*env)->CallStaticObjectMethod(env, minecraft, get_instance);
+  if (minecraft_instance == NULL) {
+    LOGGER_LOG(FATAL, "failed to get minecraft instance");
+    return false;
+  }
+
+  g_game.minecraft.class = minecraft;
+  g_game.minecraft.instance = minecraft_instance;
   return true;
 }
 
 bool init_game(void) {
   JNIEnv *env = get_env();
-  jclass mclass = get_minecraft_class(env);
-  jobject minstance = get_minecraft_instance(env, mclass);
-  if (!minstance) {
-    LOGGER_LOG(FATAL, "falied to get minecraft");
-    return false;
-  }
-  jobject local_player = get_localplayer(env, mclass, minstance);
-  if (!local_player) {
-    LOGGER_LOG(FATAL, "falied to get local player");
+
+  if (!init_minecraft(env)) {
+    LOGGER_LOG(FATAL, "failed to init minecraft");
     return false;
   }
 
-  if (!init_collections()) {
+  LOGGER_LOG(LOG, "minecraft is initialized");
+  if (!init_collections(env)) {
     LOGGER_LOG(FATAL, "failed to init collections");
     return false;
   }
+  LOGGER_LOG(LOG, "collections are initialized");
 
-  g_game.local_player = local_player;
-  g_game.mclass = mclass;
-  g_game.minstance = minstance;
+  if (!init_entity_renderer(env)) {
+    LOGGER_LOG(FATAL, "failed to init entity renderer");
+    return false;
+  }
+  LOGGER_LOG(LOG, "entity renderer is initialized");
+
   return true;
 }
 

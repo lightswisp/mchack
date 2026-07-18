@@ -1,7 +1,7 @@
 #include "message.h"
-#include "../game.h"
 #include "../jvm.h"
 #include "../utils/logger.h"
+#include "localplayer.h"
 
 bool send_message(const char *msg) {
   bool status = false;
@@ -30,7 +30,8 @@ bool send_message(const char *msg) {
     goto end;
   }
 
-  jclass playerClass = (*env)->GetObjectClass(env, game->local_player);
+  jobject local_player = get_localplayer(env, game);
+  jclass playerClass = (*env)->GetObjectClass(env, local_player);
   if (!playerClass) {
     LOGGER_LOG(FATAL, "failed to get player class");
     goto end;
@@ -43,7 +44,7 @@ bool send_message(const char *msg) {
     LOGGER_LOG(FATAL, "failed to get display chat method");
     goto end;
   }
-  (*env)->CallVoidMethod(env, game->local_player, displayChatMethod, chatComponent, JNI_FALSE);
+  (*env)->CallVoidMethod(env, local_player, displayChatMethod, chatComponent, JNI_FALSE);
   status = true;
 
 end:

@@ -40,8 +40,11 @@ static void draw_misc_group(struct nk_context *ctx, menu_state_t *menu_state) {
   if (nk_widget(&space, ctx)) {
     nk_stroke_line(canvas, space.x, space.y + 4, space.x + space.w, space.y + 4, 1.0f, nk_rgb(49, 49, 49));
   }
-  nk_layout_row_dynamic(ctx, NK_DYNAMIC, 1);
-  nk_label(ctx, "text 2", NK_TEXT_LEFT);
+  nk_layout_row_dynamic(ctx, NK_DYNAMIC, 3);
+  menu_state->misc_settings.fly = nk_check_label(ctx, "fly", menu_state->misc_settings.fly);
+  menu_state->misc_settings.sprint = nk_check_label(ctx, "sprint", menu_state->misc_settings.sprint);
+  menu_state->misc_settings.nofall = nk_check_label(ctx, "nofall", menu_state->misc_settings.nofall);
+  menu_state->misc_settings.inf_jump = nk_check_label(ctx, "infjump", menu_state->misc_settings.inf_jump);
 }
 
 static void draw_scripts_group(struct nk_context *ctx, menu_state_t *menu_state) {

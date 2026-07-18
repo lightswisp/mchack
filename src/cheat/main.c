@@ -9,9 +9,11 @@
 #include "jvm.h"
 #include "rendering/draw.h"
 #include "utils/logger.h"
+#include "core/updater.h"
 
 /* hacks */
-#include "hacks/esp.h"
+#include "hacks/esp/esp.h"
+#include "hacks/misc/misc.h"
 
 #ifndef MCHACK_LOG_PATH
 #define MCHACK_LOG_PATH ""
@@ -38,7 +40,6 @@ __attribute__((constructor)) void __onload() {
 
 bool set_hooks(void) {
   LOGGER_LOG(LOG, "setting hooks..");
-  send_message("setting hooks..");
   return set_draw_hook();
 }
 
@@ -78,16 +79,27 @@ void *__main_thread([[maybe_unused]] void *a) {
   }
 
   LOGGER_LOG(LOG, "injected");
-  send_message("injected!");
+  // send_message("injected!");
 
   if (!set_hooks()) {
     LOGGER_LOG(FATAL, "failed to set hooks");
-    send_message("failed to set hooks");
+    // send_message("failed to set hooks");
     goto end;
   }
 
+  game_t *game = get_game();
+  JNIEnv *env = get_env();
+  struct timespec ts = {.tv_sec = 0, .tv_nsec = 10000000};
+
+  // it sets everything to false;
+  reset_updates(game);
+
   while (!should_close) {
-    draw_esp();
+    update(env, game);
+    esp(env, game);
+    misc(env, game);
+
+    nanosleep(&ts, NULL);
   }
 
 end:

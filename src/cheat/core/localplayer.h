@@ -1,4 +1,4 @@
 #pragma once
-#include <jni.h>
+#include "../game.h"
 
-jobject get_localplayer(JNIEnv *env, jclass mclass, jobject minstance);
+jobject get_localplayer(JNIEnv *env, game_t *game);
