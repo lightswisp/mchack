@@ -2,7 +2,7 @@
 #include "../jvm.h"
 #include "../game.h"
 
-jobject get_localplayer(JNIEnv *env, game_t *game) {
+jobject localplayer_get(JNIEnv *env, game_t *game) {
 
   jfieldID player_field =
       (*env)->GetFieldID(env, game->minecraft.class, "player", "Lnet/minecraft/client/player/LocalPlayer;");

@@ -1,4 +1,4 @@
 #pragma once
 #include <jni.h>
 
-bool send_message(const char *msg);
+bool message_send(const char *msg);

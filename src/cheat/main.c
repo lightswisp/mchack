@@ -8,12 +8,14 @@
 #include "hooks/hooks.h"
 #include "jvm.h"
 #include "rendering/draw.h"
+#include "rendering/gui.h"
 #include "utils/logger.h"
 #include "core/updater.h"
 
 /* hacks */
 #include "hacks/esp/esp.h"
 #include "hacks/misc/misc.h"
+#include "hacks/aimbot/aimbot.h"
 
 #ifndef MCHACK_LOG_PATH
 #define MCHACK_LOG_PATH ""
@@ -93,11 +95,11 @@ void *__main_thread([[maybe_unused]] void *a) {
 
   // it sets everything to false;
   reset_updates(game);
-
   while (!should_close) {
     update(env, game);
     esp(env, game);
     misc(env, game);
+    aimbot(env, game);
 
     nanosleep(&ts, NULL);
   }

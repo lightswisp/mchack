@@ -3,9 +3,26 @@
 
 typedef struct {
   bool in_game;
+  bool paused;
+
   struct {
     jclass class;
     jobject instance;
+    jmethodID pause_game;
+    jmethodID set_screen;
+
+    struct {
+      jclass class;
+      jfieldID buttons;
+      jfieldID title;
+    } screen;
+
+    struct {
+      jclass class;
+      jobject instance;
+      jmethodID grab_mouse;
+    } mouse_handler;
+
   } minecraft;
 
   struct {
@@ -16,12 +33,30 @@ typedef struct {
     jfieldID on_ground;
     jmethodID set_sprinting;
     jmethodID is_moving;
+    jmethodID display_client_message;
     struct {
       jclass class;
       jobject instance;
       jfieldID mayfly;
     } abilities;
   } localplayer;
+
+  struct {
+    bool updated;
+    jclass class;
+    jobject instance;
+    jint size;
+
+    jmethodID is_local_player;
+    jmethodID get_x;
+    jmethodID get_y;
+    jmethodID get_z;
+  } players;
+
+  struct {
+    jclass class;
+    jmethodID constructor;
+  } text_component;
 
   struct {
     struct {
@@ -33,6 +68,7 @@ typedef struct {
       jclass class;
       jmethodID size;
       jmethodID get;
+      jmethodID clear;
     } list;
   } collections;
 

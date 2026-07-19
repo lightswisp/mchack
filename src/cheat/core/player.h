@@ -8,6 +8,6 @@ typedef struct {
   jfieldID client_level_field;
 } player_t;
 
-jobject get_players(jint *size);
-jstring get_name(jobject player, jint index);
-bool get_position(jobject players, jint index, vec3_t *out);
+bool player_is_localplayer(jobject player);
+jstring player_get_name(jobject player);
+void player_get_position(jobject player, vec3_t *out);

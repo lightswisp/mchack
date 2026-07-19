@@ -1,12 +1,63 @@
 #include "gui.h"
 #include "draw.h"
+#include "../game.h"
+#include "../jvm.h"
+#include "../utils/logger.h"
+#include <complex.h>
 #include <limits.h>
+#include <unistd.h>
 
 static menu_state_t menu_state = {.active_tab = 0,
                                   .aimbot_settings.enabled = false,
                                   .esp_settings.enabled = false,
                                   .misc_settings.enabled = false,
                                   .scripts_settings.enabled = false};
+
+static void disable_minecraft_controls() {
+  JNIEnv *env = get_env();
+  game_t *game = get_game();
+  if (!game->in_game)
+    return;
+  if (game->paused)
+    return;
+  // pausing the game
+  (*env)->CallVoidMethod(env, game->minecraft.instance, game->minecraft.pause_game, true);
+  game->paused = true;
+  LOGGER_LOG(LOG, "paused");
+  // getting the screen
+  jfieldID screen_field =
+      (*env)->GetFieldID(env, game->minecraft.class, "screen", "Lnet/minecraft/client/gui/screens/Screen;");
+  if (!screen_field) {
+    LOGGER_LOG(FATAL, "failed to get screen field");
+    return;
+  }
+  jobject screen = (*env)->GetObjectField(env, game->minecraft.instance, screen_field);
+  jobject buttons = (*env)->GetObjectField(env, screen, game->minecraft.screen.buttons);
+
+  jstring str = (*env)->NewStringUTF(env, "");
+  jobject component =
+      (*env)->NewObject(env, game->text_component.class, game->text_component.constructor, str);
+
+  // removing all buttons
+  (*env)->CallVoidMethod(env, buttons, game->collections.list.clear);
+  // set empty title
+  (*env)->SetObjectField(env, screen, game->minecraft.screen.title, component);
+}
+
+static void enable_minecraft_controls() {
+  JNIEnv *env = get_env();
+  game_t *game = get_game();
+  if (!game->in_game)
+    return;
+  if (!game->paused)
+    return;
+  // resuming the game
+  (*env)->CallVoidMethod(env, game->minecraft.instance, game->minecraft.set_screen, NULL);
+  (*env)->CallVoidMethod(env, game->minecraft.mouse_handler.instance,
+                         game->minecraft.mouse_handler.grab_mouse);
+  LOGGER_LOG(LOG, "resumed");
+  game->paused = false;
+}
 
 static void draw_aimbot_group(struct nk_context *ctx, menu_state_t *menu_state) {
   nk_layout_row_dynamic(ctx, NK_DYNAMIC, 1);
@@ -166,6 +217,12 @@ void setup_resolution(rendering_context_t *rctx) {
 }
 
 void draw_gui(rendering_context_t *rctx) {
+
+  if (rctx->open) {
+    disable_minecraft_controls();
+  } else {
+    enable_minecraft_controls();
+  }
 
   if (nk_begin(rctx->ctx, "mchack",
                nk_rect(100, 100, menu_state.resolution.win_width, menu_state.resolution.win_height),
