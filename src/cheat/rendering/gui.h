@@ -1,10 +1,14 @@
 #pragma once
 #include "draw.h"
+#include "../utils/math.h"
 
 typedef struct {
   char text_buf[512];
   int text_len;
   enum { AIMBOT, ESP, MISC, SCRIPTS } active_tab;
+  enum { IDLE, ACTIVE, WAITING } state;
+
+  struct nk_vec2 pos;
 
   struct {
     float win_width;
@@ -17,6 +21,12 @@ typedef struct {
 
   struct {
     bool enabled;
+    char smoothness_label[32];
+    float smoothness;
+    char distance_label[32];
+    float distance;
+    char fov_label[32];
+    float fov;
   } aimbot_settings;
 
   struct {

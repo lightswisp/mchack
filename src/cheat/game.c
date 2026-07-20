@@ -142,6 +142,14 @@ static bool init_minecraft(JNIEnv *env) {
     return false;
   }
 
+  jmethodID start_attack = (*env)->GetMethodID(env, minecraft, "startAttack", "()V");
+  if (!start_attack) {
+    LOGGER_LOG(FATAL, "failed to get start attack method");
+    return false;
+  }
+
+  g_game.minecraft.start_attack = start_attack;
+
   g_game.minecraft.mouse_handler.class = mouse_handler_class;
   g_game.minecraft.mouse_handler.instance = mouse_handler;
   g_game.minecraft.mouse_handler.grab_mouse = grab_mouse;

@@ -8,7 +8,6 @@ find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(glfw3 3.3 REQUIRED)
 
-add_compile_options(-g)
 add_library(cheat SHARED main.c
     core/message.h
     core/message.c
@@ -46,6 +45,7 @@ add_library(cheat SHARED main.c
     core/updater.c
     core/updater.h)
 target_include_directories(cheat PRIVATE ${JNI_INCLUDE_DIRS})
+target_compile_options(cheat PRIVATE -g -O0 -fno-omit-frame-pointer)
 
 target_link_libraries(cheat PRIVATE OpenGL::GL)
 target_link_libraries(cheat PRIVATE OpenGL::GLU)

@@ -22,6 +22,12 @@ static void update_localplayer(JNIEnv *env, game_t *game, jobject local_player) 
   jmethodID is_moving = (*env)->GetMethodID(env, game->localplayer.class, "isMoving", "()Z");
   jmethodID display_client_message = (*env)->GetMethodID(env, game->localplayer.class, "displayClientMessage",
                                                          "(Lnet/minecraft/network/chat/Component;Z)V");
+  jmethodID get_x = (*env)->GetMethodID(env, game->localplayer.class, "getX", "()D");
+  jmethodID get_y = (*env)->GetMethodID(env, game->localplayer.class, "getY", "()D");
+  jmethodID get_z = (*env)->GetMethodID(env, game->localplayer.class, "getZ", "()D");
+
+  jfieldID x_rot = (*env)->GetFieldID(env, game->localplayer.class, "xRot", "F");
+  jfieldID y_rot = (*env)->GetFieldID(env, game->localplayer.class, "yRot", "F");
 
   game->localplayer.abilities.class = abilities_class;
   game->localplayer.abilities.instance = abilities;
@@ -31,6 +37,12 @@ static void update_localplayer(JNIEnv *env, game_t *game, jobject local_player) 
   game->localplayer.set_sprinting = set_sprinting;
   game->localplayer.is_moving = is_moving;
   game->localplayer.display_client_message = display_client_message;
+  game->localplayer.get_x = get_x;
+  game->localplayer.get_y = get_y;
+  game->localplayer.get_z = get_z;
+  game->localplayer.x_rot = x_rot;
+  game->localplayer.y_rot = y_rot;
+
   game->localplayer.updated = true;
   LOGGER_LOG(LOG, "local player is updated!");
 }
@@ -46,7 +58,7 @@ static void update_players(JNIEnv *env, game_t *game) {
   jclass client_level_class = (*env)->GetObjectClass(env, client_level);
   jfieldID players_field = (*env)->GetFieldID(env, client_level_class, "players", "Ljava/util/List;");
   jobject players = (*env)->GetObjectField(env, client_level, players_field);
-  jclass players_class = (*env)->GetObjectClass(env, players);
+  jclass players_class = (*env)->FindClass(env, "Lnet/minecraft/world/entity/player/Player;");
 
   jmethodID is_local_player = (*env)->GetMethodID(env, players_class, "isLocalPlayer", "()Z");
   jmethodID get_x = (*env)->GetMethodID(env, players_class, "getX", "()D");
@@ -60,9 +72,6 @@ static void update_players(JNIEnv *env, game_t *game) {
   game->players.get_y = get_y;
   game->players.get_z = get_z;
 
-  (*env)->DeleteLocalRef(env, client_level);
-  (*env)->DeleteLocalRef(env, client_level_class);
-
   LOGGER_LOG(LOG, "players are updated!");
   game->players.updated = true;
 }
@@ -71,7 +80,6 @@ void update_players_size(JNIEnv *env, game_t *game) {
   // it will constantly update player's size, because it is dynamic
   game->players.size = (*env)->CallIntMethod(env, game->players.instance, game->collections.list.size);
 }
-
 
 void reset_updates(game_t *game) {
   game->in_game = false;

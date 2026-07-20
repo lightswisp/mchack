@@ -55,7 +55,7 @@ void swap_buffers(GLFWwindow *win) {
     LOGGER_LOG(LOG, "setting ctx");
     rctx.win = win;
     glewInit();
-    glfwGetFramebufferSize(win, &rctx.width, &rctx.height);
+    glfwGetWindowSize(win, &rctx.width, &rctx.height);
     glViewport(0, 0, rctx.width, rctx.height);
 
     // saving the state
@@ -102,6 +102,7 @@ void swap_buffers(GLFWwindow *win) {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bound_element_array_buffer);
   glBindVertexArray(bound_vao);
 
+  glfwGetWindowSize(win, &rctx.width, &rctx.height);
   atomic_store(&rctx.executing, false);
   glfwSwapBuffers_o(win);
 }

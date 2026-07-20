@@ -2,4 +2,6 @@
 - fix rva calculation in injector
 - add stop/resume threads in cheat functionality. Because when we remove hooks, we crash 
 - add minecraft mappings to the cheat and json parser
-- implement cheat gui 
+- implement cheat gui  (OK)
+- remove game controls on cheat open (OK)
+- save cheat menu position, so that when we reopen it it opens in the same place (OK)

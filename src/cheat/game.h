@@ -10,6 +10,7 @@ typedef struct {
     jobject instance;
     jmethodID pause_game;
     jmethodID set_screen;
+    jmethodID start_attack;
 
     struct {
       jclass class;
@@ -31,9 +32,14 @@ typedef struct {
     jclass class;
     jobject instance;
     jfieldID on_ground;
+    jfieldID x_rot;
+    jfieldID y_rot;
     jmethodID set_sprinting;
     jmethodID is_moving;
     jmethodID display_client_message;
+    jmethodID get_x;
+    jmethodID get_y;
+    jmethodID get_z;
     struct {
       jclass class;
       jobject instance;

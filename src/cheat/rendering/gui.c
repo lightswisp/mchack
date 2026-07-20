@@ -5,9 +5,12 @@
 #include "../utils/logger.h"
 #include <complex.h>
 #include <limits.h>
+#include <threads.h>
 #include <unistd.h>
 
 static menu_state_t menu_state = {.active_tab = 0,
+                                  .state = IDLE,
+                                  .pos = {100, 100},
                                   .aimbot_settings.enabled = false,
                                   .esp_settings.enabled = false,
                                   .misc_settings.enabled = false,
@@ -22,8 +25,6 @@ static void disable_minecraft_controls() {
     return;
   // pausing the game
   (*env)->CallVoidMethod(env, game->minecraft.instance, game->minecraft.pause_game, true);
-  game->paused = true;
-  LOGGER_LOG(LOG, "paused");
   // getting the screen
   jfieldID screen_field =
       (*env)->GetFieldID(env, game->minecraft.class, "screen", "Lnet/minecraft/client/gui/screens/Screen;");
@@ -31,7 +32,15 @@ static void disable_minecraft_controls() {
     LOGGER_LOG(FATAL, "failed to get screen field");
     return;
   }
+
   jobject screen = (*env)->GetObjectField(env, game->minecraft.instance, screen_field);
+  if (!screen) {
+    menu_state.state = WAITING;
+    LOGGER_LOG(LOG, "waiting for screen...");
+    return;
+  }
+
+  LOGGER_LOG(LOG, "screen has been found");
   jobject buttons = (*env)->GetObjectField(env, screen, game->minecraft.screen.buttons);
 
   jstring str = (*env)->NewStringUTF(env, "");
@@ -42,6 +51,9 @@ static void disable_minecraft_controls() {
   (*env)->CallVoidMethod(env, buttons, game->collections.list.clear);
   // set empty title
   (*env)->SetObjectField(env, screen, game->minecraft.screen.title, component);
+  menu_state.state = ACTIVE;
+  game->paused = true;
+  LOGGER_LOG(LOG, "paused");
 }
 
 static void enable_minecraft_controls() {
@@ -57,6 +69,7 @@ static void enable_minecraft_controls() {
                          game->minecraft.mouse_handler.grab_mouse);
   LOGGER_LOG(LOG, "resumed");
   game->paused = false;
+  menu_state.state = IDLE;
 }
 
 static void draw_aimbot_group(struct nk_context *ctx, menu_state_t *menu_state) {
@@ -67,8 +80,19 @@ static void draw_aimbot_group(struct nk_context *ctx, menu_state_t *menu_state) 
   if (nk_widget(&space, ctx)) {
     nk_stroke_line(canvas, space.x, space.y + 4, space.x + space.w, space.y + 4, 1.0f, nk_rgb(49, 49, 49));
   }
-  nk_layout_row_dynamic(ctx, NK_DYNAMIC, 1);
-  nk_label(ctx, "text 2", NK_TEXT_LEFT);
+  nk_layout_row_dynamic(ctx, NK_DYNAMIC, 2);
+  snprintf(menu_state->aimbot_settings.smoothness_label, sizeof(menu_state->aimbot_settings.smoothness_label),
+           "smoothness: %f", menu_state->aimbot_settings.smoothness);
+  nk_label(ctx, menu_state->aimbot_settings.smoothness_label, NK_TEXT_LEFT);
+  nk_slider_float(ctx, 0.0, &menu_state->aimbot_settings.smoothness, 1.0, 0.1);
+  snprintf(menu_state->aimbot_settings.distance_label, sizeof(menu_state->aimbot_settings.distance_label),
+           "distance: %f", menu_state->aimbot_settings.distance);
+  nk_label(ctx, menu_state->aimbot_settings.distance_label, NK_TEXT_LEFT);
+  nk_slider_float(ctx, 0.0, &menu_state->aimbot_settings.distance, 10.0, 1.0);
+  snprintf(menu_state->aimbot_settings.fov_label, sizeof(menu_state->aimbot_settings.fov_label), "fov: %f",
+           menu_state->aimbot_settings.fov);
+  nk_label(ctx, menu_state->aimbot_settings.fov_label, NK_TEXT_LEFT);
+  nk_slider_float(ctx, 0.0, &menu_state->aimbot_settings.fov, 400.0, 10.0);
 }
 
 static void draw_esp_group(struct nk_context *ctx, menu_state_t *menu_state) {
@@ -134,7 +158,7 @@ static void draw_left_panel(struct nk_context *ctx, menu_state_t *menu_state) {
 }
 
 static void draw_right_panel(struct nk_context *ctx, menu_state_t *menu_state) {
-  if (nk_group_begin(ctx, "right", NK_WINDOW_BORDER | NK_WINDOW_NO_SCROLLBAR)) {
+  if (nk_group_begin(ctx, "right", NK_WINDOW_BORDER)) {
     switch (menu_state->active_tab) {
     case AIMBOT:
       draw_aimbot_group(ctx, menu_state);
@@ -192,16 +216,14 @@ void setup_menu_theme(struct nk_context *ctx) {
   ctx->style.checkbox.border_color = element_bg;
   ctx->style.checkbox.border = 0.5f;
 
-  ctx->style.slider.normal = nk_style_item_color(element_bg);
-  ctx->style.slider.hover = nk_style_item_color(element_bg);
-  ctx->style.slider.cursor_normal = nk_style_item_color(nk_rgba(80, 80, 80, 255));
-  ctx->style.slider.cursor_hover = nk_style_item_color(nk_rgba(100, 100, 100, 255));
-  ctx->style.slider.cursor_size = nk_vec2(4, 0);
+  ctx->style.slider.padding.x = 8.0f;
 }
 
 void setup_resolution(rendering_context_t *rctx) {
-  float win_width = rctx->width * 0.30f;
-  float win_height = rctx->height * 0.22f;
+  float win_width = 1036.0f; // rctx->width * 0.30f;
+  float win_height = 466.0f;
+
+  LOGGER_LOG(LOG, "width: %f | height: %f", win_width, win_height);
 
   float panel_height = win_height - rctx->ctx->style.window.padding.y * 2;
 
@@ -216,17 +238,12 @@ void setup_resolution(rendering_context_t *rctx) {
   menu_state.resolution.left_panel_widget_height = left_panel_widget_height;
 }
 
-void draw_gui(rendering_context_t *rctx) {
-
-  if (rctx->open) {
-    disable_minecraft_controls();
-  } else {
-    enable_minecraft_controls();
-  }
-
+static void draw_menu(rendering_context_t *rctx) {
   if (nk_begin(rctx->ctx, "mchack",
-               nk_rect(100, 100, menu_state.resolution.win_width, menu_state.resolution.win_height),
+               nk_rect(menu_state.pos.x, menu_state.pos.y, menu_state.resolution.win_width,
+                       menu_state.resolution.win_height),
                NK_WINDOW_MOVABLE | NK_WINDOW_NO_SCROLLBAR)) {
+    menu_state.pos = nk_window_get_position(rctx->ctx);
     float ratio[] = {0.35f, 0.65f};
     nk_layout_row(rctx->ctx, NK_DYNAMIC, menu_state.resolution.panel_height, 2, ratio);
     draw_left_panel(rctx->ctx, &menu_state);
@@ -234,6 +251,51 @@ void draw_gui(rendering_context_t *rctx) {
   }
   nk_window_show(rctx->ctx, "mchack", rctx->open);
   nk_end(rctx->ctx);
+}
+
+static void draw_fov_circle(rendering_context_t *rctx) {
+  if (!menu_state.aimbot_settings.enabled)
+    return;
+  if (menu_state.aimbot_settings.fov == 0.0f)
+    return;
+
+  struct nk_command_buffer *canvas = nk_window_get_canvas(rctx->ctx);
+  float diameter = menu_state.aimbot_settings.fov * 2;
+  float center_x = rctx->width / 2.0 - (menu_state.aimbot_settings.fov);
+  float center_y = rctx->height / 2.0 - (menu_state.aimbot_settings.fov);
+  struct nk_rect fov_rect = nk_rect(center_x, center_y, diameter, diameter);
+  nk_stroke_circle(canvas, fov_rect, 2.5f, nk_rgb(249, 39, 114));
+}
+
+static void draw_overlay(rendering_context_t *rctx) {
+  // it will be used to draw boxes, text, fov circle, etc
+  struct nk_color transparent = nk_rgba(0, 0, 0, 0);
+  nk_style_push_style_item(rctx->ctx, &rctx->ctx->style.window.fixed_background,
+                           nk_style_item_color(transparent));
+  nk_style_push_color(rctx->ctx, &rctx->ctx->style.window.background, transparent);
+  nk_begin(rctx->ctx, "overlay", nk_rect(0, 0, rctx->width, rctx->height),
+           NK_WINDOW_NO_SCROLLBAR | NK_WINDOW_NO_INPUT | NK_WINDOW_BACKGROUND);
+
+  draw_fov_circle(rctx);
+
+  nk_end(rctx->ctx);
+  nk_style_pop_color(rctx->ctx);
+  nk_style_pop_style_item(rctx->ctx);
+}
+
+void draw_gui(rendering_context_t *rctx) {
+
+  if (rctx->open) {
+    disable_minecraft_controls();
+    if (menu_state.state == WAITING) {
+      return;
+    }
+  } else {
+    enable_minecraft_controls();
+  }
+
+  draw_overlay(rctx);
+  draw_menu(rctx);
 }
 
 menu_state_t *get_menu_state(void) { return &menu_state; }

@@ -1,9 +1,8 @@
 #include "player.h"
-#include "../utils/logger.h"
 #include "../game.h"
 #include "../jvm.h"
 
-jstring player_get_name(jobject player) {}
+jstring player_get_name([[maybe_unused]] jobject player) { return NULL; }
 
 bool player_is_localplayer(jobject player) {
   JNIEnv *env = get_env();
@@ -15,9 +14,9 @@ bool player_is_localplayer(jobject player) {
 void player_get_position(jobject player, vec3_t *out) {
   JNIEnv *env = get_env();
   game_t *game = get_game();
-  double x = (*env)->CallDoubleMethod(env, player, game->players.get_x);
-  double y = (*env)->CallDoubleMethod(env, player, game->players.get_y);
-  double z = (*env)->CallDoubleMethod(env, player, game->players.get_z);
+  float x = (*env)->CallDoubleMethod(env, player, game->players.get_x);
+  float y = (*env)->CallDoubleMethod(env, player, game->players.get_y);
+  float z = (*env)->CallDoubleMethod(env, player, game->players.get_z);
   out->x = x;
   out->y = y;
   out->z = z;
