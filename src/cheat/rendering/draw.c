@@ -16,11 +16,17 @@ rendering_context_t rctx = {.ctx = NULL,
                             .initialized = false,
                             .open = false,
                             .orig_key_callback = NULL,
-                            .orig_char_callback = NULL};
+                            .orig_char_callback = NULL,
+                            .orig_cursor_callback = NULL,
+                            .orig_mouse_callback = NULL};
 
 void *glfwSwapBuffers_addr = NULL;
 typedef void (*glfwSwapBuffers_s)(GLFWwindow *);
 glfwSwapBuffers_s glfwSwapBuffers_o;
+
+void cursor_dummy([[maybe_unused]] GLFWwindow *win, [[maybe_unused]] double x, [[maybe_unused]] double y) {
+  return;
+}
 
 void handle_input(GLFWwindow *win) {
   static bool was_pressed = false;
@@ -31,13 +37,20 @@ void handle_input(GLFWwindow *win) {
     if (rctx.open) {
       GLFWkeyfun key_call = glfwSetKeyCallback(win, nk_glfw3_key_callback);
       GLFWcharfun char_call = glfwSetCharCallback(win, nk_glfw3_char_callback);
-      if (!rctx.orig_char_callback && !rctx.orig_key_callback) {
+      GLFWcursorposfun cursor_call = glfwSetCursorPosCallback(win, cursor_dummy);
+      GLFWmousebuttonfun mouse_call = glfwSetMouseButtonCallback(win, nk_glfw3_mouse_button_callback);
+      if (!rctx.orig_char_callback && !rctx.orig_key_callback && !rctx.orig_cursor_callback &&
+          !rctx.orig_mouse_callback) {
         rctx.orig_char_callback = char_call;
         rctx.orig_key_callback = key_call;
+        rctx.orig_cursor_callback = cursor_call;
+        rctx.orig_mouse_callback = mouse_call;
       }
     } else {
       glfwSetKeyCallback(win, rctx.orig_key_callback);
       glfwSetCharCallback(win, rctx.orig_char_callback);
+      glfwSetCursorPosCallback(win, rctx.orig_cursor_callback);
+      glfwSetMouseButtonCallback(win, rctx.orig_mouse_callback);
     }
   }
   was_pressed = is_pressed;
@@ -46,7 +59,8 @@ void handle_input(GLFWwindow *win) {
 void swap_buffers(GLFWwindow *win) {
   if (atomic_load(&rctx.shutting_down)) {
     LOGGER_LOG(LOG, "no more execution for us");
-    return glfwSwapBuffers_o(win);
+    glfwSwapBuffers_o(win);
+    return;
   }
   // for synchronization between the rendering thread and our thread
   atomic_store(&rctx.executing, true);

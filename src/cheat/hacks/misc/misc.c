@@ -3,6 +3,7 @@
 #include "nofall.h"
 #include "fly.h"
 #include "infjump.h"
+#include "speed.h"
 #include "misc.h"
 
 void misc(JNIEnv *env, game_t *game) {
@@ -16,4 +17,5 @@ void misc(JNIEnv *env, game_t *game) {
   nofall(env, game, menu_state->misc_settings.nofall);
   fly(env, game, menu_state->misc_settings.fly);
   inf_jump(env, game, menu_state->misc_settings.inf_jump);
+  speed(env, game, menu_state->misc_settings.speed);
 }

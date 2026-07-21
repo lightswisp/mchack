@@ -8,21 +8,14 @@ typedef struct {
   struct {
     jclass class;
     jobject instance;
-    jmethodID pause_game;
-    jmethodID set_screen;
     jmethodID start_attack;
 
     struct {
       jclass class;
-      jfieldID buttons;
-      jfieldID title;
-    } screen;
-
-    struct {
-      jclass class;
       jobject instance;
-      jmethodID grab_mouse;
-    } mouse_handler;
+      jfieldID fov;
+      jfloat fov_val;
+    } options;
 
   } minecraft;
 
@@ -34,16 +27,21 @@ typedef struct {
     jfieldID on_ground;
     jfieldID x_rot;
     jfieldID y_rot;
+    jfieldID delta_movement;
     jmethodID set_sprinting;
     jmethodID is_moving;
     jmethodID display_client_message;
     jmethodID get_x;
     jmethodID get_y;
     jmethodID get_z;
+    jmethodID set_delta_movement;
+    jmethodID get_delta_movement;
+
     struct {
       jclass class;
       jobject instance;
       jfieldID mayfly;
+      jfieldID walking_speed;
     } abilities;
   } localplayer;
 
@@ -76,6 +74,13 @@ typedef struct {
       jmethodID get;
       jmethodID clear;
     } list;
+
+    struct {
+      jclass class;
+      jfieldID x;
+      jfieldID y;
+      jfieldID z;
+    } vec3;
   } collections;
 
   struct {

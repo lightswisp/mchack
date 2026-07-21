@@ -1,8 +1,10 @@
 #pragma once
 #include "draw.h"
 #include "../utils/math.h"
+#include <GLFW/glfw3.h>
 
 typedef struct {
+  GLFWwindow *win;
   char text_buf[512];
   int text_len;
   enum { AIMBOT, ESP, MISC, SCRIPTS } active_tab;
@@ -21,6 +23,7 @@ typedef struct {
 
   struct {
     bool enabled;
+    bool auto_attack;
     char smoothness_label[32];
     float smoothness;
     char distance_label[32];
@@ -40,6 +43,8 @@ typedef struct {
     bool sprint;
     bool nofall;
     bool inf_jump;
+    char speed_label[32];
+    float speed;
   } misc_settings;
 
   struct {

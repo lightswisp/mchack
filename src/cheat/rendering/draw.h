@@ -28,6 +28,8 @@ typedef struct {
 
   GLFWkeyfun orig_key_callback;
   GLFWcharfun orig_char_callback;
+  GLFWcursorposfun orig_cursor_callback;
+  GLFWmousebuttonfun orig_mouse_callback;
   GLFWwindow *win;
 } rendering_context_t;
 

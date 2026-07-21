@@ -17,6 +17,7 @@ static void update_localplayer(JNIEnv *env, game_t *game, jobject local_player) 
 
   jclass abilities_class = (*env)->GetObjectClass(env, abilities);
   jfieldID mayfly = (*env)->GetFieldID(env, abilities_class, "mayfly", "Z");
+  jfieldID walking_speed = (*env)->GetFieldID(env, abilities_class, "walkingSpeed", "F");
   jfieldID on_ground = (*env)->GetFieldID(env, game->localplayer.class, "onGround", "Z");
   jmethodID set_sprinting = (*env)->GetMethodID(env, super, "setSprinting", "(Z)V");
   jmethodID is_moving = (*env)->GetMethodID(env, game->localplayer.class, "isMoving", "()Z");
@@ -28,10 +29,20 @@ static void update_localplayer(JNIEnv *env, game_t *game, jobject local_player) 
 
   jfieldID x_rot = (*env)->GetFieldID(env, game->localplayer.class, "xRot", "F");
   jfieldID y_rot = (*env)->GetFieldID(env, game->localplayer.class, "yRot", "F");
+  jfieldID delta_movement =
+      (*env)->GetFieldID(env, game->localplayer.class, "deltaMovement", "Lnet/minecraft/world/phys/Vec3;");
+  jmethodID set_delta_movement =
+      (*env)->GetMethodID(env, game->localplayer.class, "setDeltaMovement", "(DDD)V");
+  jmethodID get_delta_movement = (*env)->GetMethodID(env, game->localplayer.class, "getDeltaMovement",
+                                                     "()Lnet/minecraft/world/phys/Vec3;");
 
+  game->localplayer.delta_movement = delta_movement;
+  game->localplayer.set_delta_movement = set_delta_movement;
+  game->localplayer.get_delta_movement = get_delta_movement;
   game->localplayer.abilities.class = abilities_class;
   game->localplayer.abilities.instance = abilities;
   game->localplayer.abilities.mayfly = mayfly;
+  game->localplayer.abilities.walking_speed = walking_speed;
   game->localplayer.on_ground = on_ground;
   game->localplayer.super = super;
   game->localplayer.set_sprinting = set_sprinting;
@@ -45,6 +56,11 @@ static void update_localplayer(JNIEnv *env, game_t *game, jobject local_player) 
 
   game->localplayer.updated = true;
   LOGGER_LOG(LOG, "local player is updated!");
+}
+
+static void update_options(JNIEnv *env, game_t *game) {
+  jfloat fov = (*env)->GetDoubleField(env, game->minecraft.options.instance, game->minecraft.options.fov);
+  game->minecraft.options.fov_val = fov;
 }
 
 static void update_players(JNIEnv *env, game_t *game) {
@@ -100,4 +116,5 @@ void update(JNIEnv *env, game_t *game) {
   update_localplayer(env, game, local_player);
   update_players(env, game);
   update_players_size(env, game);
+  update_options(env, game);
 }

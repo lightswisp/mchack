@@ -1,6 +1,7 @@
 #include "localplayer.h"
 #include "../jvm.h"
 #include "../game.h"
+#include "../utils/logger.h"
 
 jobject localplayer_get(JNIEnv *env, game_t *game) {
 
@@ -16,27 +17,38 @@ jobject localplayer_get(JNIEnv *env, game_t *game) {
   return local_player;
 }
 
-void localplayer_get_position(jobject player, vec3_t *out) {
-  JNIEnv *env = get_env();
-  game_t *game = get_game();
-  float x = (*env)->CallDoubleMethod(env, player, game->localplayer.get_x);
-  float y = (*env)->CallDoubleMethod(env, player, game->localplayer.get_y);
-  float z = (*env)->CallDoubleMethod(env, player, game->localplayer.get_z);
+void localplayer_get_position(JNIEnv *env, game_t *game, vec3_t *out) {
+  float x = (*env)->CallDoubleMethod(env, game->localplayer.instance, game->localplayer.get_x);
+  float y = (*env)->CallDoubleMethod(env, game->localplayer.instance, game->localplayer.get_y);
+  float z = (*env)->CallDoubleMethod(env, game->localplayer.instance, game->localplayer.get_z);
   out->x = x;
   out->y = y;
   out->z = z;
 }
 
-void localplayer_get_viewangles(jobject player, vec2_t *out) {
-  JNIEnv *env = get_env();
-  game_t *game = get_game();
-  out->x = (*env)->GetFloatField(env, player, game->localplayer.x_rot);
-  out->y = (*env)->GetFloatField(env, player, game->localplayer.y_rot);
+void localplayer_get_viewangles(JNIEnv *env, game_t *game, vec2_t *out) {
+  out->x = (*env)->GetFloatField(env, game->localplayer.instance, game->localplayer.x_rot);
+  out->y = (*env)->GetFloatField(env, game->localplayer.instance, game->localplayer.y_rot);
 }
 
-void localplayer_set_viewangles(jobject player, vec2_t *angles) {
-  JNIEnv *env = get_env();
-  game_t *game = get_game();
-  (*env)->SetFloatField(env, player, game->localplayer.x_rot, angles->x);
-  (*env)->SetFloatField(env, player, game->localplayer.y_rot, angles->y);
+void localplayer_set_viewangles(JNIEnv *env, game_t *game, vec2_t *in) {
+  (*env)->SetFloatField(env, game->localplayer.instance, game->localplayer.x_rot, in->x);
+  (*env)->SetFloatField(env, game->localplayer.instance, game->localplayer.y_rot, in->y);
+}
+
+void localplayer_get_delta_movement(JNIEnv *env, game_t *game, vec3_t *out) {
+
+  jobject delta_movement =
+      (*env)->GetObjectField(env, game->localplayer.instance, game->localplayer.delta_movement);
+  float x = (*env)->GetDoubleField(env, delta_movement, game->collections.vec3.x);
+  float y = (*env)->GetDoubleField(env, delta_movement, game->collections.vec3.y);
+  float z = (*env)->GetDoubleField(env, delta_movement, game->collections.vec3.z);
+  out->x = x;
+  out->y = y;
+  out->z = z;
+}
+
+void localplayer_set_delta_movement(JNIEnv *env, game_t *game, vec3_t *in) {
+  (*env)->CallVoidMethod(env, game->localplayer.instance, game->localplayer.set_delta_movement, in->x, in->y,
+                         in->z);
 }

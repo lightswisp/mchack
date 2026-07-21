@@ -39,6 +39,20 @@ static bool init_collections(JNIEnv *env) {
     return false;
   }
 
+  jclass vec3_class = (*env)->FindClass(env, "net/minecraft/world/phys/Vec3");
+  if (!vec3_class) {
+    LOGGER_LOG(FATAL, "failed to get vec3 class");
+    return false;
+  }
+  jfieldID vec3_x = (*env)->GetFieldID(env, vec3_class, "x", "D");
+  jfieldID vec3_y = (*env)->GetFieldID(env, vec3_class, "y", "D");
+  jfieldID vec3_z = (*env)->GetFieldID(env, vec3_class, "z", "D");
+
+  g_game.collections.vec3.class = vec3_class;
+  g_game.collections.vec3.x = vec3_x;
+  g_game.collections.vec3.y = vec3_y;
+  g_game.collections.vec3.z = vec3_z;
+
   g_game.collections.map.class = map_class;
   g_game.collections.map.clear = map_clear;
   g_game.collections.list.class = list_class;
@@ -94,74 +108,38 @@ static bool init_minecraft(JNIEnv *env) {
     return false;
   }
 
-  jmethodID pause_game = (*env)->GetMethodID(env, minecraft, "pauseGame", "(Z)V");
-  if (!pause_game) {
-    LOGGER_LOG(FATAL, "failed to get pause game method");
-    return false;
-  }
-
-  jmethodID set_screen =
-      (*env)->GetMethodID(env, minecraft, "setScreen", "(Lnet/minecraft/client/gui/screens/Screen;)V");
-  if (!set_screen) {
-    LOGGER_LOG(FATAL, "failed to find set screen method");
-    return false;
-  }
-
-  jclass screen_class = (*env)->FindClass(env, "Lnet/minecraft/client/gui/screens/Screen;");
-  if (!screen_class) {
-    LOGGER_LOG(FATAL, "failed to find screen class");
-    return false;
-  }
-  jfieldID buttons = (*env)->GetFieldID(env, screen_class, "buttons", "Ljava/util/List;");
-  if (!buttons) {
-    LOGGER_LOG(FATAL, "failed to find buttons");
-    return false;
-  }
-
-  jfieldID title = (*env)->GetFieldID(env, screen_class, "title", "Lnet/minecraft/network/chat/Component;");
-  if (!title) {
-    LOGGER_LOG(FATAL, "failed to get title");
-    return false;
-  }
-
-  jfieldID mouse_handler_field =
-      (*env)->GetFieldID(env, minecraft, "mouseHandler", "Lnet/minecraft/client/MouseHandler;");
-  if (!mouse_handler_field) {
-    LOGGER_LOG(FATAL, "failed to get mouse handler field");
-    return false;
-  }
-  jobject mouse_handler = (*env)->GetObjectField(env, minecraft_instance, mouse_handler_field);
-  if (!mouse_handler) {
-    LOGGER_LOG(FATAL, "failed to get mouse handler");
-    return false;
-  }
-  jclass mouse_handler_class = (*env)->GetObjectClass(env, mouse_handler);
-  jmethodID grab_mouse = (*env)->GetMethodID(env, mouse_handler_class, "grabMouse", "()V");
-  if (!grab_mouse) {
-    LOGGER_LOG(FATAL, "failed to get grab mouse method");
-    return false;
-  }
-
   jmethodID start_attack = (*env)->GetMethodID(env, minecraft, "startAttack", "()V");
   if (!start_attack) {
     LOGGER_LOG(FATAL, "failed to get start attack method");
     return false;
   }
 
+  jfieldID options_field = (*env)->GetFieldID(env, minecraft, "options", "Lnet/minecraft/client/Options;");
+  if (!options_field) {
+    LOGGER_LOG(FATAL, "failed to get options field");
+    return false;
+  }
+
+  jobject options_instance = (*env)->GetObjectField(env, minecraft_instance, options_field);
+  if (!options_instance) {
+    LOGGER_LOG(FATAL, "failed to get intance of options");
+    return false;
+  }
+  jclass options_class = (*env)->GetObjectClass(env, options_instance);
+  jfieldID fov = (*env)->GetFieldID(env, options_class, "fov", "D");
+  if (!fov) {
+    LOGGER_LOG(FATAL, "failed to get fov field");
+    return false;
+  }
+
+  g_game.minecraft.options.class = options_class;
+  g_game.minecraft.options.instance = options_instance;
+  g_game.minecraft.options.fov = fov;
+
   g_game.minecraft.start_attack = start_attack;
-
-  g_game.minecraft.mouse_handler.class = mouse_handler_class;
-  g_game.minecraft.mouse_handler.instance = mouse_handler;
-  g_game.minecraft.mouse_handler.grab_mouse = grab_mouse;
-
-  g_game.minecraft.screen.class = screen_class;
-  g_game.minecraft.screen.buttons = buttons;
-  g_game.minecraft.screen.title = title;
-  g_game.minecraft.set_screen = set_screen;
 
   g_game.minecraft.class = minecraft;
   g_game.minecraft.instance = minecraft_instance;
-  g_game.minecraft.pause_game = pause_game;
 
   return true;
 }

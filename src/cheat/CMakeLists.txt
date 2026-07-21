@@ -43,7 +43,9 @@ add_library(cheat SHARED main.c
     hacks/aimbot/aimbot.h
     utils/math.h
     core/updater.c
-    core/updater.h)
+    core/updater.h
+    hacks/misc/speed.c
+    hacks/misc/speed.h)
 target_include_directories(cheat PRIVATE ${JNI_INCLUDE_DIRS})
 target_compile_options(cheat PRIVATE -g -O0 -fno-omit-frame-pointer)
 

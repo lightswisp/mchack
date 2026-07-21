@@ -16,83 +16,31 @@ static menu_state_t menu_state = {.active_tab = 0,
                                   .misc_settings.enabled = false,
                                   .scripts_settings.enabled = false};
 
-static void disable_minecraft_controls() {
-  JNIEnv *env = get_env();
-  game_t *game = get_game();
-  if (!game->in_game)
-    return;
-  if (game->paused)
-    return;
-  // pausing the game
-  (*env)->CallVoidMethod(env, game->minecraft.instance, game->minecraft.pause_game, true);
-  // getting the screen
-  jfieldID screen_field =
-      (*env)->GetFieldID(env, game->minecraft.class, "screen", "Lnet/minecraft/client/gui/screens/Screen;");
-  if (!screen_field) {
-    LOGGER_LOG(FATAL, "failed to get screen field");
-    return;
-  }
-
-  jobject screen = (*env)->GetObjectField(env, game->minecraft.instance, screen_field);
-  if (!screen) {
-    menu_state.state = WAITING;
-    LOGGER_LOG(LOG, "waiting for screen...");
-    return;
-  }
-
-  LOGGER_LOG(LOG, "screen has been found");
-  jobject buttons = (*env)->GetObjectField(env, screen, game->minecraft.screen.buttons);
-
-  jstring str = (*env)->NewStringUTF(env, "");
-  jobject component =
-      (*env)->NewObject(env, game->text_component.class, game->text_component.constructor, str);
-
-  // removing all buttons
-  (*env)->CallVoidMethod(env, buttons, game->collections.list.clear);
-  // set empty title
-  (*env)->SetObjectField(env, screen, game->minecraft.screen.title, component);
-  menu_state.state = ACTIVE;
-  game->paused = true;
-  LOGGER_LOG(LOG, "paused");
-}
-
-static void enable_minecraft_controls() {
-  JNIEnv *env = get_env();
-  game_t *game = get_game();
-  if (!game->in_game)
-    return;
-  if (!game->paused)
-    return;
-  // resuming the game
-  (*env)->CallVoidMethod(env, game->minecraft.instance, game->minecraft.set_screen, NULL);
-  (*env)->CallVoidMethod(env, game->minecraft.mouse_handler.instance,
-                         game->minecraft.mouse_handler.grab_mouse);
-  LOGGER_LOG(LOG, "resumed");
-  game->paused = false;
-  menu_state.state = IDLE;
-}
-
 static void draw_aimbot_group(struct nk_context *ctx, menu_state_t *menu_state) {
   nk_layout_row_dynamic(ctx, NK_DYNAMIC, 1);
   menu_state->aimbot_settings.enabled = nk_check_label(ctx, "aimbot", menu_state->aimbot_settings.enabled);
   struct nk_command_buffer *canvas = nk_window_get_canvas(ctx);
   struct nk_rect space;
   if (nk_widget(&space, ctx)) {
-    nk_stroke_line(canvas, space.x, space.y + 4, space.x + space.w, space.y + 4, 1.0f, nk_rgb(49, 49, 49));
+    nk_stroke_line(canvas, space.x, space.y + 4, space.x + space.w, space.y + 4, 2.0f, nk_rgb(49, 49, 49));
   }
+  nk_layout_row_dynamic(ctx, NK_DYNAMIC, 1);
+  menu_state->aimbot_settings.auto_attack =
+      nk_check_label(ctx, "auto attack", menu_state->aimbot_settings.auto_attack);
+
   nk_layout_row_dynamic(ctx, NK_DYNAMIC, 2);
   snprintf(menu_state->aimbot_settings.smoothness_label, sizeof(menu_state->aimbot_settings.smoothness_label),
-           "smoothness: %f", menu_state->aimbot_settings.smoothness);
+           "smoothness: %.2f", menu_state->aimbot_settings.smoothness);
   nk_label(ctx, menu_state->aimbot_settings.smoothness_label, NK_TEXT_LEFT);
   nk_slider_float(ctx, 0.0, &menu_state->aimbot_settings.smoothness, 1.0, 0.1);
   snprintf(menu_state->aimbot_settings.distance_label, sizeof(menu_state->aimbot_settings.distance_label),
-           "distance: %f", menu_state->aimbot_settings.distance);
+           "distance: %.2f", menu_state->aimbot_settings.distance);
   nk_label(ctx, menu_state->aimbot_settings.distance_label, NK_TEXT_LEFT);
   nk_slider_float(ctx, 0.0, &menu_state->aimbot_settings.distance, 10.0, 1.0);
-  snprintf(menu_state->aimbot_settings.fov_label, sizeof(menu_state->aimbot_settings.fov_label), "fov: %f",
+  snprintf(menu_state->aimbot_settings.fov_label, sizeof(menu_state->aimbot_settings.fov_label), "fov: %.2f",
            menu_state->aimbot_settings.fov);
   nk_label(ctx, menu_state->aimbot_settings.fov_label, NK_TEXT_LEFT);
-  nk_slider_float(ctx, 0.0, &menu_state->aimbot_settings.fov, 400.0, 10.0);
+  nk_slider_float(ctx, 0.0, &menu_state->aimbot_settings.fov, 360.0, 10.0);
 }
 
 static void draw_esp_group(struct nk_context *ctx, menu_state_t *menu_state) {
@@ -101,7 +49,7 @@ static void draw_esp_group(struct nk_context *ctx, menu_state_t *menu_state) {
   struct nk_command_buffer *canvas = nk_window_get_canvas(ctx);
   struct nk_rect space;
   if (nk_widget(&space, ctx)) {
-    nk_stroke_line(canvas, space.x, space.y + 4, space.x + space.w, space.y + 4, 1.0f, nk_rgb(49, 49, 49));
+    nk_stroke_line(canvas, space.x, space.y + 4, space.x + space.w, space.y + 4, 2.0f, nk_rgb(49, 49, 49));
   }
   nk_layout_row_dynamic(ctx, NK_DYNAMIC, 1);
   nk_label(ctx, "text 2", NK_TEXT_LEFT);
@@ -113,13 +61,17 @@ static void draw_misc_group(struct nk_context *ctx, menu_state_t *menu_state) {
   struct nk_command_buffer *canvas = nk_window_get_canvas(ctx);
   struct nk_rect space;
   if (nk_widget(&space, ctx)) {
-    nk_stroke_line(canvas, space.x, space.y + 4, space.x + space.w, space.y + 4, 1.0f, nk_rgb(49, 49, 49));
+    nk_stroke_line(canvas, space.x, space.y + 4, space.x + space.w, space.y + 4, 2.0f, nk_rgb(49, 49, 49));
   }
   nk_layout_row_dynamic(ctx, NK_DYNAMIC, 3);
   menu_state->misc_settings.fly = nk_check_label(ctx, "fly", menu_state->misc_settings.fly);
   menu_state->misc_settings.sprint = nk_check_label(ctx, "sprint", menu_state->misc_settings.sprint);
   menu_state->misc_settings.nofall = nk_check_label(ctx, "nofall", menu_state->misc_settings.nofall);
   menu_state->misc_settings.inf_jump = nk_check_label(ctx, "infjump", menu_state->misc_settings.inf_jump);
+  snprintf(menu_state->misc_settings.speed_label, sizeof(menu_state->misc_settings.speed_label),
+           "speed: %.2f", menu_state->misc_settings.speed);
+  nk_label(ctx, menu_state->misc_settings.speed_label, NK_TEXT_LEFT);
+  nk_slider_float(ctx, 1.0, &menu_state->misc_settings.speed, 2.0, 0.1);
 }
 
 static void draw_scripts_group(struct nk_context *ctx, menu_state_t *menu_state) {
@@ -128,7 +80,7 @@ static void draw_scripts_group(struct nk_context *ctx, menu_state_t *menu_state)
   struct nk_command_buffer *canvas = nk_window_get_canvas(ctx);
   struct nk_rect space;
   if (nk_widget(&space, ctx)) {
-    nk_stroke_line(canvas, space.x, space.y + 4, space.x + space.w, space.y + 4, 1.0f, nk_rgb(49, 49, 49));
+    nk_stroke_line(canvas, space.x, space.y + 4, space.x + space.w, space.y + 4, 2.0f, nk_rgb(49, 49, 49));
   }
   nk_layout_row_dynamic(ctx, NK_DYNAMIC, 1);
   nk_label(ctx, "text 2", NK_TEXT_LEFT);
@@ -158,7 +110,7 @@ static void draw_left_panel(struct nk_context *ctx, menu_state_t *menu_state) {
 }
 
 static void draw_right_panel(struct nk_context *ctx, menu_state_t *menu_state) {
-  if (nk_group_begin(ctx, "right", NK_WINDOW_BORDER)) {
+  if (nk_group_begin(ctx, "right", NK_WINDOW_BORDER | NK_WINDOW_SCROLL_AUTO_HIDE)) {
     switch (menu_state->active_tab) {
     case AIMBOT:
       draw_aimbot_group(ctx, menu_state);
@@ -195,7 +147,6 @@ void setup_menu_theme(struct nk_context *ctx) {
   ctx->style.window.border_color = border_color;
   ctx->style.window.group_padding = nk_vec2(16.0f, 16.0f);
   ctx->style.window.group_border = 2.0f;
-  ctx->style.window.min_row_height_padding = 0.0f;
 
   ctx->style.edit.normal = nk_style_item_color(nk_rgb(26, 26, 26));
   ctx->style.edit.active = nk_style_item_color(nk_rgb(23, 23, 23));
@@ -216,7 +167,9 @@ void setup_menu_theme(struct nk_context *ctx) {
   ctx->style.checkbox.border_color = element_bg;
   ctx->style.checkbox.border = 0.5f;
 
-  ctx->style.slider.padding.x = 8.0f;
+  ctx->style.slider.cursor_size = nk_vec2(30.0, 30.0);
+  ctx->style.slider.padding.x = 12.0f;
+  ctx->style.slider.bar_height = 30.0f;
 }
 
 void setup_resolution(rendering_context_t *rctx) {
@@ -259,10 +212,17 @@ static void draw_fov_circle(rendering_context_t *rctx) {
   if (menu_state.aimbot_settings.fov == 0.0f)
     return;
 
+  game_t *game = get_game();
   struct nk_command_buffer *canvas = nk_window_get_canvas(rctx->ctx);
-  float diameter = menu_state.aimbot_settings.fov * 2;
-  float center_x = rctx->width / 2.0 - (menu_state.aimbot_settings.fov);
-  float center_y = rctx->height / 2.0 - (menu_state.aimbot_settings.fov);
+
+  float aimbot_radius = deg2rad(menu_state.aimbot_settings.fov / 2.0f);
+  float game_fov = game->minecraft.options.fov_val;
+  float game_radius = deg2rad(game_fov / 2.0f);
+  float fov_radius_pixels = (rctx->width / 2.0f) * (tanf(aimbot_radius) / tanf(game_radius));
+
+  float diameter = fov_radius_pixels * 2;
+  float center_x = rctx->width / 2.0 - (fov_radius_pixels);
+  float center_y = rctx->height / 2.0 - (fov_radius_pixels);
   struct nk_rect fov_rect = nk_rect(center_x, center_y, diameter, diameter);
   nk_stroke_circle(canvas, fov_rect, 2.5f, nk_rgb(249, 39, 114));
 }
@@ -284,16 +244,7 @@ static void draw_overlay(rendering_context_t *rctx) {
 }
 
 void draw_gui(rendering_context_t *rctx) {
-
-  if (rctx->open) {
-    disable_minecraft_controls();
-    if (menu_state.state == WAITING) {
-      return;
-    }
-  } else {
-    enable_minecraft_controls();
-  }
-
+  menu_state.win = rctx->win;
   draw_overlay(rctx);
   draw_menu(rctx);
 }

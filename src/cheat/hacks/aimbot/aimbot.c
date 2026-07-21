@@ -4,11 +4,11 @@
 #include "../../core/localplayer.h"
 #include "aimbot.h"
 
-static jobject find_closest_player(JNIEnv *env, game_t *game, double *dist) {
+static jobject find_closest_player(JNIEnv *env, game_t *game, float *dist) {
   vec3_t player_position;
   vec3_t localplayer_position;
   jint players_num = game->players.size;
-  double min_distance = 0.0f;
+  float min_distance = 0.0f;
   jobject player = NULL;
 
   for (jint i = 0; i < players_num; i++) {
@@ -17,9 +17,9 @@ static jobject find_closest_player(JNIEnv *env, game_t *game, double *dist) {
     if (player_is_localplayer(temp_player))
       continue;
 
-    localplayer_get_position(game->localplayer.instance, &localplayer_position);
+    localplayer_get_position(env, game, &localplayer_position);
     player_get_position(temp_player, &player_position);
-    double temp_distance = calculate_distance_vec3(&localplayer_position, &player_position);
+    float temp_distance = calculate_distance_vec3(&localplayer_position, &player_position);
 
     if (player == NULL) {
       // init
@@ -37,6 +37,10 @@ static jobject find_closest_player(JNIEnv *env, game_t *game, double *dist) {
   return player;
 }
 
+static void attack(JNIEnv *env, game_t *game) {
+  (*env)->CallVoidMethod(env, game->minecraft.instance, game->minecraft.start_attack);
+}
+
 void aimbot(JNIEnv *env, game_t *game) {
 
   menu_state_t *menu_state = get_menu_state();
@@ -49,32 +53,39 @@ void aimbot(JNIEnv *env, game_t *game) {
 
   vec3_t player_position;
   vec3_t localplayer_position;
-  double distance = 0.0f;
+  float distance = 0.0f;
   jobject closest_player = find_closest_player(env, game, &distance);
 
   if (distance > menu_state->aimbot_settings.distance)
     return;
 
-  localplayer_get_position(game->localplayer.instance, &localplayer_position);
+  localplayer_get_position(env, game, &localplayer_position);
   player_get_position(closest_player, &player_position);
 
-  double delta_x = player_position.x - localplayer_position.x;
-  double delta_y = player_position.y - localplayer_position.y;
-  double delta_z = player_position.z - localplayer_position.z;
+  float delta_x = player_position.x - localplayer_position.x;
+  float delta_y = player_position.y - localplayer_position.y;
+  float delta_z = player_position.z - localplayer_position.z;
 
-  double pitch = rad2deg(-asin(delta_y / distance));
-  double yaw = rad2deg(-atan2(delta_x, delta_z));
+  float pitch = rad2deg(-asinf(delta_y / distance));
+  float yaw = rad2deg(-atan2f(delta_x, delta_z));
   vec2_t viewangles = {pitch, yaw};
   vec2_t local_viewangles;
-  localplayer_get_viewangles(game->localplayer.instance, &local_viewangles);
+  localplayer_get_viewangles(env, game, &local_viewangles);
 
-  double delta_pitch = viewangles.x - local_viewangles.x;
-  double delta_yaw = viewangles.y - local_viewangles.y;
-
+  float delta_pitch = viewangles.x - local_viewangles.x;
+  float delta_yaw = viewangles.y - local_viewangles.y;
   delta_yaw = normalize_angle(delta_yaw);
+
+  float hypot = sqrtf(delta_pitch * delta_pitch + delta_yaw * delta_yaw);
+  if (menu_state->aimbot_settings.fov != 0.0f && hypot > menu_state->aimbot_settings.fov)
+    return;
 
   local_viewangles.x += delta_pitch * menu_state->aimbot_settings.smoothness;
   local_viewangles.y += delta_yaw * menu_state->aimbot_settings.smoothness;
 
-  localplayer_set_viewangles(game->localplayer.instance, &local_viewangles);
+  localplayer_set_viewangles(env, game, &local_viewangles);
+
+  // autoattack
+  if (menu_state->aimbot_settings.auto_attack && distance <= 3.0f)
+    attack(env, game);
 }
