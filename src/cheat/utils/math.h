@@ -21,3 +21,11 @@ static inline float normalize_angle(float a) {
     a += 360.0;
   return a - 180.0;
 }
+
+static inline float clamp(float a, float min, float max) {
+  if (a < min)
+    return min;
+  if (a > max)
+    return max;
+  return a;
+}

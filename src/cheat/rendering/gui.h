@@ -3,12 +3,13 @@
 #include "../utils/math.h"
 #include <GLFW/glfw3.h>
 
+typedef enum { IDLE, ACTIVE } state_t;
+
 typedef struct {
   GLFWwindow *win;
   char text_buf[512];
   int text_len;
   enum { AIMBOT, ESP, MISC, SCRIPTS } active_tab;
-  enum { IDLE, ACTIVE, WAITING } state;
 
   struct nk_vec2 pos;
 
@@ -34,12 +35,30 @@ typedef struct {
 
   struct {
     bool enabled;
+
+    struct {
+      bool enabled;
+      state_t state;
+    } glow;
+
+    struct {
+      bool enabled;
+      int distance;
+      char distance_label[32];
+      int radius;
+      char radius_label[32];
+      float arrows2draw[255];
+      size_t size;
+    } arrows;
   } esp_settings;
 
   struct {
     bool enabled;
 
-    bool fly;
+    struct {
+      bool enabled;
+      state_t state;
+    } fly;
     bool sprint;
     bool nofall;
     bool inf_jump;

@@ -45,7 +45,11 @@ add_library(cheat SHARED main.c
     core/updater.c
     core/updater.h
     hacks/misc/speed.c
-    hacks/misc/speed.h)
+    hacks/misc/speed.h
+    hacks/esp/glow.c
+    hacks/esp/glow.h
+    hacks/esp/arrows.c
+    hacks/esp/arrows.h)
 target_include_directories(cheat PRIVATE ${JNI_INCLUDE_DIRS})
 target_compile_options(cheat PRIVATE -g -O0 -fno-omit-frame-pointer)
 

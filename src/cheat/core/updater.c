@@ -3,8 +3,6 @@
 #include "../utils/logger.h"
 
 static void update_localplayer(JNIEnv *env, game_t *game, jobject local_player) {
-  if (game->localplayer.updated)
-    return;
 
   game->localplayer.instance = local_player;
   game->localplayer.class = (*env)->GetObjectClass(env, local_player);
@@ -53,9 +51,6 @@ static void update_localplayer(JNIEnv *env, game_t *game, jobject local_player) 
   game->localplayer.get_z = get_z;
   game->localplayer.x_rot = x_rot;
   game->localplayer.y_rot = y_rot;
-
-  game->localplayer.updated = true;
-  LOGGER_LOG(LOG, "local player is updated!");
 }
 
 static void update_options(JNIEnv *env, game_t *game) {
@@ -64,8 +59,6 @@ static void update_options(JNIEnv *env, game_t *game) {
 }
 
 static void update_players(JNIEnv *env, game_t *game) {
-  if (game->players.updated)
-    return;
 
   jfieldID client_level_field = (*env)->GetFieldID(env, game->minecraft.class, "level",
                                                    "Lnet/minecraft/client/multiplayer/ClientLevel;");
@@ -80,6 +73,7 @@ static void update_players(JNIEnv *env, game_t *game) {
   jmethodID get_x = (*env)->GetMethodID(env, players_class, "getX", "()D");
   jmethodID get_y = (*env)->GetMethodID(env, players_class, "getY", "()D");
   jmethodID get_z = (*env)->GetMethodID(env, players_class, "getZ", "()D");
+  jfieldID glowing = (*env)->GetFieldID(env, players_class, "glowing", "Z");
 
   game->players.class = players_class;
   game->players.instance = players;
@@ -87,13 +81,7 @@ static void update_players(JNIEnv *env, game_t *game) {
   game->players.get_x = get_x;
   game->players.get_y = get_y;
   game->players.get_z = get_z;
-
-  LOGGER_LOG(LOG, "players are updated!");
-  game->players.updated = true;
-}
-
-void update_players_size(JNIEnv *env, game_t *game) {
-  // it will constantly update player's size, because it is dynamic
+  game->players.glowing = glowing;
   game->players.size = (*env)->CallIntMethod(env, game->players.instance, game->collections.list.size);
 }
 
@@ -115,6 +103,5 @@ void update(JNIEnv *env, game_t *game) {
 
   update_localplayer(env, game, local_player);
   update_players(env, game);
-  update_players_size(env, game);
   update_options(env, game);
 }

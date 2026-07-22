@@ -53,6 +53,7 @@ bool remove_hooks(void) {
 
 void handle_uninject([[maybe_unused]] int sig) {
   LOGGER_LOG(WARNING, "caught uninjection signal");
+  
   should_close = true;
   remove_hooks();
   LOGGER_LOG(LOG, "hooks are removed");

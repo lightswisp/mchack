@@ -1,12 +1,39 @@
 #include <threads.h>
 #define NK_IMPLEMENTATION
 #define NK_GLFW_GL3_IMPLEMENTATION
+#define NK_INCLUDE_DEFAULT_ALLOCATOR
 
 #include "../hooks/hooks.h"
 #include "../utils/logger.h"
 #include <dlfcn.h>
 #include "draw.h"
 #include "gui.h"
+
+struct {
+  GLenum last_active_texture;
+  GLuint last_sampler;
+  GLuint last_program;
+  GLuint last_texture;
+  GLuint last_array_buffer;
+  GLint last_element_array_buffer;
+  GLuint last_vertex_array_object;
+  GLint last_viewport[4];
+  GLint last_scissor_box[4];
+  GLenum last_blend_src_rgb;
+  GLenum last_blend_dst_rgb;
+  GLenum last_blend_src_alpha;
+  GLenum last_blend_dst_alpha;
+  GLenum last_blend_equation_rgb;
+  GLenum last_blend_equation_alpha;
+  GLboolean last_enable_blend;
+  GLboolean last_enable_cull_face;
+  GLboolean last_enable_depth_test;
+  GLboolean last_enable_stencil_test;
+  GLboolean last_enable_scissor_test;
+  GLboolean last_depth_mask;
+  GLboolean last_color_mask[4];
+  GLint last_polygon_mode[2];
+} opengl_state;
 
 rendering_context_t rctx = {.ctx = NULL,
                             .glfw = {0},
@@ -24,11 +51,19 @@ void *glfwSwapBuffers_addr = NULL;
 typedef void (*glfwSwapBuffers_s)(GLFWwindow *);
 glfwSwapBuffers_s glfwSwapBuffers_o;
 
-void cursor_dummy([[maybe_unused]] GLFWwindow *win, [[maybe_unused]] double x, [[maybe_unused]] double y) {
+static void cursor_dummy([[maybe_unused]] GLFWwindow *win, [[maybe_unused]] double x,
+                         [[maybe_unused]] double y) {
   return;
 }
 
-void handle_input(GLFWwindow *win) {
+static void restore_callbacks() {
+  glfwSetKeyCallback(rctx.win, rctx.orig_key_callback);
+  glfwSetCharCallback(rctx.win, rctx.orig_char_callback);
+  glfwSetCursorPosCallback(rctx.win, rctx.orig_cursor_callback);
+  glfwSetMouseButtonCallback(rctx.win, rctx.orig_mouse_callback);
+}
+
+static void handle_input(GLFWwindow *win) {
   static bool was_pressed = false;
   bool is_pressed = (glfwGetKey(win, GLFW_KEY_DELETE) == GLFW_PRESS);
   if (!is_pressed && was_pressed) {
@@ -47,13 +82,84 @@ void handle_input(GLFWwindow *win) {
         rctx.orig_mouse_callback = mouse_call;
       }
     } else {
-      glfwSetKeyCallback(win, rctx.orig_key_callback);
-      glfwSetCharCallback(win, rctx.orig_char_callback);
-      glfwSetCursorPosCallback(win, rctx.orig_cursor_callback);
-      glfwSetMouseButtonCallback(win, rctx.orig_mouse_callback);
+      restore_callbacks();
     }
   }
   was_pressed = is_pressed;
+}
+
+static void save_state() {
+  // taken from https://github.com/ocornut/imgui/blob/master/backends/imgui_impl_opengl3.cpp#L454
+  glGetIntegerv(GL_ACTIVE_TEXTURE, (GLint *)&opengl_state.last_active_texture);
+  glGetIntegerv(GL_CURRENT_PROGRAM, (GLint *)&opengl_state.last_program);
+  glGetIntegerv(GL_TEXTURE_BINDING_2D, (GLint *)&opengl_state.last_texture);
+  glGetIntegerv(GL_ARRAY_BUFFER_BINDING, (GLint *)&opengl_state.last_array_buffer);
+  glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &opengl_state.last_element_array_buffer);
+  glGetIntegerv(GL_VERTEX_ARRAY_BINDING, (GLint *)&opengl_state.last_vertex_array_object);
+  glGetIntegerv(GL_VIEWPORT, opengl_state.last_viewport);
+  glGetIntegerv(GL_SCISSOR_BOX, opengl_state.last_scissor_box);
+  glGetIntegerv(GL_BLEND_SRC_RGB, (GLint *)&opengl_state.last_blend_src_rgb);
+  glGetIntegerv(GL_BLEND_DST_RGB, (GLint *)&opengl_state.last_blend_dst_rgb);
+  glGetIntegerv(GL_BLEND_SRC_ALPHA, (GLint *)&opengl_state.last_blend_src_alpha);
+  glGetIntegerv(GL_BLEND_DST_ALPHA, (GLint *)&opengl_state.last_blend_dst_alpha);
+  glGetIntegerv(GL_BLEND_EQUATION_RGB, (GLint *)&opengl_state.last_blend_equation_rgb);
+  glGetIntegerv(GL_BLEND_EQUATION_ALPHA, (GLint *)&opengl_state.last_blend_equation_alpha);
+  opengl_state.last_enable_blend = glIsEnabled(GL_BLEND);
+  opengl_state.last_enable_cull_face = glIsEnabled(GL_CULL_FACE);
+  opengl_state.last_enable_depth_test = glIsEnabled(GL_DEPTH_TEST);
+  opengl_state.last_enable_stencil_test = glIsEnabled(GL_STENCIL_TEST);
+  opengl_state.last_enable_scissor_test = glIsEnabled(GL_SCISSOR_TEST);
+
+  glGetBooleanv(GL_DEPTH_WRITEMASK, &opengl_state.last_depth_mask);
+  glGetBooleanv(GL_COLOR_WRITEMASK, opengl_state.last_color_mask);
+  glGetIntegerv(GL_POLYGON_MODE, opengl_state.last_polygon_mode);
+}
+
+static void restore_state() {
+  // taken from https://github.com/ocornut/imgui/blob/master/backends/imgui_impl_opengl3.cpp#L454
+  if (opengl_state.last_program == 0 || glIsProgram(opengl_state.last_program))
+    glUseProgram(opengl_state.last_program);
+
+  glGetIntegerv(GL_SAMPLER_BINDING, (GLint *)&opengl_state.last_sampler);
+  glActiveTexture(opengl_state.last_active_texture);
+  glBindTexture(GL_TEXTURE_2D, opengl_state.last_texture);
+  glBindSampler(0, opengl_state.last_sampler);
+  glBindVertexArray(opengl_state.last_vertex_array_object);
+  glBindBuffer(GL_ARRAY_BUFFER, opengl_state.last_array_buffer);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, opengl_state.last_element_array_buffer);
+  glBlendEquationSeparate(opengl_state.last_blend_equation_rgb, opengl_state.last_blend_equation_alpha);
+  glBlendFuncSeparate(opengl_state.last_blend_src_rgb, opengl_state.last_blend_dst_rgb,
+                      opengl_state.last_blend_src_alpha, opengl_state.last_blend_dst_alpha);
+  if (opengl_state.last_enable_blend)
+    glEnable(GL_BLEND);
+  else
+    glDisable(GL_BLEND);
+  if (opengl_state.last_enable_cull_face)
+    glEnable(GL_CULL_FACE);
+  else
+    glDisable(GL_CULL_FACE);
+  if (opengl_state.last_enable_depth_test)
+    glEnable(GL_DEPTH_TEST);
+  else
+    glDisable(GL_DEPTH_TEST);
+  if (opengl_state.last_enable_stencil_test)
+    glEnable(GL_STENCIL_TEST);
+  else
+    glDisable(GL_STENCIL_TEST);
+  if (opengl_state.last_enable_scissor_test)
+    glEnable(GL_SCISSOR_TEST);
+  else
+    glDisable(GL_SCISSOR_TEST);
+
+  glDepthMask(opengl_state.last_depth_mask);
+  glColorMask(opengl_state.last_color_mask[0], opengl_state.last_color_mask[1],
+              opengl_state.last_color_mask[2], opengl_state.last_color_mask[3]);
+  glPolygonMode(GL_FRONT_AND_BACK, (GLenum)opengl_state.last_polygon_mode[0]);
+
+  glViewport(opengl_state.last_viewport[0], opengl_state.last_viewport[1],
+             (GLsizei)opengl_state.last_viewport[2], (GLsizei)opengl_state.last_viewport[3]);
+  glScissor(opengl_state.last_scissor_box[0], opengl_state.last_scissor_box[1],
+            (GLsizei)opengl_state.last_scissor_box[2], (GLsizei)opengl_state.last_scissor_box[3]);
 }
 
 void swap_buffers(GLFWwindow *win) {
@@ -70,14 +176,17 @@ void swap_buffers(GLFWwindow *win) {
     rctx.win = win;
     glewInit();
     glfwGetWindowSize(win, &rctx.width, &rctx.height);
-    glViewport(0, 0, rctx.width, rctx.height);
+    glfwGetFramebufferSize(win, &rctx.fb_width, &rctx.fb_height);
 
-    // saving the state
-    GLint bound_buffer, bound_element_array_buffer, bound_vao = 0;
-    glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &bound_buffer);
-    glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &bound_element_array_buffer);
-    glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &bound_vao);
-    glPushAttrib(GL_ALL_ATTRIB_BITS);
+    save_state();
+
+    glViewport(0, 0, rctx.fb_width, rctx.fb_height);
+
+    glActiveTexture(GL_TEXTURE0);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glDepthMask(GL_FALSE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
     rctx.ctx = nk_glfw3_init(&rctx.glfw, win, NK_GLFW3_DEFAULT);
 
@@ -90,19 +199,19 @@ void swap_buffers(GLFWwindow *win) {
     setup_resolution(&rctx);
     rctx.initialized = true;
 
-    // restoring the state
-    glPopAttrib();
-    glBindBuffer(GL_ARRAY_BUFFER, bound_buffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bound_element_array_buffer);
-    glBindVertexArray(bound_vao);
+    restore_state();
   }
 
-  // saving the state
-  GLint bound_buffer, bound_element_array_buffer, bound_vao = 0;
-  glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &bound_buffer);
-  glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &bound_element_array_buffer);
-  glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &bound_vao);
-  glPushAttrib(GL_ALL_ATTRIB_BITS);
+  save_state();
+
+  glfwGetWindowSize(win, &rctx.width, &rctx.height);
+  glfwGetFramebufferSize(win, &rctx.fb_width, &rctx.fb_height);
+  glViewport(0, 0, rctx.fb_width, rctx.fb_height);
+  glActiveTexture(GL_TEXTURE0);
+  glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+  glDepthMask(GL_FALSE);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
   // rendering
   handle_input(win);
@@ -110,13 +219,7 @@ void swap_buffers(GLFWwindow *win) {
   draw_gui(&rctx);
   nk_glfw3_render(&rctx.glfw, NK_ANTI_ALIASING_OFF, MAX_VERTEX_BUFFER, MAX_ELEMENT_BUFFER);
 
-  // restoring the state
-  glPopAttrib();
-  glBindBuffer(GL_ARRAY_BUFFER, bound_buffer);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bound_element_array_buffer);
-  glBindVertexArray(bound_vao);
-
-  glfwGetWindowSize(win, &rctx.width, &rctx.height);
+  restore_state();
   atomic_store(&rctx.executing, false);
   glfwSwapBuffers_o(win);
 }
@@ -138,9 +241,6 @@ bool remove_draw_hook(void) {
   while (atomic_load(&rctx.executing) == true) {
     thrd_yield();
   }
-  LOGGER_LOG(LOG, "restoring callbacks...");
-  glfwSetKeyCallback(rctx.win, rctx.orig_key_callback);
-  glfwSetCharCallback(rctx.win, rctx.orig_char_callback);
   LOGGER_LOG(LOG, "removing draw hook...");
   if (!hook_remove(glfwSwapBuffers_addr)) {
     LOGGER_LOG(FATAL, "failed to remove draw hook");
@@ -148,5 +248,7 @@ bool remove_draw_hook(void) {
   }
   LOGGER_LOG(LOG, "shutting down nuklear...");
   nk_glfw3_shutdown(&rctx.glfw);
+  LOGGER_LOG(LOG, "restoring callbacks...");
+  restore_callbacks();
   return true;
 }

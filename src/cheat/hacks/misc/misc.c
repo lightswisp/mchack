@@ -15,7 +15,7 @@ void misc(JNIEnv *env, game_t *game) {
 
   sprint(env, game, menu_state->misc_settings.sprint);
   nofall(env, game, menu_state->misc_settings.nofall);
-  fly(env, game, menu_state->misc_settings.fly);
+  fly(env, game, menu_state);
   inf_jump(env, game, menu_state->misc_settings.inf_jump);
   speed(env, game, menu_state->misc_settings.speed);
 }

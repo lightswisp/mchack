@@ -50,6 +50,7 @@ typedef struct {
     jclass class;
     jobject instance;
     jint size;
+    jfieldID glowing;
 
     jmethodID is_local_player;
     jmethodID get_x;

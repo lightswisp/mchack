@@ -20,6 +20,7 @@ typedef struct {
   struct nk_glfw glfw;
   struct nk_font_atlas *atlas;
   int width, height;
+  int fb_width, fb_height;
   bool initialized;
   bool open;
 

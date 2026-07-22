@@ -1,7 +1,6 @@
 #include "gui.h"
 #include "draw.h"
 #include "../game.h"
-#include "../jvm.h"
 #include "../utils/logger.h"
 #include <complex.h>
 #include <limits.h>
@@ -9,7 +8,6 @@
 #include <unistd.h>
 
 static menu_state_t menu_state = {.active_tab = 0,
-                                  .state = IDLE,
                                   .pos = {100, 100},
                                   .aimbot_settings.enabled = false,
                                   .esp_settings.enabled = false,
@@ -17,29 +15,30 @@ static menu_state_t menu_state = {.active_tab = 0,
                                   .scripts_settings.enabled = false};
 
 static void draw_aimbot_group(struct nk_context *ctx, menu_state_t *menu_state) {
-  nk_layout_row_dynamic(ctx, NK_DYNAMIC, 1);
+  nk_layout_row_dynamic(ctx, NK_DYNAMIC, 2);
   menu_state->aimbot_settings.enabled = nk_check_label(ctx, "aimbot", menu_state->aimbot_settings.enabled);
+  menu_state->aimbot_settings.auto_attack =
+      nk_check_text_align(ctx, "auto attack", 11, menu_state->aimbot_settings.auto_attack,
+                          NK_WIDGET_ALIGN_RIGHT, NK_TEXT_ALIGN_RIGHT);
   struct nk_command_buffer *canvas = nk_window_get_canvas(ctx);
   struct nk_rect space;
+  nk_layout_row_dynamic(ctx, 20, 1);
   if (nk_widget(&space, ctx)) {
     nk_stroke_line(canvas, space.x, space.y + 4, space.x + space.w, space.y + 4, 2.0f, nk_rgb(49, 49, 49));
   }
-  nk_layout_row_dynamic(ctx, NK_DYNAMIC, 1);
-  menu_state->aimbot_settings.auto_attack =
-      nk_check_label(ctx, "auto attack", menu_state->aimbot_settings.auto_attack);
 
   nk_layout_row_dynamic(ctx, NK_DYNAMIC, 2);
   snprintf(menu_state->aimbot_settings.smoothness_label, sizeof(menu_state->aimbot_settings.smoothness_label),
            "smoothness: %.2f", menu_state->aimbot_settings.smoothness);
-  nk_label(ctx, menu_state->aimbot_settings.smoothness_label, NK_TEXT_LEFT);
+  nk_label(ctx, menu_state->aimbot_settings.smoothness_label, NK_TEXT_RIGHT);
   nk_slider_float(ctx, 0.0, &menu_state->aimbot_settings.smoothness, 1.0, 0.1);
   snprintf(menu_state->aimbot_settings.distance_label, sizeof(menu_state->aimbot_settings.distance_label),
            "distance: %.2f", menu_state->aimbot_settings.distance);
-  nk_label(ctx, menu_state->aimbot_settings.distance_label, NK_TEXT_LEFT);
+  nk_label(ctx, menu_state->aimbot_settings.distance_label, NK_TEXT_RIGHT);
   nk_slider_float(ctx, 0.0, &menu_state->aimbot_settings.distance, 10.0, 1.0);
   snprintf(menu_state->aimbot_settings.fov_label, sizeof(menu_state->aimbot_settings.fov_label), "fov: %.2f",
            menu_state->aimbot_settings.fov);
-  nk_label(ctx, menu_state->aimbot_settings.fov_label, NK_TEXT_LEFT);
+  nk_label(ctx, menu_state->aimbot_settings.fov_label, NK_TEXT_RIGHT);
   nk_slider_float(ctx, 0.0, &menu_state->aimbot_settings.fov, 360.0, 10.0);
 }
 
@@ -48,11 +47,24 @@ static void draw_esp_group(struct nk_context *ctx, menu_state_t *menu_state) {
   menu_state->esp_settings.enabled = nk_check_label(ctx, "esp", menu_state->esp_settings.enabled);
   struct nk_command_buffer *canvas = nk_window_get_canvas(ctx);
   struct nk_rect space;
+  nk_layout_row_dynamic(ctx, 20, 1);
   if (nk_widget(&space, ctx)) {
     nk_stroke_line(canvas, space.x, space.y + 4, space.x + space.w, space.y + 4, 2.0f, nk_rgb(49, 49, 49));
   }
   nk_layout_row_dynamic(ctx, NK_DYNAMIC, 1);
-  nk_label(ctx, "text 2", NK_TEXT_LEFT);
+  menu_state->esp_settings.arrows.enabled =
+      nk_check_label(ctx, "arrows", menu_state->esp_settings.arrows.enabled);
+  snprintf(menu_state->esp_settings.arrows.distance_label,
+           sizeof(menu_state->esp_settings.arrows.distance_label), "arrows distance: %d",
+           menu_state->esp_settings.arrows.distance);
+  nk_label(ctx, menu_state->esp_settings.arrows.distance_label, NK_TEXT_LEFT);
+  nk_slider_int(ctx, 1, &menu_state->esp_settings.arrows.distance, 20, 1);
+  snprintf(menu_state->esp_settings.arrows.radius_label, sizeof(menu_state->esp_settings.arrows.radius_label),
+           "arrows radius: %d", menu_state->esp_settings.arrows.radius);
+  nk_label(ctx, menu_state->esp_settings.arrows.radius_label, NK_TEXT_LEFT);
+  nk_slider_int(ctx, 1, &menu_state->esp_settings.arrows.radius, 300, 1);
+
+  menu_state->esp_settings.glow.enabled = nk_check_label(ctx, "glow", menu_state->esp_settings.glow.enabled);
 }
 
 static void draw_misc_group(struct nk_context *ctx, menu_state_t *menu_state) {
@@ -60,18 +72,19 @@ static void draw_misc_group(struct nk_context *ctx, menu_state_t *menu_state) {
   menu_state->misc_settings.enabled = nk_check_label(ctx, "misc", menu_state->misc_settings.enabled);
   struct nk_command_buffer *canvas = nk_window_get_canvas(ctx);
   struct nk_rect space;
+  nk_layout_row_dynamic(ctx, 20, 1);
   if (nk_widget(&space, ctx)) {
     nk_stroke_line(canvas, space.x, space.y + 4, space.x + space.w, space.y + 4, 2.0f, nk_rgb(49, 49, 49));
   }
   nk_layout_row_dynamic(ctx, NK_DYNAMIC, 3);
-  menu_state->misc_settings.fly = nk_check_label(ctx, "fly", menu_state->misc_settings.fly);
+  menu_state->misc_settings.fly.enabled = nk_check_label(ctx, "fly", menu_state->misc_settings.fly.enabled);
   menu_state->misc_settings.sprint = nk_check_label(ctx, "sprint", menu_state->misc_settings.sprint);
   menu_state->misc_settings.nofall = nk_check_label(ctx, "nofall", menu_state->misc_settings.nofall);
   menu_state->misc_settings.inf_jump = nk_check_label(ctx, "infjump", menu_state->misc_settings.inf_jump);
   snprintf(menu_state->misc_settings.speed_label, sizeof(menu_state->misc_settings.speed_label),
            "speed: %.2f", menu_state->misc_settings.speed);
   nk_label(ctx, menu_state->misc_settings.speed_label, NK_TEXT_LEFT);
-  nk_slider_float(ctx, 1.0, &menu_state->misc_settings.speed, 2.0, 0.1);
+  nk_slider_float(ctx, 0.2, &menu_state->misc_settings.speed, 2.0, 0.1);
 }
 
 static void draw_scripts_group(struct nk_context *ctx, menu_state_t *menu_state) {
@@ -79,11 +92,12 @@ static void draw_scripts_group(struct nk_context *ctx, menu_state_t *menu_state)
   menu_state->scripts_settings.enabled = nk_check_label(ctx, "scripts", menu_state->scripts_settings.enabled);
   struct nk_command_buffer *canvas = nk_window_get_canvas(ctx);
   struct nk_rect space;
+  nk_layout_row_dynamic(ctx, 20, 1);
   if (nk_widget(&space, ctx)) {
     nk_stroke_line(canvas, space.x, space.y + 4, space.x + space.w, space.y + 4, 2.0f, nk_rgb(49, 49, 49));
   }
   nk_layout_row_dynamic(ctx, NK_DYNAMIC, 1);
-  nk_label(ctx, "text 2", NK_TEXT_LEFT);
+  nk_label(ctx, "in progress...", NK_TEXT_LEFT);
 }
 
 static void draw_left_panel(struct nk_context *ctx, menu_state_t *menu_state) {
@@ -168,7 +182,7 @@ void setup_menu_theme(struct nk_context *ctx) {
   ctx->style.checkbox.border = 0.5f;
 
   ctx->style.slider.cursor_size = nk_vec2(30.0, 30.0);
-  ctx->style.slider.padding.x = 12.0f;
+  ctx->style.slider.padding.x = 15.0f;
   ctx->style.slider.bar_height = 30.0f;
 }
 
@@ -227,20 +241,44 @@ static void draw_fov_circle(rendering_context_t *rctx) {
   nk_stroke_circle(canvas, fov_rect, 2.5f, nk_rgb(249, 39, 114));
 }
 
+static void draw_arrows(rendering_context_t *rctx) {
+  if (!menu_state.esp_settings.arrows.enabled)
+    return;
+  if (menu_state.esp_settings.arrows.size == 0)
+    return;
+}
+
+static void draw_dark_background(rendering_context_t *rctx) {
+  if (!rctx->open)
+    return;
+  struct nk_command_buffer *canvas = nk_window_get_canvas(rctx->ctx);
+  struct nk_rect rect = nk_rect(0, 0, rctx->width + rctx->ctx->style.window.padding.x,
+                                rctx->height + rctx->ctx->style.window.padding.y);
+  nk_fill_rect(canvas, rect, 0.0, nk_rgba(0, 0, 0, 150));
+}
+
 static void draw_overlay(rendering_context_t *rctx) {
   // it will be used to draw boxes, text, fov circle, etc
   struct nk_color transparent = nk_rgba(0, 0, 0, 0);
-  nk_style_push_style_item(rctx->ctx, &rctx->ctx->style.window.fixed_background,
-                           nk_style_item_color(transparent));
-  nk_style_push_color(rctx->ctx, &rctx->ctx->style.window.background, transparent);
-  nk_begin(rctx->ctx, "overlay", nk_rect(0, 0, rctx->width, rctx->height),
-           NK_WINDOW_NO_SCROLLBAR | NK_WINDOW_NO_INPUT | NK_WINDOW_BACKGROUND);
+  struct nk_style_item transparent_item = nk_style_item_color(transparent);
+  struct nk_style_item s1 = rctx->ctx->style.window.fixed_background;
+  struct nk_color s2 = rctx->ctx->style.window.background;
 
-  draw_fov_circle(rctx);
+  rctx->ctx->style.window.fixed_background = transparent_item;
+  rctx->ctx->style.window.background = transparent;
+  if (nk_begin(rctx->ctx, "overlay",
+               nk_rect(-17, 0, rctx->width + rctx->ctx->style.window.padding.x * 2,
+                       rctx->height + rctx->ctx->style.window.padding.y),
+               NK_WINDOW_NO_SCROLLBAR | NK_WINDOW_NO_INPUT | NK_WINDOW_BACKGROUND)) {
+
+    draw_dark_background(rctx);
+    draw_fov_circle(rctx);
+    draw_arrows(rctx);
+  }
 
   nk_end(rctx->ctx);
-  nk_style_pop_color(rctx->ctx);
-  nk_style_pop_style_item(rctx->ctx);
+  rctx->ctx->style.window.fixed_background = s1;
+  rctx->ctx->style.window.background = s2;
 }
 
 void draw_gui(rendering_context_t *rctx) {

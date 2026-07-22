@@ -1,18 +1,16 @@
 #include "fly.h"
-#include "../../core/localplayer.h"
-#include "../../jvm.h"
-#include "../../utils/logger.h"
 
-void fly(JNIEnv *env, game_t *game, bool on) {
-  bool current_setting =
-      (*env)->GetBooleanField(env, game->localplayer.abilities.instance, game->localplayer.abilities.mayfly);
-  if (on && !current_setting) {
-    // if it's on but minecraft has changed the flag
-    (*env)->SetBooleanField(env, game->localplayer.abilities.instance, game->localplayer.abilities.mayfly,
-                            true);
-  } else if (!on && current_setting) {
-    // if it's off, we need to turn the flag as well
-    (*env)->SetBooleanField(env, game->localplayer.abilities.instance, game->localplayer.abilities.mayfly,
-                            false);
+void fly(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
+  if (!menu_state->misc_settings.fly.enabled) {
+    if (menu_state->misc_settings.fly.state == ACTIVE) {
+      (*env)->SetBooleanField(env, game->localplayer.abilities.instance, game->localplayer.abilities.mayfly,
+                              false);
+      menu_state->misc_settings.fly.state = IDLE;
+    }
+    return;
   }
+
+  (*env)->SetBooleanField(env, game->localplayer.abilities.instance, game->localplayer.abilities.mayfly,
+                          true);
+  menu_state->misc_settings.fly.state = ACTIVE;
 }
