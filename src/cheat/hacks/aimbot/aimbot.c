@@ -1,8 +1,8 @@
 #include "../../rendering/gui.h"
 #include "../../core/player.h"
-#include "../../utils/logger.h"
 #include "../../core/localplayer.h"
 #include "aimbot.h"
+#include "trigger.h"
 
 static jobject find_closest_player(JNIEnv *env, game_t *game, float *dist) {
   vec3_t player_position;
@@ -14,11 +14,13 @@ static jobject find_closest_player(JNIEnv *env, game_t *game, float *dist) {
   for (jint i = 0; i < players_num; i++) {
     jobject temp_player =
         (*env)->CallObjectMethod(env, game->players.instance, game->collections.list.get, i);
-    if (player_is_localplayer(temp_player))
+    if (!temp_player)
+      continue;
+    if (player_is_localplayer(env, game, temp_player))
       continue;
 
     localplayer_get_position(env, game, &localplayer_position);
-    player_get_position(temp_player, &player_position);
+    player_get_position(env, game, temp_player, &player_position);
     float temp_distance = calculate_distance_vec3(&localplayer_position, &player_position);
 
     if (player == NULL) {
@@ -37,18 +39,8 @@ static jobject find_closest_player(JNIEnv *env, game_t *game, float *dist) {
   return player;
 }
 
-static void attack(JNIEnv *env, game_t *game) {
-  (*env)->CallVoidMethod(env, game->minecraft.instance, game->minecraft.start_attack);
-}
-
-void aimbot(JNIEnv *env, game_t *game) {
-
-  menu_state_t *menu_state = get_menu_state();
+static void aim(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
   if (!menu_state->aimbot_settings.enabled)
-    return;
-  if (!game->in_game)
-    return;
-  if (game->players.size < 2)
     return;
 
   vec3_t player_position;
@@ -60,7 +52,7 @@ void aimbot(JNIEnv *env, game_t *game) {
     return;
 
   localplayer_get_position(env, game, &localplayer_position);
-  player_get_position(closest_player, &player_position);
+  player_get_position(env, game, closest_player, &player_position);
 
   float delta_x = player_position.x - localplayer_position.x;
   float delta_y = player_position.y - localplayer_position.y;
@@ -86,6 +78,17 @@ void aimbot(JNIEnv *env, game_t *game) {
   localplayer_set_viewangles(env, game, &local_viewangles);
 
   // autoattack
-  if (menu_state->aimbot_settings.auto_attack && distance <= 3.0f)
+  if (menu_state->aimbot_settings.auto_attack && distance <= MAX_ATTACK_DISTANCE)
     attack(env, game);
+}
+
+void aimbot(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
+
+  if (!game->in_game)
+    return;
+  if (game->players.size < 2)
+    return;
+
+  aim(env, game, menu_state);
+  trigger(env, game, menu_state);
 }

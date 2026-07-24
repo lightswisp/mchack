@@ -53,9 +53,16 @@ static void update_localplayer(JNIEnv *env, game_t *game, jobject local_player) 
   game->localplayer.y_rot = y_rot;
 }
 
-static void update_options(JNIEnv *env, game_t *game) {
+static void update_minecraft(JNIEnv *env, game_t *game) {
   jfloat fov = (*env)->GetDoubleField(env, game->minecraft.options.instance, game->minecraft.options.fov);
+  jfieldID crosshair_field = (*env)->GetFieldID(env, game->minecraft.class, "crosshairPickEntity",
+                                                "Lnet/minecraft/world/entity/Entity;");
+  jobject crosshair_pick_entity = (*env)->GetObjectField(env, game->minecraft.instance, crosshair_field);
+  jfieldID gamma = (*env)->GetFieldID(env, game->minecraft.options.class, "gamma", "D");
+
   game->minecraft.options.fov_val = fov;
+  game->minecraft.crosshair_pick_entity = crosshair_pick_entity;
+  game->minecraft.options.gamma = gamma;
 }
 
 static void update_players(JNIEnv *env, game_t *game) {
@@ -63,6 +70,9 @@ static void update_players(JNIEnv *env, game_t *game) {
   jfieldID client_level_field = (*env)->GetFieldID(env, game->minecraft.class, "level",
                                                    "Lnet/minecraft/client/multiplayer/ClientLevel;");
   jobject client_level = (*env)->GetObjectField(env, game->minecraft.instance, client_level_field);
+
+  if (!client_level)
+    return;
 
   jclass client_level_class = (*env)->GetObjectClass(env, client_level);
   jfieldID players_field = (*env)->GetFieldID(env, client_level_class, "players", "Ljava/util/List;");
@@ -85,17 +95,16 @@ static void update_players(JNIEnv *env, game_t *game) {
   game->players.size = (*env)->CallIntMethod(env, game->players.instance, game->collections.list.size);
 }
 
-void reset_updates(game_t *game) {
+void reset_updates(game_t *game, menu_state_t *menu_state) {
   game->in_game = false;
-  game->localplayer.updated = false;
-  game->players.updated = false;
+  menu_state->esp_settings.arrows.size = 0;
 }
 
-void update(JNIEnv *env, game_t *game) {
+void update(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
   jobject local_player = localplayer_get(env, game);
   if (!local_player) {
     // revert updates for all (local player, players, entities, world, etc)
-    reset_updates(game);
+    reset_updates(game, menu_state);
     return;
   }
   // we are in game, so we are safe to update structs
@@ -103,5 +112,5 @@ void update(JNIEnv *env, game_t *game) {
 
   update_localplayer(env, game, local_player);
   update_players(env, game);
-  update_options(env, game);
+  update_minecraft(env, game);
 }

@@ -49,7 +49,11 @@ add_library(cheat SHARED main.c
     hacks/esp/glow.c
     hacks/esp/glow.h
     hacks/esp/arrows.c
-    hacks/esp/arrows.h)
+    hacks/esp/arrows.h
+    hacks/aimbot/trigger.c
+    hacks/aimbot/trigger.h
+    hacks/misc/fullbright.c
+    hacks/misc/fullbright.h)
 target_include_directories(cheat PRIVATE ${JNI_INCLUDE_DIRS})
 target_compile_options(cheat PRIVATE -g -O0 -fno-omit-frame-pointer)
 

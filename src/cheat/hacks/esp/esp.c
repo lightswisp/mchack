@@ -5,8 +5,7 @@
 #include "glow.h"
 #include "arrows.h"
 
-void esp(JNIEnv *env, game_t *game) {
-  menu_state_t *menu_state = get_menu_state();
+void esp(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
   if (!menu_state->esp_settings.enabled)
     return;
   if (!game->in_game)

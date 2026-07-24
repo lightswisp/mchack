@@ -40,6 +40,10 @@ static void draw_aimbot_group(struct nk_context *ctx, menu_state_t *menu_state) 
            menu_state->aimbot_settings.fov);
   nk_label(ctx, menu_state->aimbot_settings.fov_label, NK_TEXT_RIGHT);
   nk_slider_float(ctx, 0.0, &menu_state->aimbot_settings.fov, 360.0, 10.0);
+
+  nk_layout_row_dynamic(ctx, NK_DYNAMIC, 1);
+  menu_state->aimbot_settings.trigger =
+      nk_check_label(ctx, "trigger bot", menu_state->aimbot_settings.trigger);
 }
 
 static void draw_esp_group(struct nk_context *ctx, menu_state_t *menu_state) {
@@ -76,11 +80,17 @@ static void draw_misc_group(struct nk_context *ctx, menu_state_t *menu_state) {
   if (nk_widget(&space, ctx)) {
     nk_stroke_line(canvas, space.x, space.y + 4, space.x + space.w, space.y + 4, 2.0f, nk_rgb(49, 49, 49));
   }
-  nk_layout_row_dynamic(ctx, NK_DYNAMIC, 3);
+  nk_layout_row_dynamic(ctx, NK_DYNAMIC, 2);
   menu_state->misc_settings.fly.enabled = nk_check_label(ctx, "fly", menu_state->misc_settings.fly.enabled);
   menu_state->misc_settings.sprint = nk_check_label(ctx, "sprint", menu_state->misc_settings.sprint);
-  menu_state->misc_settings.nofall = nk_check_label(ctx, "nofall", menu_state->misc_settings.nofall);
-  menu_state->misc_settings.inf_jump = nk_check_label(ctx, "infjump", menu_state->misc_settings.inf_jump);
+  menu_state->misc_settings.nofall = nk_check_label(ctx, "no fall", menu_state->misc_settings.nofall);
+  menu_state->misc_settings.inf_jump =
+      nk_check_label(ctx, "infinite jump", menu_state->misc_settings.inf_jump);
+  menu_state->misc_settings.fullbright.enabled =
+      nk_check_label(ctx, "full bright", menu_state->misc_settings.fullbright.enabled);
+  menu_state->misc_settings.fast_place =
+      nk_check_label(ctx, "fast place", menu_state->misc_settings.fast_place);
+  nk_layout_row_dynamic(ctx, NK_DYNAMIC, 2);
   snprintf(menu_state->misc_settings.speed_label, sizeof(menu_state->misc_settings.speed_label),
            "speed: %.2f", menu_state->misc_settings.speed);
   nk_label(ctx, menu_state->misc_settings.speed_label, NK_TEXT_LEFT);
@@ -246,6 +256,43 @@ static void draw_arrows(rendering_context_t *rctx) {
     return;
   if (menu_state.esp_settings.arrows.size == 0)
     return;
+
+  struct nk_command_buffer *canvas = nk_window_get_canvas(rctx->ctx);
+  struct nk_color arrow_color = nk_rgb(249, 37, 114);
+  float arrow_size = 20.0f;
+
+  float center_x = rctx->width / 2.0;
+  float center_y = rctx->height / 2.0;
+
+  for (size_t i = 0; i < menu_state.esp_settings.arrows.size; i++) {
+    float x = center_x;
+    float y = center_y;
+    float angle = menu_state.esp_settings.arrows.arrows2draw[i];
+    float angle90 = angle - 1.5707963267948966;
+    vec2_t t1[3] = {{x, y}, {x, y + arrow_size}, {x - arrow_size, y + arrow_size * 2}};
+    vec2_t t2[3] = {{x, y}, {x, y + arrow_size}, {x + arrow_size, y + arrow_size * 2}};
+
+    // first rotate
+    transform_rotate(&t1[0], rctx->width, rctx->height, angle90);
+    transform_rotate(&t1[1], rctx->width, rctx->height, angle90);
+    transform_rotate(&t1[2], rctx->width, rctx->height, angle90);
+    transform_rotate(&t2[0], rctx->width, rctx->height, angle90);
+    transform_rotate(&t2[1], rctx->width, rctx->height, angle90);
+    transform_rotate(&t2[2], rctx->width, rctx->height, angle90);
+
+    // then move
+    vec2_t add_factor = {cosf(angle) * menu_state.esp_settings.arrows.radius,
+                         -sinf(angle) * menu_state.esp_settings.arrows.radius};
+    vec2add(&t1[0], &add_factor);
+    vec2add(&t1[1], &add_factor);
+    vec2add(&t1[2], &add_factor);
+    vec2add(&t2[0], &add_factor);
+    vec2add(&t2[1], &add_factor);
+    vec2add(&t2[2], &add_factor);
+
+    nk_fill_triangle(canvas, t1[0].x, t1[0].y, t1[1].x, t1[1].y, t1[2].x, t1[2].y, arrow_color);
+    nk_fill_triangle(canvas, t2[0].x, t2[0].y, t2[1].x, t2[1].y, t2[2].x, t2[2].y, arrow_color);
+  }
 }
 
 static void draw_dark_background(rendering_context_t *rctx) {

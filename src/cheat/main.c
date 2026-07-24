@@ -53,7 +53,7 @@ bool remove_hooks(void) {
 
 void handle_uninject([[maybe_unused]] int sig) {
   LOGGER_LOG(WARNING, "caught uninjection signal");
-  
+
   should_close = true;
   remove_hooks();
   LOGGER_LOG(LOG, "hooks are removed");
@@ -92,15 +92,15 @@ void *__main_thread([[maybe_unused]] void *a) {
 
   game_t *game = get_game();
   JNIEnv *env = get_env();
+  menu_state_t *menu_state = get_menu_state();
   struct timespec ts = {.tv_sec = 0, .tv_nsec = 10000000};
 
-  // it sets everything to false;
-  reset_updates(game);
+  reset_updates(game, menu_state);
   while (!should_close) {
-    update(env, game);
-    esp(env, game);
-    misc(env, game);
-    aimbot(env, game);
+    update(env, game, menu_state);
+    esp(env, game, menu_state);
+    misc(env, game, menu_state);
+    aimbot(env, game, menu_state);
 
     nanosleep(&ts, NULL);
   }

@@ -9,12 +9,14 @@ typedef struct {
     jclass class;
     jobject instance;
     jmethodID start_attack;
+    jobject crosshair_pick_entity;
 
     struct {
       jclass class;
       jobject instance;
       jfieldID fov;
       jfloat fov_val;
+      jfieldID gamma;
     } options;
 
   } minecraft;

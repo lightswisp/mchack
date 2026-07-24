@@ -3,6 +3,7 @@
 void nofall(JNIEnv *env, game_t *game, bool on) {
   if (!on)
     return;
+
   //  JNIEnv *env = get_env();
   //
   //  jobject local_player = get_localplayer();

@@ -1,2 +1,3 @@
 #include "../../game.h"
-void misc(JNIEnv *env, game_t *game);
+#include "../../rendering/gui.h"
+void misc(JNIEnv *env, game_t *game, menu_state_t *menu_state);

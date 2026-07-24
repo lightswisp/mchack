@@ -31,6 +31,8 @@ typedef struct {
     float distance;
     char fov_label[32];
     float fov;
+
+    bool trigger;
   } aimbot_settings;
 
   struct {
@@ -64,6 +66,11 @@ typedef struct {
     bool inf_jump;
     char speed_label[32];
     float speed;
+    struct {
+      bool enabled;
+      state_t state;
+    } fullbright;
+    bool fast_place;
   } misc_settings;
 
   struct {
