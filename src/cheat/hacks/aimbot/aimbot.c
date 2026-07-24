@@ -1,6 +1,7 @@
 #include "../../rendering/gui.h"
 #include "../../core/player.h"
 #include "../../core/localplayer.h"
+#include "../../utils/logger.h"
 #include "aimbot.h"
 #include "trigger.h"
 
@@ -79,7 +80,7 @@ static void aim(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
 
   // autoattack
   if (menu_state->aimbot_settings.auto_attack && distance <= MAX_ATTACK_DISTANCE)
-    attack(env, game);
+    attack(env, game, menu_state);
 }
 
 void aimbot(JNIEnv *env, game_t *game, menu_state_t *menu_state) {

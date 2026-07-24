@@ -38,6 +38,7 @@ typedef struct {
     jmethodID get_z;
     jmethodID set_delta_movement;
     jmethodID get_delta_movement;
+    jmethodID get_attack_strength_scale;
 
     struct {
       jclass class;

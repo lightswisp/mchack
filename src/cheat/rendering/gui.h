@@ -31,6 +31,8 @@ typedef struct {
     float distance;
     char fov_label[32];
     float fov;
+    char attack_threshold_label[32];
+    float attack_threshold;
 
     bool trigger;
   } aimbot_settings;

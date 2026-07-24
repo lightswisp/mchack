@@ -31,7 +31,7 @@ static void draw_aimbot_group(struct nk_context *ctx, menu_state_t *menu_state) 
   snprintf(menu_state->aimbot_settings.smoothness_label, sizeof(menu_state->aimbot_settings.smoothness_label),
            "smoothness: %.2f", menu_state->aimbot_settings.smoothness);
   nk_label(ctx, menu_state->aimbot_settings.smoothness_label, NK_TEXT_RIGHT);
-  nk_slider_float(ctx, 0.0, &menu_state->aimbot_settings.smoothness, 1.0, 0.1);
+  nk_slider_float(ctx, 0.0, &menu_state->aimbot_settings.smoothness, 1.0, 0.05);
   snprintf(menu_state->aimbot_settings.distance_label, sizeof(menu_state->aimbot_settings.distance_label),
            "distance: %.2f", menu_state->aimbot_settings.distance);
   nk_label(ctx, menu_state->aimbot_settings.distance_label, NK_TEXT_RIGHT);
@@ -40,6 +40,12 @@ static void draw_aimbot_group(struct nk_context *ctx, menu_state_t *menu_state) 
            menu_state->aimbot_settings.fov);
   nk_label(ctx, menu_state->aimbot_settings.fov_label, NK_TEXT_RIGHT);
   nk_slider_float(ctx, 0.0, &menu_state->aimbot_settings.fov, 360.0, 10.0);
+
+  snprintf(menu_state->aimbot_settings.attack_threshold_label,
+           sizeof(menu_state->aimbot_settings.attack_threshold_label), "threshold: %.2f",
+           menu_state->aimbot_settings.attack_threshold);
+  nk_label(ctx, menu_state->aimbot_settings.attack_threshold_label, NK_TEXT_RIGHT);
+  nk_slider_float(ctx, 0.0, &menu_state->aimbot_settings.attack_threshold, 1.0, 0.1);
 
   nk_layout_row_dynamic(ctx, NK_DYNAMIC, 1);
   menu_state->aimbot_settings.trigger =

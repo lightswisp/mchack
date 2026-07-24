@@ -3,7 +3,11 @@
 #include "../../core/player.h"
 #include "../../utils/logger.h"
 
-void attack(JNIEnv *env, game_t *game) {
+void attack(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
+  float attack_strength = localplayer_get_attack_strength(env, game);
+  if (attack_strength < menu_state->aimbot_settings.attack_threshold)
+    return;
+
   (*env)->CallVoidMethod(env, game->minecraft.instance, game->minecraft.start_attack);
 }
 
@@ -21,5 +25,5 @@ void trigger(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
   localplayer_get_position(env, game, &localplayer_position);
   player_get_position(env, game, game->minecraft.crosshair_pick_entity, &player_position);
 
-  attack(env, game);
+  attack(env, game, menu_state);
 }

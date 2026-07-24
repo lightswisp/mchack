@@ -4,7 +4,6 @@
 #include "../utils/logger.h"
 
 jobject localplayer_get(JNIEnv *env, game_t *game) {
-
   jfieldID player_field =
       (*env)->GetFieldID(env, game->minecraft.class, "player", "Lnet/minecraft/client/player/LocalPlayer;");
   if (player_field == NULL)
@@ -51,4 +50,9 @@ void localplayer_get_delta_movement(JNIEnv *env, game_t *game, vec3_t *out) {
 void localplayer_set_delta_movement(JNIEnv *env, game_t *game, vec3_t *in) {
   (*env)->CallVoidMethod(env, game->localplayer.instance, game->localplayer.set_delta_movement, in->x, in->y,
                          in->z);
+}
+
+float localplayer_get_attack_strength(JNIEnv *env, game_t *game) {
+  return (*env)->CallFloatMethod(env, game->localplayer.instance,
+                                 game->localplayer.get_attack_strength_scale);
 }

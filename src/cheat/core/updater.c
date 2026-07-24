@@ -33,7 +33,10 @@ static void update_localplayer(JNIEnv *env, game_t *game, jobject local_player) 
       (*env)->GetMethodID(env, game->localplayer.class, "setDeltaMovement", "(DDD)V");
   jmethodID get_delta_movement = (*env)->GetMethodID(env, game->localplayer.class, "getDeltaMovement",
                                                      "()Lnet/minecraft/world/phys/Vec3;");
+  jmethodID get_attack_strength_scale =
+      (*env)->GetMethodID(env, game->localplayer.class, "getAttackStrengthScale", "(F)F");
 
+  game->localplayer.get_attack_strength_scale = get_attack_strength_scale;
   game->localplayer.delta_movement = delta_movement;
   game->localplayer.set_delta_movement = set_delta_movement;
   game->localplayer.get_delta_movement = get_delta_movement;
