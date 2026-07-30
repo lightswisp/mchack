@@ -4,7 +4,7 @@
 #include "../../core/player.h"
 #include "../../utils/logger.h"
 
-void arrows(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
+void arrows(JNIEnv *env, game_t *game, menu_state_t *menu_state, overlay_t *overlay) {
   // it will traverse all players
   // then it will calculate the angle between our crosshair and the angle we need to turn to the enemy
   // this angle will be added to the menu_state->esp_settings.arrows2draw[i]
@@ -19,10 +19,9 @@ void arrows(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
   vec3_t localplayer_position;
   vec3_t player_position;
   size_t arrows = 0;
-  jint max_arrows = arr_size(menu_state->esp_settings.arrows.arrows2draw);
-  jint clamped_players = game->players.size > max_arrows ? max_arrows : game->players.size;
+  jint max_arrows = clampi(game->players.size, 0, arr_size(overlay->arrows.buffer));
 
-  for (jint i = 0; i < clamped_players; i++) {
+  for (jint i = 0; i < max_arrows; i++) {
     jobject player = (*env)->CallObjectMethod(env, game->players.instance, game->collections.list.get, i);
     if (!player)
       continue;
@@ -45,9 +44,9 @@ void arrows(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
     float delta_yaw = yaw - local_viewangles.y;
     delta_yaw = normalize_angle(delta_yaw);
     float arrow_angle = deg2rad(90.0f - delta_yaw);
-    menu_state->esp_settings.arrows.arrows2draw[arrows] = arrow_angle;
+    overlay->arrows.buffer[arrows] = arrow_angle;
     arrows++;
   }
 
-  menu_state->esp_settings.arrows.size = arrows;
+  overlay->arrows.size = arrows;
 }

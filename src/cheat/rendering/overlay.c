@@ -3,10 +3,12 @@
 #include "math.h"
 #include "../game.h"
 
+overlay_t overlay = {0};
+
 static void draw_arrows(rendering_context_t *rctx, menu_state_t *menu_state) {
   if (!menu_state->esp_settings.arrows.enabled)
     return;
-  if (menu_state->esp_settings.arrows.size == 0)
+  if (overlay.arrows.size == 0)
     return;
 
   struct nk_command_buffer *canvas = nk_window_get_canvas(rctx->ctx);
@@ -16,10 +18,10 @@ static void draw_arrows(rendering_context_t *rctx, menu_state_t *menu_state) {
   float center_x = rctx->width / 2.0;
   float center_y = rctx->height / 2.0;
 
-  for (size_t i = 0; i < menu_state->esp_settings.arrows.size; i++) {
+  for (size_t i = 0; i < overlay.arrows.size; i++) {
     float x = center_x;
     float y = center_y;
-    float angle = menu_state->esp_settings.arrows.arrows2draw[i];
+    float angle = overlay.arrows.buffer[i];
     float angle90 = angle - 1.5707963267948966;
     vec2_t t1[3] = {{x, y}, {x, y + arrow_size}, {x - arrow_size, y + arrow_size * 2}};
     vec2_t t2[3] = {{x, y}, {x, y + arrow_size}, {x + arrow_size, y + arrow_size * 2}};
@@ -50,22 +52,24 @@ static void draw_arrows(rendering_context_t *rctx, menu_state_t *menu_state) {
 static void draw_boxes(rendering_context_t *rctx, menu_state_t *menu_state) {
   if (!menu_state->esp_settings.box.enabled)
     return;
-  if (menu_state->esp_settings.box.size == 0)
+  if (overlay.boxes.size == 0)
     return;
   struct nk_command_buffer *canvas = nk_window_get_canvas(rctx->ctx);
   struct nk_color box_color = nk_rgb(249, 37, 114);
-  for (size_t i = 0; i < menu_state->esp_settings.box.size; i++) {
-    float height =
-        fabs(menu_state->esp_settings.box.boxes[i].head.y - menu_state->esp_settings.box.boxes[i].feet.y);
+  for (size_t i = 0; i < overlay.boxes.size; i++) {
+    float height = fabs(overlay.boxes.buffer[i].head.y - overlay.boxes.buffer[i].feet.y);
     float width = height * 0.35;
 
-    struct nk_rect rect = {menu_state->esp_settings.box.boxes[i].head.x - (width / 2.0),
-                           menu_state->esp_settings.box.boxes[i].head.y, width, height};
+    struct nk_rect rect = {overlay.boxes.buffer[i].head.x - (width / 2.0), overlay.boxes.buffer[i].head.y,
+                           width, height};
     nk_stroke_rect(canvas, rect, 0, 2.5f, box_color);
-    // nk_stroke_line(canvas, (float)rctx->width / 2, (float)rctx->height / 2,
-    //                menu_state.esp_settings.box.boxes[i].x, menu_state.esp_settings.box.boxes[i].y, 2.0,
-    //                nk_rgb(255, 255, 255));
   }
+}
+
+static void draw_snap_lines() {
+  // nk_stroke_line(canvas, (float)rctx->width / 2, (float)rctx->height / 2,
+  //                menu_state.esp_settings.box.boxes[i].x, menu_state.esp_settings.box.boxes[i].y, 2.0,
+  //                nk_rgb(255, 255, 255));
 }
 
 static void draw_dark_background(rendering_context_t *rctx) {
@@ -123,3 +127,5 @@ void draw_overlay(rendering_context_t *rctx) {
   rctx->ctx->style.window.fixed_background = s1;
   rctx->ctx->style.window.background = s2;
 }
+
+overlay_t *get_overlay(void) { return &overlay; }

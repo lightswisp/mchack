@@ -52,17 +52,10 @@ typedef struct {
       char distance_label[32];
       int radius;
       char radius_label[32];
-      float arrows2draw[255];
-      size_t size;
     } arrows;
 
     struct {
       bool enabled;
-      struct {
-        vec3_t head;
-        vec3_t feet;
-      } boxes[255];
-      size_t size;
     } box;
   } esp_settings;
 

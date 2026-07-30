@@ -9,6 +9,7 @@
 #include "jvm.h"
 #include "rendering/draw.h"
 #include "rendering/gui.h"
+#include "rendering/overlay.h"
 #include "utils/logger.h"
 #include "core/updater.h"
 
@@ -93,13 +94,14 @@ void *__main_thread([[maybe_unused]] void *a) {
   game_t *game = get_game();
   JNIEnv *env = get_env();
   menu_state_t *menu_state = get_menu_state();
+  overlay_t *overlay = get_overlay();
   // struct timespec ts = {.tv_sec = 0, .tv_nsec = 10000000};
   struct timespec ts = {.tv_sec = 0, .tv_nsec = 1000000000};
 
-  reset_updates(game, menu_state);
+  reset_updates(game, menu_state, overlay);
   while (!should_close) {
-    update(env, game, menu_state);
-    esp(env, game, menu_state);
+    update(env, game, menu_state, overlay);
+    esp(env, game, menu_state, overlay);
     misc(env, game, menu_state);
     aimbot(env, game, menu_state);
 

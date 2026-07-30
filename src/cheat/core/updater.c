@@ -149,16 +149,17 @@ static void update_players(JNIEnv *env, game_t *game) {
   game->players.size = (*env)->CallIntMethod(env, game->players.instance, game->collections.list.size);
 }
 
-void reset_updates(game_t *game, menu_state_t *menu_state) {
+void reset_updates(game_t *game, menu_state_t *menu_state, overlay_t *overlay) {
   game->in_game = false;
-  menu_state->esp_settings.arrows.size = 0;
+  overlay->arrows.size = 0;
+  overlay->boxes.size = 0;
 }
 
-void update(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
+void update(JNIEnv *env, game_t *game, menu_state_t *menu_state, overlay_t *overlay) {
   jobject local_player = localplayer_get(env, game);
   if (!local_player) {
     // revert updates for all (local player, players, entities, world, etc)
-    reset_updates(game, menu_state);
+    reset_updates(game, menu_state, overlay);
     return;
   }
   // we are in game, so we are safe to update structs

@@ -205,8 +205,21 @@ void swap_buffers(GLFWwindow *win) {
 
   save_state();
 
-  glfwGetWindowSize(win, &rctx.width, &rctx.height);
-  glfwGetFramebufferSize(win, &rctx.fb_width, &rctx.fb_height);
+  int tmp_width, tmp_height, tmp_fbwidth, tmp_fbheight;
+  glfwGetWindowSize(win, &tmp_width, &tmp_height);
+  glfwGetFramebufferSize(win, &tmp_fbwidth, &tmp_fbheight);
+
+  if (tmp_width != 0 && tmp_height != 0 && tmp_width != rctx.width && tmp_height != rctx.height) {
+    rctx.width = tmp_width;
+    rctx.height = tmp_height;
+  }
+
+  if (tmp_fbwidth != 0 && tmp_fbheight != 0 && tmp_fbwidth != rctx.fb_width &&
+      tmp_fbheight != rctx.fb_height) {
+    rctx.fb_width = tmp_fbwidth;
+    rctx.fb_height = tmp_fbheight;
+  }
+
   glViewport(0, 0, rctx.fb_width, rctx.fb_height);
   glActiveTexture(GL_TEXTURE0);
   glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);

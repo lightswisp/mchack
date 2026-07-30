@@ -67,7 +67,15 @@ static inline float normalize_angle2(float a) {
   return a - M_PI;
 }
 
-static inline float clamp(float a, float min, float max) {
+static inline float clampf(float a, float min, float max) {
+  if (a < min)
+    return min;
+  if (a > max)
+    return max;
+  return a;
+}
+
+static inline int clampi(int a, int min, int max) {
   if (a < min)
     return min;
   if (a > max)
