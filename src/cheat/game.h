@@ -84,6 +84,7 @@ typedef struct {
     jmethodID get_x;
     jmethodID get_y;
     jmethodID get_z;
+    jmethodID get_health;
   } players;
 
   struct {

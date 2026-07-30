@@ -132,7 +132,9 @@ static void update_players(JNIEnv *env, game_t *game) {
   jfieldID eye_height = (*env)->GetFieldID(env, players_class, "eyeHeight", "F");
   jmethodID get_height = (*env)->GetMethodID(env, players_class, "getBbHeight", "()F");
   jmethodID get_width = (*env)->GetMethodID(env, players_class, "getBbWidth", "()F");
+  jmethodID get_health = (*env)->GetMethodID(env, players_class, "getHealth", "()F");
 
+  game->players.get_health = get_health;
   game->players.get_width = get_width;
   game->players.get_height = get_height;
   game->players.eye_height = eye_height;

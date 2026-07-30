@@ -16,3 +16,4 @@ void player_get_lerped_position(JNIEnv *env, game_t *game, jobject player, vec3_
 float player_get_eye_height(JNIEnv *env, game_t *game, jobject player);
 float player_get_height(JNIEnv *env, game_t *game, jobject player);
 float player_get_width(JNIEnv *env, game_t *game, jobject player);
+float player_get_health(JNIEnv *env, game_t *game, jobject player);

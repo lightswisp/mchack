@@ -49,6 +49,26 @@ static void draw_arrows(rendering_context_t *rctx, menu_state_t *menu_state) {
   }
 }
 
+static void draw_outlined_box(struct nk_command_buffer *canvas, struct nk_rect rect, float r, float t,
+                              struct nk_color c) {
+
+  struct nk_rect f1 = rect;
+  struct nk_rect f2 = rect;
+  f1.x -= t;
+  f1.y -= t;
+  f1.w += 2 * t;
+  f1.h += 2 * t;
+
+  f2.x += t;
+  f2.y += t;
+  f2.w -= 2 * t;
+  f2.h -= 2 * t;
+
+  nk_stroke_rect(canvas, f1, 0, t, nk_rgb(0, 0, 0));
+  nk_stroke_rect(canvas, rect, 0, t, c);
+  nk_stroke_rect(canvas, f2, 0, t, nk_rgb(0, 0, 0));
+}
+
 static void draw_boxes(rendering_context_t *rctx, menu_state_t *menu_state) {
   if (!menu_state->esp_settings.box.enabled)
     return;
@@ -62,7 +82,7 @@ static void draw_boxes(rendering_context_t *rctx, menu_state_t *menu_state) {
 
     struct nk_rect rect = {overlay.boxes.buffer[i].head.x - (width / 2.0), overlay.boxes.buffer[i].head.y,
                            width, height};
-    nk_stroke_rect(canvas, rect, 0, 2.5f, box_color);
+    draw_outlined_box(canvas, rect, 0, 2.0f, box_color);
   }
 }
 

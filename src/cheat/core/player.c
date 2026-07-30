@@ -17,6 +17,10 @@ void player_get_position(JNIEnv *env, game_t *game, jobject player, vec3_t *out)
   out->z = z;
 }
 
+float player_get_health(JNIEnv *env, game_t *game, jobject player) {
+  return (*env)->CallFloatMethod(env, player, game->players.get_health);
+}
+
 float player_get_eye_height(JNIEnv *env, game_t *game, jobject player) {
   return (*env)->GetFloatField(env, player, game->players.eye_height);
 }
