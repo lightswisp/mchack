@@ -5,7 +5,8 @@
 #include "../../rendering/gui.h"
 #include <GLFW/glfw3.h>
 
-void speed(JNIEnv *env, game_t *game, float speed) {
+void speed(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
+  float speed = menu_state->misc_settings.speed;
   if (speed == 0.2f)
     return;
   vec3_t delta_movement;
@@ -15,27 +16,26 @@ void speed(JNIEnv *env, game_t *game, float speed) {
   if (delta_movement.x == 0 && delta_movement.z == 0)
     return;
 
-  menu_state_t *menu = get_menu_state();
   float z_motion = cosf(deg2rad(viewangles.y)) * speed;
   float x_motion = -sinf(deg2rad(viewangles.y)) * speed;
 
   delta_movement.x = 0;
   delta_movement.z = 0;
 
-  if (glfwGetKey(menu->win, GLFW_KEY_W) == GLFW_PRESS) {
+  if (glfwGetKey(menu_state->rctx->win, GLFW_KEY_W) == GLFW_PRESS) {
 
     delta_movement.x += x_motion;
     delta_movement.z += z_motion;
   }
-  if (glfwGetKey(menu->win, GLFW_KEY_S) == GLFW_PRESS) {
+  if (glfwGetKey(menu_state->rctx->win, GLFW_KEY_S) == GLFW_PRESS) {
     delta_movement.x += -x_motion;
     delta_movement.z += -z_motion;
   }
-  if (glfwGetKey(menu->win, GLFW_KEY_A) == GLFW_PRESS) {
+  if (glfwGetKey(menu_state->rctx->win, GLFW_KEY_A) == GLFW_PRESS) {
     delta_movement.x += z_motion;
     delta_movement.z += -x_motion;
   }
-  if (glfwGetKey(menu->win, GLFW_KEY_D) == GLFW_PRESS) {
+  if (glfwGetKey(menu_state->rctx->win, GLFW_KEY_D) == GLFW_PRESS) {
     delta_movement.x += -z_motion;
     delta_movement.z += x_motion;
   }

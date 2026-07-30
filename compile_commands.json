@@ -328,5 +328,23 @@
   "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -Dcheat_EXPORTS -I/usr/lib/jvm/default/include -I/usr/lib/jvm/default/include/linux -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu23 -fPIC -Wall -Wextra -Wpedantic -g -O0 -fno-omit-frame-pointer -o CMakeFiles/cheat.dir/hacks/misc/fullbright.c.o -c /home/lightswisp/Documents/mchack/src/cheat/hacks/misc/fullbright.c",
   "file": "/home/lightswisp/Documents/mchack/src/cheat/hacks/misc/fullbright.c",
   "output": "src/cheat/CMakeFiles/cheat.dir/hacks/misc/fullbright.c.o"
+},
+{
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/cheat",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -Dcheat_EXPORTS -I/usr/lib/jvm/default/include -I/usr/lib/jvm/default/include/linux -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu23 -fPIC -Wall -Wextra -Wpedantic -g -O0 -fno-omit-frame-pointer -o CMakeFiles/cheat.dir/hacks/esp/box.c.o -c /home/lightswisp/Documents/mchack/src/cheat/hacks/esp/box.c",
+  "file": "/home/lightswisp/Documents/mchack/src/cheat/hacks/esp/box.c",
+  "output": "src/cheat/CMakeFiles/cheat.dir/hacks/esp/box.c.o"
+},
+{
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/cheat",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -Dcheat_EXPORTS -I/usr/lib/jvm/default/include -I/usr/lib/jvm/default/include/linux -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu23 -fPIC -Wall -Wextra -Wpedantic -g -O0 -fno-omit-frame-pointer -o CMakeFiles/cheat.dir/core/camera.c.o -c /home/lightswisp/Documents/mchack/src/cheat/core/camera.c",
+  "file": "/home/lightswisp/Documents/mchack/src/cheat/core/camera.c",
+  "output": "src/cheat/CMakeFiles/cheat.dir/core/camera.c.o"
+},
+{
+  "directory": "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/cheat",
+  "command": "/usr/bin/clang -DMCHACK_LIB_NAME=\\\"libcheat.so\\\" -DMCHACK_LOG_PATH=\\\"/tmp/mchack.log\\\" -DMCHACK_PROCESS_NAME=\\\"java\\\" -DZYCORE_STATIC_BUILD -DZYDIS_STATIC_BUILD -Dcheat_EXPORTS -I/usr/lib/jvm/default/include -I/usr/lib/jvm/default/include/linux -I/home/lightswisp/Documents/mchack/src/libs/zydis/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis\" -I/home/lightswisp/Documents/mchack/src/libs/zydis/dependencies/zycore/include -I\"/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/src/libs/zydis/zycore\" -g -std=gnu23 -fPIC -Wall -Wextra -Wpedantic -g -O0 -fno-omit-frame-pointer -o CMakeFiles/cheat.dir/rendering/overlay.c.o -c /home/lightswisp/Documents/mchack/src/cheat/rendering/overlay.c",
+  "file": "/home/lightswisp/Documents/mchack/src/cheat/rendering/overlay.c",
+  "output": "src/cheat/CMakeFiles/cheat.dir/rendering/overlay.c.o"
 }
 ]

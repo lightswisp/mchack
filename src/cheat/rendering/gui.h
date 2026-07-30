@@ -6,7 +6,7 @@
 typedef enum { IDLE, ACTIVE } state_t;
 
 typedef struct {
-  GLFWwindow *win;
+  rendering_context_t *rctx;
   char text_buf[512];
   int text_len;
   enum { AIMBOT, ESP, MISC, SCRIPTS } active_tab;
@@ -35,6 +35,7 @@ typedef struct {
     float attack_threshold;
 
     bool trigger;
+    bool crits;
   } aimbot_settings;
 
   struct {
@@ -54,6 +55,15 @@ typedef struct {
       float arrows2draw[255];
       size_t size;
     } arrows;
+
+    struct {
+      bool enabled;
+      struct {
+        vec3_t head;
+        vec3_t feet;
+      } boxes[255];
+      size_t size;
+    } box;
   } esp_settings;
 
   struct {

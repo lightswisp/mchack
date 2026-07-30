@@ -10,6 +10,7 @@ typedef struct {
     jobject instance;
     jmethodID start_attack;
     jobject crosshair_pick_entity;
+    jfloat partial_tick;
 
     struct {
       jclass class;
@@ -18,6 +19,21 @@ typedef struct {
       jfloat fov_val;
       jfieldID gamma;
     } options;
+
+    struct {
+      jclass class;
+      jobject instance;
+      jfieldID fov;
+      jfloat fov_val;
+
+      struct {
+        jclass class;
+        jobject instance;
+        jfieldID x_rot;
+        jfieldID y_rot;
+        jobject position;
+      } camera;
+    } game_renderer;
 
   } minecraft;
 
@@ -30,6 +46,8 @@ typedef struct {
     jfieldID x_rot;
     jfieldID y_rot;
     jfieldID delta_movement;
+    jfieldID falling_distance;
+    jfieldID has_impulse;
     jmethodID set_sprinting;
     jmethodID is_moving;
     jmethodID display_client_message;
@@ -39,6 +57,7 @@ typedef struct {
     jmethodID set_delta_movement;
     jmethodID get_delta_movement;
     jmethodID get_attack_strength_scale;
+    jmethodID set_pos_raw;
 
     struct {
       jclass class;
@@ -54,7 +73,13 @@ typedef struct {
     jobject instance;
     jint size;
     jfieldID glowing;
+    jfieldID x_old;
+    jfieldID y_old;
+    jfieldID z_old;
+    jfieldID eye_height;
 
+    jmethodID get_height;
+    jmethodID get_width;
     jmethodID is_local_player;
     jmethodID get_x;
     jmethodID get_y;

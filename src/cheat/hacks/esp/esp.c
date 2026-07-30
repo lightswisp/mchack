@@ -4,6 +4,7 @@
 
 #include "glow.h"
 #include "arrows.h"
+#include "box.h"
 
 void esp(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
   if (!menu_state->esp_settings.enabled)
@@ -15,4 +16,5 @@ void esp(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
 
   glow(env, game, menu_state);
   arrows(env, game, menu_state);
+  box(env, game, menu_state);
 }

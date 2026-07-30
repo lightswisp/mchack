@@ -8,6 +8,7 @@
 #include <dlfcn.h>
 #include "draw.h"
 #include "gui.h"
+#include "overlay.h"
 
 struct {
   GLenum last_active_texture;
@@ -216,8 +217,9 @@ void swap_buffers(GLFWwindow *win) {
   // rendering
   handle_input(win);
   nk_glfw3_new_frame(&rctx.glfw);
+  draw_overlay(&rctx);
   draw_gui(&rctx);
-  nk_glfw3_render(&rctx.glfw, NK_ANTI_ALIASING_OFF, MAX_VERTEX_BUFFER, MAX_ELEMENT_BUFFER);
+  nk_glfw3_render(&rctx.glfw, NK_ANTI_ALIASING_ON, MAX_VERTEX_BUFFER, MAX_ELEMENT_BUFFER);
 
   restore_state();
   atomic_store(&rctx.executing, false);

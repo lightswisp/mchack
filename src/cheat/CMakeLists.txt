@@ -53,7 +53,13 @@ add_library(cheat SHARED main.c
     hacks/aimbot/trigger.c
     hacks/aimbot/trigger.h
     hacks/misc/fullbright.c
-    hacks/misc/fullbright.h)
+    hacks/misc/fullbright.h
+    hacks/esp/box.c
+    hacks/esp/box.h
+    core/camera.c
+    core/camera.h
+    rendering/overlay.c
+    rendering/overlay.h)
 target_include_directories(cheat PRIVATE ${JNI_INCLUDE_DIRS})
 target_compile_options(cheat PRIVATE -g -O0 -fno-omit-frame-pointer)
 

@@ -9,6 +9,7 @@ void arrows(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
   // then it will calculate the angle between our crosshair and the angle we need to turn to the enemy
   // this angle will be added to the menu_state->esp_settings.arrows2draw[i]
   // then an arrow will be drawn on the circle.
+  // rotation matrix must be applied before altering x,y coordianates
   // X coordinate of an arrow will be calculated as     cos(angle) * R
   // Y coordinate of an arrow will be calculated as     sin(angle) * R
   // where R is the radius of our arrow circle
@@ -18,7 +19,8 @@ void arrows(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
   vec3_t localplayer_position;
   vec3_t player_position;
   size_t arrows = 0;
-  jint clamped_players = game->players.size % arr_size(menu_state->esp_settings.arrows.arrows2draw);
+  jint max_arrows = arr_size(menu_state->esp_settings.arrows.arrows2draw);
+  jint clamped_players = game->players.size > max_arrows ? max_arrows : game->players.size;
 
   for (jint i = 0; i < clamped_players; i++) {
     jobject player = (*env)->CallObjectMethod(env, game->players.instance, game->collections.list.get, i);

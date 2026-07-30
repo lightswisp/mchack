@@ -93,7 +93,8 @@ void *__main_thread([[maybe_unused]] void *a) {
   game_t *game = get_game();
   JNIEnv *env = get_env();
   menu_state_t *menu_state = get_menu_state();
-  struct timespec ts = {.tv_sec = 0, .tv_nsec = 10000000};
+  // struct timespec ts = {.tv_sec = 0, .tv_nsec = 10000000};
+  struct timespec ts = {.tv_sec = 0, .tv_nsec = 1000000000};
 
   reset_updates(game, menu_state);
   while (!should_close) {

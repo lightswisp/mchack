@@ -1,6 +1,7 @@
 #pragma once
 #include <math.h>
 
+#define TAU 6.283185307179586F
 #define arr_size(a) (sizeof(a) / sizeof(a[0]))
 
 typedef struct {
@@ -59,10 +60,107 @@ static inline float normalize_angle(float a) {
   return a - 180.0;
 }
 
+static inline float normalize_angle2(float a) {
+  a = fmodf(a + M_PI, TAU);
+  if (a < 0.0)
+    a += TAU;
+  return a - M_PI;
+}
+
 static inline float clamp(float a, float min, float max) {
   if (a < min)
     return min;
   if (a > max)
     return max;
   return a;
+}
+
+static inline bool w2s(vec3_t *entity, vec3_t *camera, /* must be in radians */ vec2_t *camera_angles,
+                       vec3_t *out, float width, float height, float fov) {
+  float fovy_rad = deg2rad(fov);
+  float dx = entity->x - camera->x;
+  float dy = entity->y - camera->y;
+  float dz = entity->z - camera->z;
+
+  float rad_yaw = camera_angles->y;
+  float rad_pitch = camera_angles->x;
+
+  float sin_yaw = sinf(rad_yaw);
+  float cos_yaw = cosf(rad_yaw);
+  float sin_pitch = sinf(rad_pitch);
+  float cos_pitch = cosf(rad_pitch);
+
+  float x_cam = -dx * cos_yaw - dz * sin_yaw;
+  float y_tmp = -dx * sin_yaw + dz * cos_yaw;
+
+  float y_cam = dy * cos_pitch + y_tmp * sin_pitch;
+  float z_cam = y_tmp * cos_pitch - dy * sin_pitch;
+
+  if (z_cam <= 0.1f) {
+    return false;
+  }
+
+  float aspect_ratio = width / height;
+  float tan_half_fovy = tanf(fovy_rad * 0.5f);
+
+  float x_ndc = x_cam / (z_cam * tan_half_fovy * aspect_ratio);
+  float y_ndc = y_cam / (z_cam * tan_half_fovy);
+
+  float width_half = width * 0.5f;
+  float height_half = height * 0.5f;
+
+  out->x = width_half + (x_ndc * width_half);
+  out->y = height_half - (y_ndc * height_half);
+  out->z = z_cam;
+
+  if (isnan(out->x) || isnan(out->y) || isinf(out->x) || isinf(out->y)) {
+    return false;
+  }
+
+  return true;
+
+  //  float width_half = (float)width / 2.0;
+  //  float height_half = (float)height / 2.0;
+  //
+  //  // fov argument is a vertical fov, we also need to calculate the horizontal fov
+  //  float fovy_rad = deg2rad(fov);
+  //  float d = height_half / tanf(fovy_rad / 2);
+  //  float fovx_rad = atanf(width_half / d) * 2.0;
+  //
+  //  float distance = calculate_distance_vec3(entity, local);
+  //  float delta_x = entity->x - local->x;
+  //  float delta_y = entity->y - local->y;
+  //  float delta_z = entity->z - local->z;
+  //
+  //  float pitch = -asinf(delta_y / distance);
+  //  float yaw = -atan2f(delta_x, delta_z);
+  //
+  //  float pitch_delta = pitch - local_angles->x;
+  //  float yaw_delta = normalize_angle2(yaw - local_angles->y);
+  //  // if it is out of our field of view, just skip
+  //  if (fabs(yaw_delta) > fovx_rad / 2.0)
+  //    return false;
+  //
+  //  // X
+  //  float xz_distance = sqrtf(delta_x * delta_x + delta_z * delta_z);
+  //  float dz = sinf(yaw_delta) * xz_distance;
+  //  float dx = cosf(yaw_delta) * xz_distance;
+  //  float dfx = tanf(fovx_rad / 2) * dx;
+  //  float x = width_half + ((dz / dfx) * width_half);
+  //
+  //  // Y
+  //  float dy = sinf(pitch_delta) * distance;
+  //  float dd = cosf(pitch_delta) * distance;
+  //  float dfy = tanf(fovy_rad / 2) * dd;
+  //  float y = height_half + ((dy / dfy) * height_half);
+  //
+  //  // out of screen checks
+  //  if (x < 0 || x > width || y < 0 || y > height || isnan(x) || isnan(y)) {
+  //    return false;
+  //  }
+  //
+  //  out->x = x;
+  //  out->y = y;
+  //
+  //  return true;
 }

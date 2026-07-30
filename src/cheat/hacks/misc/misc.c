@@ -16,6 +16,6 @@ void misc(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
   nofall(env, game, menu_state->misc_settings.nofall);
   fly(env, game, menu_state);
   inf_jump(env, game, menu_state->misc_settings.inf_jump);
-  speed(env, game, menu_state->misc_settings.speed);
+  speed(env, game, menu_state);
   fullbright(env, game, menu_state);
 }
