@@ -24,8 +24,7 @@ void box(JNIEnv *env, game_t *game, menu_state_t *menu_state, overlay_t *overlay
     if (player_get_health(env, game, player) <= 0)
       continue;
 
-    LOGGER_LOG(LOG, "health: %f", player_get_health(env, game, player));
-    float fov = game->minecraft.options.fov_val * game->minecraft.game_renderer.fov_val;
+    float fov = game->minecraft.options.fov_val * game->game_renderer.fov_val;
     camera_get_position(env, game, &camera_position);
     camera_get_viewangles2(env, game, &camera_angles);
     player_get_lerped_position(env, game, player, &player_position);

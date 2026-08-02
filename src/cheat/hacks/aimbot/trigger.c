@@ -34,8 +34,6 @@ void attack(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
   (*env)->CallVoidMethod(env, game->minecraft.instance, game->minecraft.start_attack);
 }
 
-void attack_with_crit(JNIEnv *env, game_t *game) {}
-
 void trigger(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
   if (!menu_state->aimbot_settings.trigger)
     return;

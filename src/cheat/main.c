@@ -5,7 +5,7 @@
 
 #include "core/message.h"
 #include "game.h"
-#include "hooks/hooks.h"
+#include "hooks/native/hooks.h"
 #include "jvm.h"
 #include "rendering/draw.h"
 #include "rendering/gui.h"
@@ -41,9 +41,9 @@ __attribute__((constructor)) void __onload() {
   pthread_create(&g_thread, NULL, __main_thread, NULL);
 }
 
-bool set_hooks(void) {
+bool set_hooks() {
   LOGGER_LOG(LOG, "setting hooks..");
-  return set_draw_hook();
+  return set_draw_hook() && set_game_hooks();
 }
 
 bool remove_hooks(void) {
@@ -52,13 +52,14 @@ bool remove_hooks(void) {
   return remove_draw_hook();
 }
 
-void handle_uninject([[maybe_unused]] int sig) {
-  LOGGER_LOG(WARNING, "caught uninjection signal");
-
+void uninject([[maybe_unused]] int sig) {
+  LOGGER_LOG(WARNING, "uninjecting!");
   should_close = true;
   remove_hooks();
   LOGGER_LOG(LOG, "hooks are removed");
-  LOGGER_LOG(WARNING, "detaching from jvm");
+  LOGGER_LOG(WARNING, "removing local references...");
+  deinit_game();
+  LOGGER_LOG(WARNING, "detaching from jvm...");
   detach_jvm();
 }
 
@@ -66,7 +67,7 @@ void handle_uninject([[maybe_unused]] int sig) {
 void *__main_thread([[maybe_unused]] void *a) {
 
   struct sigaction sa;
-  sa.sa_handler = handle_uninject;
+  sa.sa_handler = uninject;
   sigemptyset(&sa.sa_mask);
   sa.sa_flags = 0;
   sigaction(SIGUSR1, &sa, NULL);
@@ -95,18 +96,24 @@ void *__main_thread([[maybe_unused]] void *a) {
   JNIEnv *env = get_env();
   menu_state_t *menu_state = get_menu_state();
   overlay_t *overlay = get_overlay();
-  // struct timespec ts = {.tv_sec = 0, .tv_nsec = 10000000};
-  struct timespec ts = {.tv_sec = 0, .tv_nsec = 1000000000};
+  struct timespec loop_ts = {.tv_sec = 0, .tv_nsec = 1000000};
+  struct timespec update_ts = {.tv_sec = 1, .tv_nsec = 0};
 
   reset_updates(game, menu_state, overlay);
   while (!should_close) {
-    update(env, game, menu_state, overlay);
+    if (!update(env, game, menu_state, overlay)) {
+      LOGGER_LOG(FATAL, "update has failed, waiting...");
+      nanosleep(&update_ts, NULL);
+      continue;
+    }
     esp(env, game, menu_state, overlay);
     misc(env, game, menu_state);
     aimbot(env, game, menu_state);
 
-    nanosleep(&ts, NULL);
+    nanosleep(&loop_ts, NULL);
   }
+
+  // uninject(SIGUSR1);
 
 end:
   return NULL;

@@ -6,6 +6,9 @@
 #include <GLFW/glfw3.h>
 
 void speed(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
+  // We may also try to modify player's impulse:
+  //  this.leftImpulse = (float) (((double) this.leftImpulse) * 0.3d);
+  //  this.forwardImpulse = (float)(((double)this.forwardImpulse) * 0.3d);
   float speed = menu_state->misc_settings.speed;
   if (speed == 0.2f)
     return;

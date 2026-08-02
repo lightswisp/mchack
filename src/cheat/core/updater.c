@@ -2,153 +2,89 @@
 #include "localplayer.h"
 #include "../utils/logger.h"
 
-static void update_localplayer(JNIEnv *env, game_t *game, jobject local_player) {
+static bool update_localplayer(JNIEnv *env, game_t *game) {
+  jobject local_player = localplayer_get(env, game);
+  CHECK(local_player);
+  DELETE_REF(env, game->localplayer.instance);
 
-  game->localplayer.instance = local_player;
-  game->localplayer.class = (*env)->GetObjectClass(env, local_player);
+  jobject abilities = (*env)->GetObjectField(env, local_player, game->localplayer.abilities_field);
+  CHECK(abilities);
+  DELETE_REF(env, game->localplayer.abilities.instance);
 
-  jclass super = (*env)->GetSuperclass(env, game->localplayer.class);
-  jfieldID abilities_field = (*env)->GetFieldID(env, game->localplayer.class, "abilities",
-                                                "Lnet/minecraft/world/entity/player/Abilities;");
+  jint tick_count = (*env)->GetIntField(env, local_player, game->localplayer.tick_count_field);
 
-  jobject abilities = (*env)->GetObjectField(env, game->localplayer.instance, abilities_field);
-
-  jclass abilities_class = (*env)->GetObjectClass(env, abilities);
-  jfieldID mayfly = (*env)->GetFieldID(env, abilities_class, "mayfly", "Z");
-  jfieldID walking_speed = (*env)->GetFieldID(env, abilities_class, "walkingSpeed", "F");
-  jfieldID on_ground = (*env)->GetFieldID(env, game->localplayer.class, "onGround", "Z");
-  jmethodID set_sprinting = (*env)->GetMethodID(env, super, "setSprinting", "(Z)V");
-  jmethodID is_moving = (*env)->GetMethodID(env, game->localplayer.class, "isMoving", "()Z");
-  jmethodID display_client_message = (*env)->GetMethodID(env, game->localplayer.class, "displayClientMessage",
-                                                         "(Lnet/minecraft/network/chat/Component;Z)V");
-  jmethodID get_x = (*env)->GetMethodID(env, game->localplayer.class, "getX", "()D");
-  jmethodID get_y = (*env)->GetMethodID(env, game->localplayer.class, "getY", "()D");
-  jmethodID get_z = (*env)->GetMethodID(env, game->localplayer.class, "getZ", "()D");
-
-  jfieldID x_rot = (*env)->GetFieldID(env, game->localplayer.class, "xRot", "F");
-  jfieldID y_rot = (*env)->GetFieldID(env, game->localplayer.class, "yRot", "F");
-  jfieldID delta_movement =
-      (*env)->GetFieldID(env, game->localplayer.class, "deltaMovement", "Lnet/minecraft/world/phys/Vec3;");
-  jmethodID set_delta_movement =
-      (*env)->GetMethodID(env, game->localplayer.class, "setDeltaMovement", "(DDD)V");
-  jmethodID get_delta_movement = (*env)->GetMethodID(env, game->localplayer.class, "getDeltaMovement",
-                                                     "()Lnet/minecraft/world/phys/Vec3;");
-  jmethodID get_attack_strength_scale =
-      (*env)->GetMethodID(env, game->localplayer.class, "getAttackStrengthScale", "(F)F");
-  jfieldID falling_distance = (*env)->GetFieldID(env, game->localplayer.class, "fallDistance", "F");
-  jmethodID set_pos_raw = (*env)->GetMethodID(env, game->localplayer.class, "setPosRaw", "(DDD)V");
-  jfieldID has_impulse = (*env)->GetFieldID(env, game->localplayer.class, "hasImpulse", "Z");
-
-  game->localplayer.has_impulse = has_impulse;
-  game->localplayer.set_pos_raw = set_pos_raw;
-  game->localplayer.falling_distance = falling_distance;
-  game->localplayer.get_attack_strength_scale = get_attack_strength_scale;
-  game->localplayer.delta_movement = delta_movement;
-  game->localplayer.set_delta_movement = set_delta_movement;
-  game->localplayer.get_delta_movement = get_delta_movement;
-  game->localplayer.abilities.class = abilities_class;
+  game->localplayer.tick_count = tick_count;
   game->localplayer.abilities.instance = abilities;
-  game->localplayer.abilities.mayfly = mayfly;
-  game->localplayer.abilities.walking_speed = walking_speed;
-  game->localplayer.on_ground = on_ground;
-  game->localplayer.super = super;
-  game->localplayer.set_sprinting = set_sprinting;
-  game->localplayer.is_moving = is_moving;
-  game->localplayer.display_client_message = display_client_message;
-  game->localplayer.get_x = get_x;
-  game->localplayer.get_y = get_y;
-  game->localplayer.get_z = get_z;
-  game->localplayer.x_rot = x_rot;
-  game->localplayer.y_rot = y_rot;
+  game->localplayer.instance = local_player;
+
+  return true;
 }
 
-static void update_minecraft(JNIEnv *env, game_t *game) {
+static bool update_minecraft(JNIEnv *env, game_t *game) {
   jfloat fov = (*env)->GetDoubleField(env, game->minecraft.options.instance, game->minecraft.options.fov);
-  jfieldID crosshair_field = (*env)->GetFieldID(env, game->minecraft.class, "crosshairPickEntity",
-                                                "Lnet/minecraft/world/entity/Entity;");
-  jobject crosshair_pick_entity = (*env)->GetObjectField(env, game->minecraft.instance, crosshair_field);
-  jfieldID gamma = (*env)->GetFieldID(env, game->minecraft.options.class, "gamma", "D");
 
-  jfieldID game_renderer_field = (*env)->GetFieldID(env, game->minecraft.class, "gameRenderer",
-                                                    "Lnet/minecraft/client/renderer/GameRenderer;");
-  jobject game_renderer = (*env)->GetObjectField(env, game->minecraft.instance, game_renderer_field);
-  jclass game_renderer_class = (*env)->GetObjectClass(env, game_renderer);
-  jfieldID game_renderer_fov = (*env)->GetFieldID(env, game_renderer_class, "fov", "F");
-  jfloat game_renderer_fov_val = (*env)->GetFloatField(env, game_renderer, game_renderer_fov);
-  jmethodID get_frame_time = (*env)->GetMethodID(env, game->minecraft.class, "getFrameTime", "()F");
-  jfloat partial_tick = (*env)->CallFloatMethod(env, game->minecraft.instance, get_frame_time);
+  // NO NEED TO CHECK IF IT'S NULL
+  jobject crosshair_pick_entity =
+      (*env)->GetObjectField(env, game->minecraft.instance, game->minecraft.crosshair_field);
+  DELETE_REF(env, game->minecraft.crosshair_pick_entity);
+  jfloat partial_tick = (*env)->CallFloatMethod(env, game->minecraft.instance, game->minecraft.get_frame_time);
 
   game->minecraft.partial_tick = partial_tick;
-  game->minecraft.game_renderer.class = game_renderer_class;
-  game->minecraft.game_renderer.instance = game_renderer;
-  game->minecraft.game_renderer.fov = game_renderer_fov;
-  game->minecraft.game_renderer.fov_val = game_renderer_fov_val;
   game->minecraft.options.fov_val = fov;
   game->minecraft.crosshair_pick_entity = crosshair_pick_entity;
-  game->minecraft.options.gamma = gamma;
+
+  return true;
 }
 
-static void update_camera(JNIEnv *env, game_t *game) {
-  jfieldID camera_field = (*env)->GetFieldID(env, game->minecraft.game_renderer.class, "mainCamera",
-                                             "Lnet/minecraft/client/Camera;");
-  jobject camera = (*env)->GetObjectField(env, game->minecraft.game_renderer.instance, camera_field);
-  jclass camera_class = (*env)->GetObjectClass(env, camera);
-  jfieldID x_rot_field = (*env)->GetFieldID(env, camera_class, "xRot", "F");
-  jfieldID y_rot_field = (*env)->GetFieldID(env, camera_class, "yRot", "F");
-  jfieldID position_field =
-      (*env)->GetFieldID(env, camera_class, "position", "Lnet/minecraft/world/phys/Vec3;");
+static bool update_game_renderer(JNIEnv *env, game_t *game) {
+  jobject game_renderer = (*env)->GetObjectField(env, game->minecraft.instance, game->minecraft.game_renderer_field);
+  CHECK(game_renderer);
+  DELETE_REF(env, game->game_renderer.instance);
+  jfloat game_renderer_fov_val = (*env)->GetFloatField(env, game_renderer, game->game_renderer.fov);
 
-  jobject position = (*env)->GetObjectField(env, camera, position_field);
+  game->game_renderer.instance = game_renderer;
+  game->game_renderer.fov_val = game_renderer_fov_val;
 
-  game->minecraft.game_renderer.camera.x_rot = x_rot_field;
-  game->minecraft.game_renderer.camera.y_rot = y_rot_field;
-  game->minecraft.game_renderer.camera.position = position;
-  game->minecraft.game_renderer.camera.class = camera_class;
-  game->minecraft.game_renderer.camera.instance = camera;
+  return true;
 }
 
-static void update_players(JNIEnv *env, game_t *game) {
+static bool update_camera(JNIEnv *env, game_t *game) {
+  jobject camera = (*env)->GetObjectField(env, game->game_renderer.instance, game->game_renderer.camera_field);
+  CHECK(camera);
+  DELETE_REF(env, game->camera.instance);
 
-  jfieldID client_level_field = (*env)->GetFieldID(env, game->minecraft.class, "level",
-                                                   "Lnet/minecraft/client/multiplayer/ClientLevel;");
-  jobject client_level = (*env)->GetObjectField(env, game->minecraft.instance, client_level_field);
+  jobject position = (*env)->GetObjectField(env, camera, game->camera.position_field);
+  CHECK(position);
+  DELETE_REF(env, game->camera.position);
 
-  if (!client_level)
-    return;
+  game->camera.instance = camera;
+  game->camera.position = position;
 
-  jclass client_level_class = (*env)->GetObjectClass(env, client_level);
-  jfieldID players_field = (*env)->GetFieldID(env, client_level_class, "players", "Ljava/util/List;");
-  jobject players = (*env)->GetObjectField(env, client_level, players_field);
-  jclass players_class = (*env)->FindClass(env, "Lnet/minecraft/world/entity/player/Player;");
+  return true;
+}
 
-  jmethodID is_local_player = (*env)->GetMethodID(env, players_class, "isLocalPlayer", "()Z");
-  jmethodID get_x = (*env)->GetMethodID(env, players_class, "getX", "()D");
-  jmethodID get_y = (*env)->GetMethodID(env, players_class, "getY", "()D");
-  jmethodID get_z = (*env)->GetMethodID(env, players_class, "getZ", "()D");
-  jfieldID glowing = (*env)->GetFieldID(env, players_class, "glowing", "Z");
-  jfieldID x_old = (*env)->GetFieldID(env, players_class, "xOld", "D");
-  jfieldID y_old = (*env)->GetFieldID(env, players_class, "yOld", "D");
-  jfieldID z_old = (*env)->GetFieldID(env, players_class, "zOld", "D");
-  jfieldID eye_height = (*env)->GetFieldID(env, players_class, "eyeHeight", "F");
-  jmethodID get_height = (*env)->GetMethodID(env, players_class, "getBbHeight", "()F");
-  jmethodID get_width = (*env)->GetMethodID(env, players_class, "getBbWidth", "()F");
-  jmethodID get_health = (*env)->GetMethodID(env, players_class, "getHealth", "()F");
+static bool update_client_level(JNIEnv *env, game_t *game) {
+  jobject client_level = (*env)->GetObjectField(env, game->minecraft.instance, game->minecraft.client_level_field);
+  CHECK(client_level);
+  DELETE_REF(env, game->client_level.instance);
 
-  game->players.get_health = get_health;
-  game->players.get_width = get_width;
-  game->players.get_height = get_height;
-  game->players.eye_height = eye_height;
-  game->players.x_old = x_old;
-  game->players.y_old = y_old;
-  game->players.z_old = z_old;
-  game->players.class = players_class;
+  game->client_level.instance = client_level;
+
+  return true;
+}
+
+static bool update_players(JNIEnv *env, game_t *game) {
+  if (!game->client_level.instance)
+    return false;
+
+  jobject players = (*env)->GetObjectField(env, game->client_level.instance, game->client_level.players_field);
+  CHECK(players);
+  DELETE_REF(env, game->players.instance);
+
   game->players.instance = players;
-  game->players.is_local_player = is_local_player;
-  game->players.get_x = get_x;
-  game->players.get_y = get_y;
-  game->players.get_z = get_z;
-  game->players.glowing = glowing;
   game->players.size = (*env)->CallIntMethod(env, game->players.instance, game->collections.list.size);
+
+  return true;
 }
 
 void reset_updates(game_t *game, menu_state_t *menu_state, overlay_t *overlay) {
@@ -157,18 +93,22 @@ void reset_updates(game_t *game, menu_state_t *menu_state, overlay_t *overlay) {
   overlay->boxes.size = 0;
 }
 
-void update(JNIEnv *env, game_t *game, menu_state_t *menu_state, overlay_t *overlay) {
+bool update(JNIEnv *env, game_t *game, menu_state_t *menu_state, overlay_t *overlay) {
   jobject local_player = localplayer_get(env, game);
   if (!local_player) {
     // revert updates for all (local player, players, entities, world, etc)
     reset_updates(game, menu_state, overlay);
-    return;
+    return false;
   }
   // we are in game, so we are safe to update structs
   game->in_game = true;
 
-  update_localplayer(env, game, local_player);
-  update_players(env, game);
-  update_minecraft(env, game);
-  update_camera(env, game);
+  CHECK_BOOL(update_localplayer(env, game));
+  CHECK_BOOL(update_client_level(env, game));
+  CHECK_BOOL(update_players(env, game));
+  CHECK_BOOL(update_minecraft(env, game));
+  CHECK_BOOL(update_game_renderer(env, game));
+  CHECK_BOOL(update_camera(env, game));
+
+  return true;
 }

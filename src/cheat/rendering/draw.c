@@ -3,7 +3,7 @@
 #define NK_GLFW_GL3_IMPLEMENTATION
 #define NK_INCLUDE_DEFAULT_ALLOCATOR
 
-#include "../hooks/hooks.h"
+#include "../hooks/native/hooks.h"
 #include "../utils/logger.h"
 #include <dlfcn.h>
 #include "draw.h"
@@ -52,8 +52,7 @@ void *glfwSwapBuffers_addr = NULL;
 typedef void (*glfwSwapBuffers_s)(GLFWwindow *);
 glfwSwapBuffers_s glfwSwapBuffers_o;
 
-static void cursor_dummy([[maybe_unused]] GLFWwindow *win, [[maybe_unused]] double x,
-                         [[maybe_unused]] double y) {
+static void cursor_dummy([[maybe_unused]] GLFWwindow *win, [[maybe_unused]] double x, [[maybe_unused]] double y) {
   return;
 }
 
@@ -153,12 +152,12 @@ static void restore_state() {
     glDisable(GL_SCISSOR_TEST);
 
   glDepthMask(opengl_state.last_depth_mask);
-  glColorMask(opengl_state.last_color_mask[0], opengl_state.last_color_mask[1],
-              opengl_state.last_color_mask[2], opengl_state.last_color_mask[3]);
+  glColorMask(opengl_state.last_color_mask[0], opengl_state.last_color_mask[1], opengl_state.last_color_mask[2],
+              opengl_state.last_color_mask[3]);
   glPolygonMode(GL_FRONT_AND_BACK, (GLenum)opengl_state.last_polygon_mode[0]);
 
-  glViewport(opengl_state.last_viewport[0], opengl_state.last_viewport[1],
-             (GLsizei)opengl_state.last_viewport[2], (GLsizei)opengl_state.last_viewport[3]);
+  glViewport(opengl_state.last_viewport[0], opengl_state.last_viewport[1], (GLsizei)opengl_state.last_viewport[2],
+             (GLsizei)opengl_state.last_viewport[3]);
   glScissor(opengl_state.last_scissor_box[0], opengl_state.last_scissor_box[1],
             (GLsizei)opengl_state.last_scissor_box[2], (GLsizei)opengl_state.last_scissor_box[3]);
 }
@@ -214,8 +213,7 @@ void swap_buffers(GLFWwindow *win) {
     rctx.height = tmp_height;
   }
 
-  if (tmp_fbwidth != 0 && tmp_fbheight != 0 && tmp_fbwidth != rctx.fb_width &&
-      tmp_fbheight != rctx.fb_height) {
+  if (tmp_fbwidth != 0 && tmp_fbheight != 0 && tmp_fbwidth != rctx.fb_width && tmp_fbheight != rctx.fb_height) {
     rctx.fb_width = tmp_fbwidth;
     rctx.fb_height = tmp_fbheight;
   }
@@ -247,7 +245,7 @@ bool set_draw_hook(void) {
     return false;
   }
   LOGGER_LOG(LOG, "glfwSwapBuffers @ %p", glfwSwapBuffers_addr);
-  return hook_install(glfwSwapBuffers_addr, (void *)&swap_buffers, (void **)&glfwSwapBuffers_o);
+  return native_hook_install(glfwSwapBuffers_addr, (void *)&swap_buffers, (void **)&glfwSwapBuffers_o);
 }
 
 bool remove_draw_hook(void) {
@@ -257,7 +255,7 @@ bool remove_draw_hook(void) {
     thrd_yield();
   }
   LOGGER_LOG(LOG, "removing draw hook...");
-  if (!hook_remove(glfwSwapBuffers_addr)) {
+  if (!native_hook_remove(glfwSwapBuffers_addr)) {
     LOGGER_LOG(FATAL, "failed to remove draw hook");
     return false;
   }

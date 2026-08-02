@@ -3,6 +3,7 @@
 #include "../../core/localplayer.h"
 #include "../../core/player.h"
 #include "../../utils/logger.h"
+#include "../../core/camera.h"
 
 void arrows(JNIEnv *env, game_t *game, menu_state_t *menu_state, overlay_t *overlay) {
   // it will traverse all players
@@ -28,8 +29,8 @@ void arrows(JNIEnv *env, game_t *game, menu_state_t *menu_state, overlay_t *over
     if (player_is_localplayer(env, game, player))
       continue;
 
-    localplayer_get_position(env, game, &localplayer_position);
-    player_get_position(env, game, player, &player_position);
+    camera_get_position(env, game, &localplayer_position);
+    player_get_lerped_position(env, game, player, &player_position);
     float distance = calculate_distance_vec3(&localplayer_position, &player_position);
     if (distance > menu_state->esp_settings.arrows.distance)
       continue;
@@ -39,7 +40,7 @@ void arrows(JNIEnv *env, game_t *game, menu_state_t *menu_state, overlay_t *over
     float yaw = rad2deg(-atan2f(delta_x, delta_z));
 
     vec2_t local_viewangles;
-    localplayer_get_viewangles(env, game, &local_viewangles);
+    camera_get_viewangles(env, game, &local_viewangles);
     local_viewangles.y = normalize_angle(local_viewangles.y);
     float delta_yaw = yaw - local_viewangles.y;
     delta_yaw = normalize_angle(delta_yaw);

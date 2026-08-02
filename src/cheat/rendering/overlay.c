@@ -6,6 +6,8 @@
 overlay_t overlay = {0};
 
 static void draw_arrows(rendering_context_t *rctx, menu_state_t *menu_state) {
+  if (!menu_state->esp_settings.enabled)
+    return;
   if (!menu_state->esp_settings.arrows.enabled)
     return;
   if (overlay.arrows.size == 0)
@@ -64,12 +66,14 @@ static void draw_outlined_box(struct nk_command_buffer *canvas, struct nk_rect r
   f2.w -= 2 * t;
   f2.h -= 2 * t;
 
-  nk_stroke_rect(canvas, f1, 0, t, nk_rgb(0, 0, 0));
-  nk_stroke_rect(canvas, rect, 0, t, c);
-  nk_stroke_rect(canvas, f2, 0, t, nk_rgb(0, 0, 0));
+  nk_stroke_rect(canvas, f1, r, t, nk_rgb(0, 0, 0));
+  nk_stroke_rect(canvas, rect, r, t, c);
+  nk_stroke_rect(canvas, f2, r, t, nk_rgb(0, 0, 0));
 }
 
 static void draw_boxes(rendering_context_t *rctx, menu_state_t *menu_state) {
+  if (!menu_state->esp_settings.enabled)
+    return;
   if (!menu_state->esp_settings.box.enabled)
     return;
   if (overlay.boxes.size == 0)
@@ -79,10 +83,50 @@ static void draw_boxes(rendering_context_t *rctx, menu_state_t *menu_state) {
   for (size_t i = 0; i < overlay.boxes.size; i++) {
     float height = fabs(overlay.boxes.buffer[i].head.y - overlay.boxes.buffer[i].feet.y);
     float width = height * 0.35;
+    float t = 2.0;
 
-    struct nk_rect rect = {overlay.boxes.buffer[i].head.x - (width / 2.0), overlay.boxes.buffer[i].head.y,
-                           width, height};
-    draw_outlined_box(canvas, rect, 0, 2.0f, box_color);
+    struct nk_rect rect = {overlay.boxes.buffer[i].head.x - (width / 2.0), overlay.boxes.buffer[i].head.y, width,
+                           height};
+    draw_outlined_box(canvas, rect, 0, t, box_color);
+  }
+}
+
+static void draw_health(rendering_context_t *rctx, menu_state_t *menu_state) {
+  if (!menu_state->esp_settings.enabled)
+    return;
+  if (!menu_state->esp_settings.health_bar.enabled)
+    return;
+  if (overlay.health.size == 0)
+    return;
+  struct nk_command_buffer *canvas = nk_window_get_canvas(rctx->ctx);
+  for (size_t i = 0; i < overlay.health.size; i++) {
+    float height = fabs(overlay.health.buffer[i].head.y - overlay.health.buffer[i].feet.y);
+    // offset from the "draw_boxes"
+    float box_width = height * 0.35;
+    // width of health box
+    float health_width = height * 0.04;
+
+    // x offset
+    float x = (overlay.health.buffer[i].head.x - (box_width / 2.0)) - (health_width * 2);
+    float y = overlay.health.buffer[i].head.y;
+    float t = 2.5;
+
+    // 20.0 -> max health
+    float health_ratio = overlay.health.buffer[i].health / 20.0f;
+
+    // it will decrease with the ratio
+    float health_height = height * health_ratio;
+
+    struct nk_color health_color =
+        nk_rgb((222.0 - (health_ratio * 222.0) + 33.0), 242 * health_ratio, 109 * health_ratio);
+
+    struct nk_rect rect = {x, y + (height - health_height), health_width, health_height};
+
+    // outline
+    struct nk_rect rect_out = {x - t, y - t, health_width + 2 * t, height + 2 * t};
+
+    nk_stroke_rect(canvas, rect_out, 0, t, nk_rgb(0, 0, 0));
+    nk_fill_rect(canvas, rect, 0, health_color);
   }
 }
 
@@ -96,8 +140,8 @@ static void draw_dark_background(rendering_context_t *rctx) {
   if (!rctx->open)
     return;
   struct nk_command_buffer *canvas = nk_window_get_canvas(rctx->ctx);
-  struct nk_rect rect = nk_rect(0, 0, rctx->width + rctx->ctx->style.window.padding.x,
-                                rctx->height + rctx->ctx->style.window.padding.y);
+  struct nk_rect rect =
+      nk_rect(0, 0, rctx->width + rctx->ctx->style.window.padding.x, rctx->height + rctx->ctx->style.window.padding.y);
   nk_fill_rect(canvas, rect, 0.0, nk_rgba(0, 0, 0, 150));
 }
 
@@ -140,6 +184,7 @@ void draw_overlay(rendering_context_t *rctx) {
     draw_dark_background(rctx);
     draw_fov_circle(rctx, menu_state);
     draw_boxes(rctx, menu_state);
+    draw_health(rctx, menu_state);
     draw_arrows(rctx, menu_state);
   }
 

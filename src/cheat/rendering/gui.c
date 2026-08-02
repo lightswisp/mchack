@@ -17,9 +17,8 @@ static menu_state_t menu_state = {.active_tab = 0,
 static void draw_aimbot_group(struct nk_context *ctx, menu_state_t *menu_state) {
   nk_layout_row_dynamic(ctx, NK_DYNAMIC, 2);
   menu_state->aimbot_settings.enabled = nk_check_label(ctx, "aimbot", menu_state->aimbot_settings.enabled);
-  menu_state->aimbot_settings.auto_attack =
-      nk_check_text_align(ctx, "auto attack", 11, menu_state->aimbot_settings.auto_attack,
-                          NK_WIDGET_ALIGN_RIGHT, NK_TEXT_ALIGN_RIGHT);
+  menu_state->aimbot_settings.auto_attack = nk_check_text_align(
+      ctx, "auto attack", 11, menu_state->aimbot_settings.auto_attack, NK_WIDGET_ALIGN_RIGHT, NK_TEXT_ALIGN_RIGHT);
   struct nk_command_buffer *canvas = nk_window_get_canvas(ctx);
   struct nk_rect space;
   nk_layout_row_dynamic(ctx, 20, 1);
@@ -28,10 +27,10 @@ static void draw_aimbot_group(struct nk_context *ctx, menu_state_t *menu_state) 
   }
 
   nk_layout_row_dynamic(ctx, NK_DYNAMIC, 2);
-  snprintf(menu_state->aimbot_settings.smoothness_label, sizeof(menu_state->aimbot_settings.smoothness_label),
-           "smoothness: %.2f", menu_state->aimbot_settings.smoothness);
-  nk_label(ctx, menu_state->aimbot_settings.smoothness_label, NK_TEXT_RIGHT);
-  nk_slider_float(ctx, 0.0, &menu_state->aimbot_settings.smoothness, 1.0, 0.05);
+  snprintf(menu_state->aimbot_settings.smoothstep_label, sizeof(menu_state->aimbot_settings.smoothstep_label),
+           "smooth step: %.2f", menu_state->aimbot_settings.smooth_step);
+  nk_label(ctx, menu_state->aimbot_settings.smoothstep_label, NK_TEXT_RIGHT);
+  nk_slider_float(ctx, 0.0, &menu_state->aimbot_settings.smooth_step, 1.0, 0.01);
   snprintf(menu_state->aimbot_settings.distance_label, sizeof(menu_state->aimbot_settings.distance_label),
            "distance: %.2f", menu_state->aimbot_settings.distance);
   nk_label(ctx, menu_state->aimbot_settings.distance_label, NK_TEXT_RIGHT);
@@ -39,7 +38,7 @@ static void draw_aimbot_group(struct nk_context *ctx, menu_state_t *menu_state) 
   snprintf(menu_state->aimbot_settings.fov_label, sizeof(menu_state->aimbot_settings.fov_label), "fov: %.2f",
            menu_state->aimbot_settings.fov);
   nk_label(ctx, menu_state->aimbot_settings.fov_label, NK_TEXT_RIGHT);
-  nk_slider_float(ctx, 0.0, &menu_state->aimbot_settings.fov, 360.0, 10.0);
+  nk_slider_float(ctx, 0.0, &menu_state->aimbot_settings.fov, 360.0, 5.0);
 
   snprintf(menu_state->aimbot_settings.attack_threshold_label,
            sizeof(menu_state->aimbot_settings.attack_threshold_label), "threshold: %.2f",
@@ -48,8 +47,7 @@ static void draw_aimbot_group(struct nk_context *ctx, menu_state_t *menu_state) 
   nk_slider_float(ctx, 0.0, &menu_state->aimbot_settings.attack_threshold, 1.0, 0.1);
 
   nk_layout_row_dynamic(ctx, NK_DYNAMIC, 1);
-  menu_state->aimbot_settings.trigger =
-      nk_check_label(ctx, "trigger bot", menu_state->aimbot_settings.trigger);
+  menu_state->aimbot_settings.trigger = nk_check_label(ctx, "trigger bot", menu_state->aimbot_settings.trigger);
   menu_state->aimbot_settings.crits = nk_check_label(ctx, "crits", menu_state->aimbot_settings.crits);
 }
 
@@ -63,11 +61,9 @@ static void draw_esp_group(struct nk_context *ctx, menu_state_t *menu_state) {
     nk_stroke_line(canvas, space.x, space.y + 4, space.x + space.w, space.y + 4, 2.0f, nk_rgb(49, 49, 49));
   }
   nk_layout_row_dynamic(ctx, NK_DYNAMIC, 1);
-  menu_state->esp_settings.arrows.enabled =
-      nk_check_label(ctx, "arrows", menu_state->esp_settings.arrows.enabled);
-  snprintf(menu_state->esp_settings.arrows.distance_label,
-           sizeof(menu_state->esp_settings.arrows.distance_label), "arrows distance: %d",
-           menu_state->esp_settings.arrows.distance);
+  menu_state->esp_settings.arrows.enabled = nk_check_label(ctx, "arrows", menu_state->esp_settings.arrows.enabled);
+  snprintf(menu_state->esp_settings.arrows.distance_label, sizeof(menu_state->esp_settings.arrows.distance_label),
+           "arrows distance: %d", menu_state->esp_settings.arrows.distance);
   nk_label(ctx, menu_state->esp_settings.arrows.distance_label, NK_TEXT_LEFT);
   nk_slider_int(ctx, 1, &menu_state->esp_settings.arrows.distance, 20, 1);
   snprintf(menu_state->esp_settings.arrows.radius_label, sizeof(menu_state->esp_settings.arrows.radius_label),
@@ -75,9 +71,11 @@ static void draw_esp_group(struct nk_context *ctx, menu_state_t *menu_state) {
   nk_label(ctx, menu_state->esp_settings.arrows.radius_label, NK_TEXT_LEFT);
   nk_slider_int(ctx, 1, &menu_state->esp_settings.arrows.radius, 300, 1);
 
-  nk_layout_row_dynamic(ctx, NK_DYNAMIC, 2);
+  nk_layout_row_dynamic(ctx, NK_DYNAMIC, 3);
   menu_state->esp_settings.glow.enabled = nk_check_label(ctx, "glow", menu_state->esp_settings.glow.enabled);
   menu_state->esp_settings.box.enabled = nk_check_label(ctx, "boxes", menu_state->esp_settings.box.enabled);
+  menu_state->esp_settings.health_bar.enabled =
+      nk_check_label(ctx, "health", menu_state->esp_settings.health_bar.enabled);
 }
 
 static void draw_misc_group(struct nk_context *ctx, menu_state_t *menu_state) {
@@ -93,15 +91,13 @@ static void draw_misc_group(struct nk_context *ctx, menu_state_t *menu_state) {
   menu_state->misc_settings.fly.enabled = nk_check_label(ctx, "fly", menu_state->misc_settings.fly.enabled);
   menu_state->misc_settings.sprint = nk_check_label(ctx, "sprint", menu_state->misc_settings.sprint);
   menu_state->misc_settings.nofall = nk_check_label(ctx, "no fall", menu_state->misc_settings.nofall);
-  menu_state->misc_settings.inf_jump =
-      nk_check_label(ctx, "infinite jump", menu_state->misc_settings.inf_jump);
+  menu_state->misc_settings.inf_jump = nk_check_label(ctx, "infinite jump", menu_state->misc_settings.inf_jump);
   menu_state->misc_settings.fullbright.enabled =
       nk_check_label(ctx, "full bright", menu_state->misc_settings.fullbright.enabled);
-  menu_state->misc_settings.fast_place =
-      nk_check_label(ctx, "fast place", menu_state->misc_settings.fast_place);
+  menu_state->misc_settings.fast_place = nk_check_label(ctx, "fast place", menu_state->misc_settings.fast_place);
   nk_layout_row_dynamic(ctx, NK_DYNAMIC, 2);
-  snprintf(menu_state->misc_settings.speed_label, sizeof(menu_state->misc_settings.speed_label),
-           "speed: %.2f", menu_state->misc_settings.speed);
+  snprintf(menu_state->misc_settings.speed_label, sizeof(menu_state->misc_settings.speed_label), "speed: %.2f",
+           menu_state->misc_settings.speed);
   nk_label(ctx, menu_state->misc_settings.speed_label, NK_TEXT_LEFT);
   nk_slider_float(ctx, 0.2, &menu_state->misc_settings.speed, 2.0, 0.1);
 }
@@ -130,8 +126,8 @@ static void draw_left_panel(struct nk_context *ctx, menu_state_t *menu_state) {
       menu_state->active_tab = MISC;
     if (nk_button_label(ctx, "scripts"))
       menu_state->active_tab = SCRIPTS;
-    nk_edit_string(ctx, NK_EDIT_FIELD, menu_state->text_buf, &menu_state->text_len,
-                   sizeof(menu_state->text_buf), nk_filter_default);
+    nk_edit_string(ctx, NK_EDIT_FIELD, menu_state->text_buf, &menu_state->text_len, sizeof(menu_state->text_buf),
+                   nk_filter_default);
     nk_layout_row_dynamic(ctx, menu_state->resolution.left_panel_widget_height, 2);
     if (nk_button_label(ctx, "save")) {
     }
@@ -214,8 +210,8 @@ void setup_resolution(rendering_context_t *rctx) {
   float panel_height = win_height - rctx->ctx->style.window.padding.y * 2;
 
   float left_panel_widgets = 6.0;
-  float left_panel_spacing = (rctx->ctx->style.window.spacing.y * (left_panel_widgets - 1)) +
-                             (rctx->ctx->style.window.group_padding.y * 2);
+  float left_panel_spacing =
+      (rctx->ctx->style.window.spacing.y * (left_panel_widgets - 1)) + (rctx->ctx->style.window.group_padding.y * 2);
   float left_panel_widget_height = ((panel_height - left_panel_spacing) / left_panel_widgets);
 
   menu_state.resolution.win_width = win_width;

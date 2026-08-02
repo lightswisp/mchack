@@ -17,5 +17,5 @@ typedef struct {
   size_t stolen_bytes_size;
 } hook_t;
 
-bool hook_install(void *addr, void *detour, void **trampoline);
-bool hook_remove(void *addr);
+bool native_hook_install(void *addr, void *detour, void **trampoline);
+bool native_hook_remove(void *addr);

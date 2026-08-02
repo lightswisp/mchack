@@ -13,8 +13,8 @@ add_library(cheat SHARED main.c
     core/message.c
     utils/logger.c
     utils/logger.h
-    hooks/hooks.h
-    hooks/hooks.c
+    hooks/native/hooks.h
+    hooks/native/hooks.c
     core/localplayer.h
     core/localplayer.c
     rendering/draw.c
@@ -59,7 +59,13 @@ add_library(cheat SHARED main.c
     core/camera.c
     core/camera.h
     rendering/overlay.c
-    rendering/overlay.h)
+    rendering/overlay.h
+    hacks/esp/health.c
+    hacks/esp/health.h
+    core/keys.c
+    core/keys.h
+    hooks/java/hooks.c
+    hooks/java/hooks.h)
 target_include_directories(cheat PRIVATE ${JNI_INCLUDE_DIRS})
 target_compile_options(cheat PRIVATE -g -O0 -fno-omit-frame-pointer)
 

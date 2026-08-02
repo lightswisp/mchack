@@ -1,5 +1,4 @@
 #include "hooks.h"
-#include "../utils/logger.h"
 #include <Zydis/Zydis.h>
 #include <dlfcn.h>
 #include <errno.h>
@@ -11,9 +10,11 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
+#include "../../utils/logger.h"
+
 hook_t hooks[MAX_HOOKS] = {0};
 
-static bool hook_find_free_slot(size_t *slot) {
+static bool native_hook_find_free_slot(size_t *slot) {
   for (size_t i = 0; i < MAX_HOOKS; i++) {
     if (hooks[i].addr == NULL) {
       *slot = i;
@@ -23,7 +24,7 @@ static bool hook_find_free_slot(size_t *slot) {
   return false;
 }
 
-static bool hook_already_installed(void *addr) {
+static bool native_hook_already_installed(void *addr) {
   for (size_t i = 0; i < MAX_HOOKS; i++) {
     if (hooks[i].addr == addr)
       return true;
@@ -31,7 +32,7 @@ static bool hook_already_installed(void *addr) {
   return false;
 }
 
-static bool hook_protect(void *addr, size_t len) {
+static bool native_hook_protect(void *addr, size_t len) {
   size_t page_size = sysconf(_SC_PAGE_SIZE);
   void *addr_aligned = (void *)((uintptr_t)addr & ~(page_size - 1));
   size_t aligned_len = (((uintptr_t)addr + len - (uintptr_t)addr_aligned) + page_size - 1) & ~(page_size - 1);
@@ -43,8 +44,8 @@ static bool hook_protect(void *addr, size_t len) {
   return true;
 }
 
-static bool is_relative_instruction(ZydisDecodedInstruction *instruction, ZydisDecodedOperand *operands,
-                                    size_t *idx) {
+static bool native_is_relative_instruction(ZydisDecodedInstruction *instruction, ZydisDecodedOperand *operands,
+                                           size_t *idx) {
   for (size_t i = 0; i < instruction->operand_count; i++) {
     ZydisDecodedOperand operand = operands[i];
     switch (operand.type) {
@@ -67,7 +68,7 @@ static bool is_relative_instruction(ZydisDecodedInstruction *instruction, ZydisD
   return false;
 }
 
-static size_t calculate_offset(ZydisDecodedInstruction *instruction, ZydisDecodedOperand *operand) {
+static size_t native_calculate_offset(ZydisDecodedInstruction *instruction, ZydisDecodedOperand *operand) {
   switch (operand->type) {
   case ZYDIS_OPERAND_TYPE_IMMEDIATE:
     if (operand->imm.is_relative)
@@ -86,7 +87,7 @@ static size_t calculate_offset(ZydisDecodedInstruction *instruction, ZydisDecode
   return 0;
 }
 
-static ZydisMnemonic inverse_mnemonic(ZydisMnemonic mnemonic) {
+static ZydisMnemonic native_inverse_mnemonic(ZydisMnemonic mnemonic) {
   switch (mnemonic) {
   case ZYDIS_MNEMONIC_JO:
     return ZYDIS_MNEMONIC_JNO;
@@ -126,14 +127,14 @@ static ZydisMnemonic inverse_mnemonic(ZydisMnemonic mnemonic) {
   return ZYDIS_MNEMONIC_INVALID;
 }
 
-bool hook_install(void *addr, void *detour, void **trampoline) {
+bool native_hook_install(void *addr, void *detour, void **trampoline) {
   LOGGER_LOG(LOG, "setting hook for %p", addr);
   bool status = false;
-  if (hook_already_installed(addr))
+  if (native_hook_already_installed(addr))
     goto end;
 
   size_t hook_idx = 0;
-  if (!hook_find_free_slot(&hook_idx))
+  if (!native_hook_find_free_slot(&hook_idx))
     goto end;
 
   uint8_t prologue_shellcode[] = {
@@ -167,7 +168,7 @@ bool hook_install(void *addr, void *detour, void **trampoline) {
   // set addr
   memcpy(prologue_shellcode + 2, &detour, 8);
 
-  if (!hook_protect(addr, sizeof(prologue_shellcode)))
+  if (!native_hook_protect(addr, sizeof(prologue_shellcode)))
     goto end;
 
   ZyanU8 *prologue = (uint8_t *)addr;
@@ -184,15 +185,14 @@ bool hook_install(void *addr, void *detour, void **trampoline) {
 
 #define MAX_INSTRUCTIONS (67)
 #define TRAMPOLINE_SIZE (ZYDIS_MAX_INSTRUCTION_LENGTH * MAX_INSTRUCTIONS)
-  trampoline_t generated_trampoline = {
-      .base = calloc(TRAMPOLINE_SIZE, 1), .size = TRAMPOLINE_SIZE, .edge = 0};
+  trampoline_t generated_trampoline = {.base = calloc(TRAMPOLINE_SIZE, 1), .size = TRAMPOLINE_SIZE, .edge = 0};
 
   // loop over the instructions
-  while (ZYAN_SUCCESS(ZydisDecoderDecodeFull(&decoder, &prologue[offset], ZYDIS_MAX_INSTRUCTION_LENGTH,
-                                             &instruction, operands)) &&
+  while (ZYAN_SUCCESS(ZydisDecoderDecodeFull(&decoder, &prologue[offset], ZYDIS_MAX_INSTRUCTION_LENGTH, &instruction,
+                                             operands)) &&
          offset < sizeof(prologue_shellcode)) {
     size_t opx = 0;
-    if (is_relative_instruction(&instruction, operands, &opx)) {
+    if (native_is_relative_instruction(&instruction, operands, &opx)) {
 
       // FOR MEMORY
       // lea rax, [rip+0x1234] - transforms to:
@@ -213,13 +213,13 @@ bool hook_install(void *addr, void *detour, void **trampoline) {
 
       // we need to relocate it
       LOGGER_LOG(LOG, "relocation is needded for current instruction");
-      size_t rel_offset = calculate_offset(&instruction, &operands[opx]);
+      size_t rel_offset = native_calculate_offset(&instruction, &operands[opx]);
       uintptr_t final_addr = runtime_address + rel_offset;
 
       memset(&req, 0, sizeof(req));
       memset(encoded_instruction, 0, sizeof(encoded_instruction));
-      if (ZYAN_FAILED(ZydisEncoderDecodedInstructionToEncoderRequest(
-              &instruction, operands, instruction.operand_count_visible, &req))) {
+      if (ZYAN_FAILED(ZydisEncoderDecodedInstructionToEncoderRequest(&instruction, operands,
+                                                                     instruction.operand_count_visible, &req))) {
         LOGGER_LOG(FATAL, "Failed to encode decoded instruction");
         goto end;
       }
@@ -253,7 +253,7 @@ bool hook_install(void *addr, void *detour, void **trampoline) {
       } else if (operands[opx].type == ZYDIS_OPERAND_TYPE_IMMEDIATE && operands[opx].imm.is_relative) {
         ZyanI64 skip_size = sizeof(cond_jmp_shellcode);
         encoded_length = ZYDIS_MAX_INSTRUCTION_LENGTH;
-        req.mnemonic = inverse_mnemonic(instruction.mnemonic);
+        req.mnemonic = native_inverse_mnemonic(instruction.mnemonic);
         req.operands[opx].imm.s = skip_size;
         if (ZYAN_FAILED(ZydisEncoderEncodeInstruction(&req, encoded_instruction, &encoded_length))) {
           LOGGER_LOG(FATAL, "failed to encode relative jump instruction");
@@ -265,8 +265,7 @@ bool hook_install(void *addr, void *detour, void **trampoline) {
         // set addr
         memcpy(cond_jmp_shellcode + COND_JMP_SHELLCODE_OFFSET, &final_addr, sizeof(final_addr));
 
-        memcpy(generated_trampoline.base + generated_trampoline.edge, cond_jmp_shellcode,
-               sizeof(cond_jmp_shellcode));
+        memcpy(generated_trampoline.base + generated_trampoline.edge, cond_jmp_shellcode, sizeof(cond_jmp_shellcode));
         generated_trampoline.edge += sizeof(cond_jmp_shellcode);
       } else {
         LOGGER_LOG(FATAL, "unknown type");
@@ -291,7 +290,7 @@ bool hook_install(void *addr, void *detour, void **trampoline) {
   // original instructions + jump
   // we need to execute stolen instructions first
   // then we will have to jump to prologue+offset
-  if (!hook_protect(generated_trampoline.base, generated_trampoline.size))
+  if (!native_hook_protect(generated_trampoline.base, generated_trampoline.size))
     goto end;
 
   uint8_t *addr_to_jump = prologue + offset;
@@ -325,14 +324,14 @@ end:
   return status;
 }
 
-bool hook_remove(void *addr) {
+bool native_hook_remove(void *addr) {
   LOGGER_LOG(LOG, "removing hook for %p", addr);
   if (addr == NULL)
     return false;
   // iterate over hooks and look for addr
   for (size_t i = 0; i < MAX_HOOKS; i++) {
     if (hooks[i].addr == addr) {
-      if (!hook_protect(addr, hooks[i].stolen_bytes_size)) {
+      if (!native_hook_protect(addr, hooks[i].stolen_bytes_size)) {
         LOGGER_LOG(FATAL, "failed to protect memory");
         return false;
       }

@@ -99,16 +99,16 @@ void logger_log(enum log_status status, const char *func, const char *fmt, ...) 
   strftime(time_buffer, sizeof(time_buffer), "%F %X", tm);
   switch (status) {
   case LOG:
-    fprintf(stdout, COLOR_START(GREEN) "[LOG @ %s]" COLOR_START(GREEN) " %s:" COLOR_END " %s\n", time_buffer,
-            func, buffer);
+    fprintf(stdout, COLOR_START(GREEN) "[LOG @ %s]" COLOR_START(GREEN) " %s:" COLOR_END " %s\n", time_buffer, func,
+            buffer);
     break;
   case WARNING:
-    fprintf(stdout, COLOR_START(GREEN) "[WARNING @ %s]" COLOR_START(YELLOW) " %s:" COLOR_END " %s\n",
-            time_buffer, func, buffer);
+    fprintf(stdout, COLOR_START(GREEN) "[WARNING @ %s]" COLOR_START(YELLOW) " %s:" COLOR_END " %s\n", time_buffer, func,
+            buffer);
     break;
   case FATAL:
-    fprintf(stdout, COLOR_START(GREEN) "[FATAL @ %s]" COLOR_START(RED) " %s:" COLOR_END " %s\n", time_buffer,
-            func, buffer);
+    fprintf(stdout, COLOR_START(GREEN) "[FATAL @ %s]" COLOR_START(RED) " %s:" COLOR_END " %s\n", time_buffer, func,
+            buffer);
     break;
   }
   va_end(args);
@@ -178,8 +178,8 @@ uintptr_t get_base(pid_t pid, const char *lib, bool exact) {
   } maps;
 
   while (fgets(maps_buf, sizeof(maps_buf), fd)) {
-    [[maybe_unused]] int n = sscanf(maps_buf, "%lx-%lx %4s %lx %254s %d %4095s", &maps.a_s, &maps.a_e,
-                                    maps.perms, &maps.offset, maps.dev, &maps.inode, maps.pathname);
+    [[maybe_unused]] int n = sscanf(maps_buf, "%lx-%lx %4s %lx %254s %d %4095s", &maps.a_s, &maps.a_e, maps.perms,
+                                    &maps.offset, maps.dev, &maps.inode, maps.pathname);
 
     if (exact) {
       const char *bname = basename(maps.pathname);
@@ -416,8 +416,7 @@ end:
   return shellcode;
 }
 
-ZyanU8 *generate_injection_shellcode(uintptr_t rsp, uintptr_t dlopen_addr, const char *lib,
-                                     ZyanUSize *shellcode_size) {
+ZyanU8 *generate_injection_shellcode(uintptr_t rsp, uintptr_t dlopen_addr, const char *lib, ZyanUSize *shellcode_size) {
   // mov rbx, 0x6767676767676767 | =====> this part is dynamic
   // push rbx                    |
   // ...
@@ -645,8 +644,8 @@ end:
   return shellcode;
 }
 
-bool handle_injection_trap(pid_t pid, struct user_regs_struct *old_regs, uintptr_t old_entry,
-                           uint8_t *backup_buffer, size_t size) {
+bool handle_injection_trap(pid_t pid, struct user_regs_struct *old_regs, uintptr_t old_entry, uint8_t *backup_buffer,
+                           size_t size) {
   struct user_regs_struct regs;
   while (true) {
     int status;
@@ -684,8 +683,8 @@ bool handle_injection_trap(pid_t pid, struct user_regs_struct *old_regs, uintptr
   return true;
 }
 
-bool handle_uninjection_trap(pid_t pid, struct user_regs_struct *old_regs, uintptr_t old_entry,
-                             uint8_t *backup_buffer, size_t size) {
+bool handle_uninjection_trap(pid_t pid, struct user_regs_struct *old_regs, uintptr_t old_entry, uint8_t *backup_buffer,
+                             size_t size) {
   struct user_regs_struct regs;
   while (true) {
     int status;
@@ -1021,10 +1020,15 @@ int main(void) {
   LOGGER_LOG(LOG, "dlopen handle: %p", context.handle);
   LOGGER_LOG(LOG, "To uninject, press ctrl+c");
 
+  // char cmd[128];
+  // sprintf(cmd, "sudo gf2 -p %d -ex handle SIGSEGV nostop noprint pass", pid);
+  // system(cmd);
+
   // tail the log file output
   if (!read_logs(MCHACK_LOG_PATH))
     goto end;
 
+  // system("pkill -9 gf2");
   exit_status = EXIT_SUCCESS;
 
 end:

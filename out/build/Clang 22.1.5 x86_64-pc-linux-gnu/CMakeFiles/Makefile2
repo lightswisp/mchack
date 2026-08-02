@@ -235,7 +235,7 @@ src/injector/CMakeFiles/injector.dir/all: src/libs/zydis/CMakeFiles/Zydis.dir/al
 src/injector/CMakeFiles/injector.dir/all: src/libs/zydis/zycore/CMakeFiles/Zycore.dir/all
 	$(MAKE) $(MAKESILENT) -f src/injector/CMakeFiles/injector.dir/build.make src/injector/CMakeFiles/injector.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/injector/CMakeFiles/injector.dir/build.make src/injector/CMakeFiles/injector.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/CMakeFiles" --progress-num=61,62 "Built target injector"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/CMakeFiles" --progress-num=64,65 "Built target injector"
 .PHONY : src/injector/CMakeFiles/injector.dir/all
 
 # Build rule for subdir invocation for target.
@@ -252,7 +252,7 @@ injector: src/injector/CMakeFiles/injector.dir/rule
 # codegen rule for target.
 src/injector/CMakeFiles/injector.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f src/injector/CMakeFiles/injector.dir/build.make src/injector/CMakeFiles/injector.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/CMakeFiles" --progress-num=61,62 "Finished codegen for target injector"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/CMakeFiles" --progress-num=64,65 "Finished codegen for target injector"
 .PHONY : src/injector/CMakeFiles/injector.dir/codegen
 
 # clean rule for target.
@@ -268,12 +268,12 @@ src/cheat/CMakeFiles/cheat.dir/all: src/libs/zydis/CMakeFiles/Zydis.dir/all
 src/cheat/CMakeFiles/cheat.dir/all: src/libs/zydis/zycore/CMakeFiles/Zycore.dir/all
 	$(MAKE) $(MAKESILENT) -f src/cheat/CMakeFiles/cheat.dir/build.make src/cheat/CMakeFiles/cheat.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/cheat/CMakeFiles/cheat.dir/build.make src/cheat/CMakeFiles/cheat.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/CMakeFiles" --progress-num=34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60 "Built target cheat"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/CMakeFiles" --progress-num=34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63 "Built target cheat"
 .PHONY : src/cheat/CMakeFiles/cheat.dir/all
 
 # Build rule for subdir invocation for target.
 src/cheat/CMakeFiles/cheat.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/CMakeFiles" 60
+	$(CMAKE_COMMAND) -E cmake_progress_start "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/CMakeFiles" 63
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/cheat/CMakeFiles/cheat.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start "/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/CMakeFiles" 0
 .PHONY : src/cheat/CMakeFiles/cheat.dir/rule
@@ -285,7 +285,7 @@ cheat: src/cheat/CMakeFiles/cheat.dir/rule
 # codegen rule for target.
 src/cheat/CMakeFiles/cheat.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f src/cheat/CMakeFiles/cheat.dir/build.make src/cheat/CMakeFiles/cheat.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/CMakeFiles" --progress-num=34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60 "Finished codegen for target cheat"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/home/lightswisp/Documents/mchack/out/build/Clang 22.1.5 x86_64-pc-linux-gnu/CMakeFiles" --progress-num=34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63 "Finished codegen for target cheat"
 .PHONY : src/cheat/CMakeFiles/cheat.dir/codegen
 
 # clean rule for target.

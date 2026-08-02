@@ -25,8 +25,8 @@ typedef struct {
   struct {
     bool enabled;
     bool auto_attack;
-    char smoothness_label[32];
-    float smoothness;
+    char smoothstep_label[32];
+    float smooth_step;
     char distance_label[32];
     float distance;
     char fov_label[32];
@@ -57,6 +57,10 @@ typedef struct {
     struct {
       bool enabled;
     } box;
+
+    struct {
+      bool enabled;
+    } health_bar;
   } esp_settings;
 
   struct {
