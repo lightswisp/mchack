@@ -167,6 +167,10 @@ uintptr_t get_base(pid_t pid, const char *lib, bool exact) {
   char maps_buf[1024];
   snprintf(path, sizeof(path), "/proc/%d/maps", pid);
   fd = fopen(path, "r");
+  if (!fd) {
+    LOGGER_LOG(FATAL, "failed to open maps");
+    return 0;
+  }
   struct {
     uintptr_t a_s, a_e;
     char perms[5];

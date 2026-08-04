@@ -187,5 +187,6 @@ typedef struct {
 
 bool init_game(void);
 bool set_game_hooks(void);
+bool remove_game_hooks(void);
 void deinit_game(void);
 game_t *get_game(void);

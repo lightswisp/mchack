@@ -452,13 +452,26 @@ static bool init_localplayer(JNIEnv *env) {
   return true;
 }
 
-void on_tick() { LOGGER_LOG(LOG, "hooked !!!!!!!!!!!!!!!"); }
+JNIEXPORT void JNICALL on_tick(JNIEnv *env, jobject this) {
+  LOGGER_LOG(LOG, "tick hook!");
+  jmethodID orig = java_get_copy(g_game.localplayer.tick);
+  (*env)->CallVoidMethod(env, this, orig);
+  return;
+}
 
 bool set_game_hooks() {
-  JNIEnv *env = get_env();
   LOGGER_LOG(LOG, "setting onTick hook");
-  CHECK_BOOL(java_hook_install(env, g_game.localplayer.tick, (void *)on_tick));
+  JNIEnv *env = get_env();
+  JNINativeMethod method = {"tick", "()V", (void *)on_tick};
+  CHECK_BOOL(java_hook_install(env, g_game.localplayer.class, g_game.localplayer.tick, &method));
 
+  return true;
+}
+
+bool remove_game_hooks() {
+  LOGGER_LOG(LOG, "removing game hooks");
+  JNIEnv *env = get_env();
+  CHECK_BOOL(java_hook_remove(env, g_game.localplayer.tick));
   return true;
 }
 

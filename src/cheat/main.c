@@ -49,7 +49,7 @@ bool set_hooks() {
 bool remove_hooks(void) {
   LOGGER_LOG(LOG, "removing hooks..");
   // send_message("remving hooks..");
-  return remove_draw_hook();
+  return remove_draw_hook() && remove_game_hooks();
 }
 
 void uninject([[maybe_unused]] int sig) {
@@ -102,7 +102,7 @@ void *__main_thread([[maybe_unused]] void *a) {
   reset_updates(game, menu_state, overlay);
   while (!should_close) {
     if (!update(env, game, menu_state, overlay)) {
-      LOGGER_LOG(FATAL, "update has failed, waiting...");
+      LOGGER_LOG(WARNING, "update has failed, waiting...");
       nanosleep(&update_ts, NULL);
       continue;
     }
