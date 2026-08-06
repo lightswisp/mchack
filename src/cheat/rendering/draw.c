@@ -195,6 +195,7 @@ void swap_buffers(GLFWwindow *win) {
     nk_glfw3_font_stash_end(&rctx.glfw);
     nk_style_set_font(rctx.ctx, &default_font->handle);
     nk_style_load_all_cursors(rctx.ctx, rctx.atlas->cursors);
+    nk_style_hide_cursor(rctx.ctx);
     setup_menu_theme(rctx.ctx);
     setup_resolution(&rctx);
     rctx.initialized = true;

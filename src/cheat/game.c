@@ -5,6 +5,12 @@
 #include "hooks/java/hooks.h"
 #include <string.h>
 
+#include "core/updater.h"
+/* hacks */
+#include "hacks/esp/esp.h"
+#include "hacks/misc/misc.h"
+#include "hacks/aimbot/aimbot.h"
+
 static game_t g_game = {0};
 
 static bool init_collections(JNIEnv *env) {
@@ -453,75 +459,79 @@ static bool init_localplayer(JNIEnv *env) {
 }
 
 JNIEXPORT void JNICALL on_tick(JNIEnv *env, jobject this) {
-  LOGGER_LOG(LOG, "tick hook!");
-  jmethodID orig = java_get_copy(g_game.localplayer.tick);
-  (*env)->CallVoidMethod(env, this, orig);
+
+  LOGGER_LOG(LOG, "tick");
+end:
+  java_unhook(g_game.localplayer.tick);
+  (*env)->CallVoidMethod(env, this, g_game.localplayer.tick);
+  java_rehook(g_game.localplayer.tick);
   return;
 }
 
 bool set_game_hooks() {
   LOGGER_LOG(LOG, "setting onTick hook");
-  JNIEnv *env = get_env();
   JNINativeMethod method = {"tick", "()V", (void *)on_tick};
-  CHECK_BOOL(java_hook_install(env, g_game.localplayer.class, g_game.localplayer.tick, &method));
+  CHECK_BOOL(java_hook_install(g_game.env, g_game.localplayer.tick, &method));
 
   return true;
 }
 
 bool remove_game_hooks() {
   LOGGER_LOG(LOG, "removing game hooks");
-  JNIEnv *env = get_env();
-  CHECK_BOOL(java_hook_remove(env, g_game.localplayer.tick));
+  CHECK_BOOL(java_hook_remove(g_game.localplayer.tick));
+
   return true;
 }
 
 bool init_game(void) {
-  JNIEnv *env = get_env();
 
-  CHECK_BOOL(init_minecraft(env));
-  CHECK_BOOL(init_collections(env));
-  CHECK_BOOL(init_entity_renderer(env));
-  CHECK_BOOL(init_game_renderer(env));
-  CHECK_BOOL(init_key_mapping(env));
-  CHECK_BOOL(init_text_component(env));
-  CHECK_BOOL(init_bounding_box(env));
-  CHECK_BOOL(init_localplayer(env));
-  CHECK_BOOL(init_client_level(env));
-  CHECK_BOOL(init_players(env));
-  CHECK_BOOL(init_camera(env));
+  g_game.env = get_env();
+  g_game.menu_state = get_menu_state();
+  g_game.overlay = get_overlay();
+
+  CHECK_BOOL(init_minecraft(g_game.env));
+  CHECK_BOOL(init_collections(g_game.env));
+  CHECK_BOOL(init_entity_renderer(g_game.env));
+  CHECK_BOOL(init_game_renderer(g_game.env));
+  CHECK_BOOL(init_key_mapping(g_game.env));
+  CHECK_BOOL(init_text_component(g_game.env));
+  CHECK_BOOL(init_bounding_box(g_game.env));
+  CHECK_BOOL(init_localplayer(g_game.env));
+  CHECK_BOOL(init_client_level(g_game.env));
+  CHECK_BOOL(init_players(g_game.env));
+  CHECK_BOOL(init_camera(g_game.env));
 
   return true;
 }
 
 void deinit_game() {
-  JNIEnv *env = get_env();
   // DELETE_REF(env, g_game.minecraft.class);
-  DELETE_REF(env, g_game.minecraft.instance);
-  DELETE_REF(env, g_game.minecraft.crosshair_pick_entity);
-  DELETE_REF(env, g_game.minecraft.options.class);
-  DELETE_REF(env, g_game.minecraft.options.instance);
-  DELETE_REF(env, g_game.game_renderer.class);
-  DELETE_REF(env, g_game.game_renderer.instance);
-  DELETE_REF(env, g_game.camera.class);
-  DELETE_REF(env, g_game.camera.instance);
-  DELETE_REF(env, g_game.camera.position);
-  DELETE_REF(env, g_game.client_level.class);
-  DELETE_REF(env, g_game.client_level.instance);
-  DELETE_REF(env, g_game.localplayer.super);
-  DELETE_REF(env, g_game.localplayer.class);
-  DELETE_REF(env, g_game.localplayer.instance);
-  DELETE_REF(env, g_game.localplayer.abilities.class);
-  DELETE_REF(env, g_game.localplayer.abilities.instance);
-  DELETE_REF(env, g_game.players.class);
-  DELETE_REF(env, g_game.players.instance);
-  DELETE_REF(env, g_game.bounding_box.class);
-  DELETE_REF(env, g_game.text_component.class);
-  DELETE_REF(env, g_game.collections.map.class);
-  DELETE_REF(env, g_game.collections.list.class);
-  DELETE_REF(env, g_game.collections.vec3.class);
-  DELETE_REF(env, g_game.entity_renderer.class);
-  DELETE_REF(env, g_game.entity_renderer.instance);
-  DELETE_REF(env, g_game.key_mapping.class);
+  DELETE_REF(g_game.env, g_game.minecraft.instance);
+  DELETE_REF(g_game.env, g_game.minecraft.crosshair_pick_entity);
+  DELETE_REF(g_game.env, g_game.minecraft.options.class);
+  DELETE_REF(g_game.env, g_game.minecraft.options.instance);
+  DELETE_REF(g_game.env, g_game.game_renderer.class);
+  DELETE_REF(g_game.env, g_game.game_renderer.instance);
+  DELETE_REF(g_game.env, g_game.camera.class);
+  DELETE_REF(g_game.env, g_game.camera.instance);
+  DELETE_REF(g_game.env, g_game.camera.position);
+  DELETE_REF(g_game.env, g_game.client_level.class);
+  DELETE_REF(g_game.env, g_game.client_level.instance);
+  DELETE_REF(g_game.env, g_game.localplayer.super);
+  DELETE_REF(g_game.env, g_game.localplayer.class);
+  DELETE_REF(g_game.env, g_game.localplayer.instance);
+  DELETE_REF(g_game.env, g_game.localplayer.abilities.class);
+  DELETE_REF(g_game.env, g_game.localplayer.abilities.instance);
+  DELETE_REF(g_game.env, g_game.players.class);
+  DELETE_REF(g_game.env, g_game.players.instance);
+  DELETE_REF(g_game.env, g_game.bounding_box.class);
+  DELETE_REF(g_game.env, g_game.text_component.class);
+  DELETE_REF(g_game.env, g_game.collections.map.class);
+  DELETE_REF(g_game.env, g_game.collections.list.class);
+  DELETE_REF(g_game.env, g_game.collections.vec3.class);
+  DELETE_REF(g_game.env, g_game.entity_renderer.class);
+  DELETE_REF(g_game.env, g_game.entity_renderer.instance);
+  DELETE_REF(g_game.env, g_game.key_mapping.class);
 }
 
 game_t *get_game(void) { return &g_game; }

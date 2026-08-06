@@ -1,4 +1,6 @@
 #pragma once
+#include "rendering/gui.h"
+#include "rendering/overlay.h"
 #include <jni.h>
 
 #define CHECK(a)                                                                                                       \
@@ -24,6 +26,9 @@
   } while (0)
 
 typedef struct {
+  JNIEnv *env;
+  menu_state_t *menu_state;
+  overlay_t *overlay;
   bool in_game;
   bool paused;
 

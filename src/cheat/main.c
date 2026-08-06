@@ -93,27 +93,26 @@ void *__main_thread([[maybe_unused]] void *a) {
   }
 
   game_t *game = get_game();
-  JNIEnv *env = get_env();
-  menu_state_t *menu_state = get_menu_state();
-  overlay_t *overlay = get_overlay();
   struct timespec loop_ts = {.tv_sec = 0, .tv_nsec = 1000000};
   struct timespec update_ts = {.tv_sec = 1, .tv_nsec = 0};
 
-  reset_updates(game, menu_state, overlay);
+  reset_updates(game, game->menu_state, game->overlay);
   while (!should_close) {
-    if (!update(env, game, menu_state, overlay)) {
+    if (!update(game->env, game, game->menu_state, game->overlay)) {
       LOGGER_LOG(WARNING, "update has failed, waiting...");
+      reset_updates(game, game->menu_state, game->overlay);
       nanosleep(&update_ts, NULL);
       continue;
     }
-    esp(env, game, menu_state, overlay);
-    misc(env, game, menu_state);
-    aimbot(env, game, menu_state);
+    esp(game->env, game, game->menu_state, game->overlay);
+    misc(game->env, game, game->menu_state);
+    aimbot(game->env, game, game->menu_state);
 
     nanosleep(&loop_ts, NULL);
   }
 
   // uninject(SIGUSR1);
+  LOGGER_LOG(WARNING, "should never reach");
 
 end:
   return NULL;

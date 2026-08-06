@@ -2,6 +2,8 @@
 #include "localplayer.h"
 #include "../utils/logger.h"
 
+// maybe we should start using GlobalRefs instead of always deleting and updating objects?
+
 static bool update_localplayer(JNIEnv *env, game_t *game) {
   jobject local_player = localplayer_get(env, game);
   CHECK(local_player);
