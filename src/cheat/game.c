@@ -386,6 +386,12 @@ static bool init_localplayer(JNIEnv *env) {
   jfieldID y_rot = (*env)->GetFieldID(env, local_player_class, "yRot", "F");
   CHECK(y_rot);
 
+  jfieldID x_rot_old = (*env)->GetFieldID(env, local_player_class, "xRotLast", "F");
+  CHECK(x_rot_old);
+
+  jfieldID y_rot_old = (*env)->GetFieldID(env, local_player_class, "yRotLast", "F");
+  CHECK(y_rot_old);
+
   jfieldID delta_movement =
       (*env)->GetFieldID(env, local_player_class, "deltaMovement", "Lnet/minecraft/world/phys/Vec3;");
   CHECK(delta_movement);
@@ -454,16 +460,20 @@ static bool init_localplayer(JNIEnv *env) {
   g_game.localplayer.get_z = get_z;
   g_game.localplayer.x_rot = x_rot;
   g_game.localplayer.y_rot = y_rot;
+  g_game.localplayer.x_rot_old = x_rot_old;
+  g_game.localplayer.y_rot_old = y_rot_old;
 
   return true;
 }
 
 JNIEXPORT void JNICALL on_tick(JNIEnv *env, jobject this) {
 
-  LOGGER_LOG(LOG, "tick");
+  // aimbot(env, &g_game, g_game.menu_state);
 end:
   java_unhook(g_game.localplayer.tick);
   (*env)->CallVoidMethod(env, this, g_game.localplayer.tick);
+  // float x = (*env)->CallDoubleMethod(env, this, g_game.localplayer.get_x);
+  // LOGGER_LOG(LOG, "X: %f", x);
   java_rehook(g_game.localplayer.tick);
   return;
 }

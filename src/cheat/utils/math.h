@@ -83,8 +83,19 @@ static inline int clampi(int a, int min, int max) {
   return a;
 }
 
-static inline bool w2s(vec3_t *entity, vec3_t *camera, /* must be in radians */ vec2_t *camera_angles,
-                       vec3_t *out, float width, float height, float fov) {
+static inline void calculate_delta_angle(vec2_t *from, vec2_t *to, vec2_t *out) {
+  out->x = to->x - from->x;
+  out->y = normalize_angle(to->y - from->y);
+}
+
+static inline void calculate_delta_pos_vec3(vec3_t *a, vec3_t *b, vec3_t *out) {
+  out->x = a->x - b->x;
+  out->y = a->y - b->y;
+  out->z = a->z - b->z;
+}
+
+static inline bool w2s(vec3_t *entity, vec3_t *camera, /* must be in radians */ vec2_t *camera_angles, vec3_t *out,
+                       float width, float height, float fov) {
   float fovy_rad = deg2rad(fov);
   float dx = entity->x - camera->x;
   float dy = entity->y - camera->y;

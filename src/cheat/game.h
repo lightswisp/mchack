@@ -95,6 +95,8 @@ typedef struct {
     jfieldID on_ground;
     jfieldID x_rot;
     jfieldID y_rot;
+    jfieldID x_rot_old;
+    jfieldID y_rot_old;
     jfieldID delta_movement;
     jfieldID falling_distance;
     jfieldID has_impulse;

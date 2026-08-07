@@ -39,11 +39,10 @@ static jobject find_closest_player(JNIEnv *env, game_t *game, float *dist) {
   return player;
 }
 
-static void smooth(JNIEnv *env, game_t *game, menu_state_t *menu_state, float dp, float dy, vec2_t *local_viewangles,
-                   float step) {
+static void smooth(JNIEnv *env, game_t *game, vec2_t *delta_angles, vec2_t *local_viewangles, float smooth) {
 
-  local_viewangles->x += dp * sin(TAU * 0.1 * step);
-  local_viewangles->y += dy * sin(TAU * 0.1 * step);
+  local_viewangles->x += delta_angles->x * smooth; // sin(TAU * 0.1 * step);
+  local_viewangles->y += delta_angles->y * smooth; // sin(TAU * 0.1 * step);
 
   localplayer_set_viewangles(env, game, local_viewangles);
 }
@@ -53,9 +52,9 @@ static void aim(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
     return;
 
   static int prev_tick;
-  static float step = 0.0f;
   vec3_t player_position;
   vec3_t localplayer_position;
+  vec3_t delta_position;
   float distance = 0.0f;
   jobject closest_player = find_closest_player(env, game, &distance);
 
@@ -72,33 +71,23 @@ static void aim(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
   //     (vec32, entity2)->{ return new Vec3(vec32.x, vec32.y + ((double)entity2.getEyeHeight()), vec32.z);
   //     });
 
-  float delta_x = player_position.x - localplayer_position.x;
-  float delta_y = player_position.y - localplayer_position.y;
-  float delta_z = player_position.z - localplayer_position.z;
+  calculate_delta_pos_vec3(&player_position, &localplayer_position, &delta_position);
 
-  float pitch = rad2deg(-asinf(delta_y / distance));
-  float yaw = rad2deg(-atan2f(delta_x, delta_z));
+  float pitch = rad2deg(-asinf(delta_position.y / distance));
+  float yaw = rad2deg(-atan2f(delta_position.x, delta_position.z));
   vec2_t viewangles = {pitch, yaw};
   vec2_t local_viewangles;
+  vec2_t delta_angles;
   localplayer_get_viewangles(env, game, &local_viewangles);
+  calculate_delta_angle(&local_viewangles, &viewangles, &delta_angles);
 
-  float delta_pitch = viewangles.x - local_viewangles.x;
-  float delta_yaw = viewangles.y - local_viewangles.y;
-  delta_yaw = normalize_angle(delta_yaw);
-
-  float hypot = sqrtf(delta_pitch * delta_pitch + delta_yaw * delta_yaw);
-  if (menu_state->aimbot_settings.fov != 0.0f && hypot > menu_state->aimbot_settings.fov)
+  float fov = hypot(delta_angles.x, delta_angles.y);
+  if (menu_state->aimbot_settings.fov != 0.0f && fov > menu_state->aimbot_settings.fov)
     return;
 
-  // if (prev_tick != game->localplayer.tick_count) {
-  if (step > 2.5f)
-    step = 0.0f;
-
-  step += menu_state->aimbot_settings.smooth_step;
-  smooth(env, game, menu_state, delta_pitch, delta_yaw, &local_viewangles, step);
+  smooth(env, game, &delta_angles, &local_viewangles, menu_state->aimbot_settings.smooth_step);
   prev_tick = game->localplayer.tick_count;
   LOGGER_LOG(LOG, "new tick: %d", prev_tick);
-  //}
 
   // autoattack
   if (menu_state->aimbot_settings.auto_attack && distance <= MAX_ATTACK_DISTANCE)

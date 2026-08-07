@@ -54,6 +54,15 @@ void localplayer_set_viewangles(JNIEnv *env, game_t *game, vec2_t *in) {
   (*env)->SetFloatField(env, game->localplayer.instance, game->localplayer.y_rot, in->y);
 }
 
+void localplayer_set_lerped_viewangles(JNIEnv *env, game_t *game, vec2_t *in) {
+  float x_rot_old = (*env)->GetFloatField(env, game->localplayer.instance, game->localplayer.x_rot_old);
+  float y_rot_old = (*env)->GetFloatField(env, game->localplayer.instance, game->localplayer.y_rot_old);
+  float x_lerped = x_rot_old + (in->x - x_rot_old) * game->minecraft.partial_tick;
+  float y_lerped = y_rot_old + (in->y - y_rot_old) * game->minecraft.partial_tick;
+  (*env)->SetFloatField(env, game->localplayer.instance, game->localplayer.x_rot, x_lerped);
+  (*env)->SetFloatField(env, game->localplayer.instance, game->localplayer.y_rot, y_lerped);
+}
+
 void localplayer_get_delta_movement(JNIEnv *env, game_t *game, vec3_t *out) {
 
   jobject delta_movement = (*env)->GetObjectField(env, game->localplayer.instance, game->localplayer.delta_movement);
