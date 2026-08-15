@@ -213,11 +213,13 @@ bool java_hook_remove(jmethodID mid) {
       *java_hook_ctx.hooks[i].pointers.fi_entry = java_hook_ctx.hooks[i].backup.orig_fi_entry;
       *java_hook_ctx.hooks[i].pointers.fc_entry = java_hook_ctx.hooks[i].backup.orig_fc_entry;
       *java_hook_ctx.hooks[i].pointers.flags = java_hook_ctx.hooks[i].backup.orig_flags;
+      *java_hook_ctx.hooks[i].pointers.code = java_hook_ctx.hooks[i].backup.orig_code;
 
       free(java_hook_ctx.hooks[i].i2i_stub);
       free(java_hook_ctx.hooks[i].fi_stub);
       free(java_hook_ctx.hooks[i].fc_stub);
       java_hook_ctx.hooks[i].is_hooked = false;
+      LOGGER_LOG(LOG, "hook for %p is removed", mid);
       return true;
     }
   }
@@ -439,6 +441,7 @@ bool java_hook_install(JNIEnv *env, jmethodID mid, JNINativeMethod *detour) {
 
   java_set_method_noinline(method);
 
+  *entries.code = 0;
   memcpy(entries.i2i_entry, &java_hook_ctx.hooks[free_slot].i2i_stub, sizeof(uintptr_t));
   LOGGER_LOG(LOG, "new i2i %lx", *entries.i2i_entry);
   memcpy(entries.fi_entry, &java_hook_ctx.hooks[free_slot].fi_stub, sizeof(uintptr_t));

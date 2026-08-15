@@ -1,15 +1,15 @@
 #include "fly.h"
 #include "../../core/localplayer.h"
 
-void fly(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
-  if (!menu_state->misc_settings.fly.enabled) {
-    if (menu_state->misc_settings.fly.state == ACTIVE) {
-      localplayer_set_mayfly(env, game, false);
-      menu_state->misc_settings.fly.state = IDLE;
+void fly(JNIEnv *env, jobject this, game_t *game) {
+  if (!game->menu->misc_settings.fly.enabled) {
+    if (game->menu->misc_settings.fly.state == ACTIVE) {
+      localplayer_set_mayfly2(env, this, game, false);
+      game->menu->misc_settings.fly.state = IDLE;
     }
     return;
   }
 
-  localplayer_set_mayfly(env, game, true);
-  menu_state->misc_settings.fly.state = ACTIVE;
+  localplayer_set_mayfly2(env, this, game, true);
+  game->menu->misc_settings.fly.state = ACTIVE;
 }

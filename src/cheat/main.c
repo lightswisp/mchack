@@ -1,5 +1,5 @@
 #include <jni.h>
-#include <pthread.h>
+#include <threads.h>
 #include <unistd.h>
 #include <signal.h>
 
@@ -8,7 +8,7 @@
 #include "hooks/native/hooks.h"
 #include "jvm.h"
 #include "rendering/draw.h"
-#include "rendering/gui.h"
+#include "rendering/menu.h"
 #include "rendering/overlay.h"
 #include "utils/logger.h"
 #include "core/updater.h"
@@ -23,23 +23,7 @@
 #error "log path is undefined"
 #endif
 
-void *__main_thread(void *a);
-pthread_t g_thread;
 bool should_close = false;
-
-/* run this function on library load */
-__attribute__((constructor)) void __onload() {
-  pthread_attr_t attr;
-
-  /* start thread detached */
-  if (-1 == pthread_attr_init(&attr))
-    return;
-  if (-1 == pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED))
-    return;
-
-  /* spawn a thread to do the real work */
-  pthread_create(&g_thread, NULL, __main_thread, NULL);
-}
 
 bool set_hooks() {
   LOGGER_LOG(LOG, "setting hooks..");
@@ -54,17 +38,20 @@ bool remove_hooks(void) {
 
 void uninject([[maybe_unused]] int sig) {
   LOGGER_LOG(WARNING, "uninjecting!");
-  should_close = true;
-  remove_hooks();
-  LOGGER_LOG(LOG, "hooks are removed");
+  if (!remove_hooks())
+    LOGGER_LOG(FATAL, "failed to remove hooks! The game will probably crash oops ...");
+  else
+    LOGGER_LOG(WARNING, "hooks are removed");
+
   LOGGER_LOG(WARNING, "removing local references...");
   deinit_game();
   LOGGER_LOG(WARNING, "detaching from jvm...");
   detach_jvm();
+  should_close = true;
 }
 
 /* our main loop */
-void *__main_thread([[maybe_unused]] void *a) {
+int mchack_main([[maybe_unused]] void *a) {
 
   struct sigaction sa;
   sa.sa_handler = uninject;
@@ -93,29 +80,40 @@ void *__main_thread([[maybe_unused]] void *a) {
   }
 
   game_t *game = get_game();
-  struct timespec loop_ts = {.tv_sec = 0, .tv_nsec = 1000000};
+#define UPDATE_TIME_NS (1000000.0)
+  game->update_time = UPDATE_TIME_NS / 1000000000.0f;
+  struct timespec loop_ts = {.tv_sec = 0, .tv_nsec = UPDATE_TIME_NS};
   struct timespec update_ts = {.tv_sec = 1, .tv_nsec = 0};
 
-  reset_updates(game, game->menu_state, game->overlay);
+  reset_updates(game);
   while (!should_close) {
-    if (!update(game->env, game, game->menu_state, game->overlay)) {
+    if (!update(game)) {
       LOGGER_LOG(WARNING, "update has failed, waiting...");
-      reset_updates(game, game->menu_state, game->overlay);
+      reset_updates(game);
       nanosleep(&update_ts, NULL);
       continue;
     }
-    esp(game->env, game, game->menu_state, game->overlay);
-    misc(game->env, game, game->menu_state);
-    aimbot(game->env, game, game->menu_state);
+
+    {
+      // modules that will be running in main loop
+      // misc module is being called from on_tick hook 20 times per second
+      esp(game);
+      aimbot(game);
+    }
 
     nanosleep(&loop_ts, NULL);
   }
 
-  // uninject(SIGUSR1);
-  LOGGER_LOG(WARNING, "should never reach");
-
+  LOGGER_LOG(WARNING, "bye bye..");
 end:
-  return NULL;
+  return 0;
 }
 
-__attribute__((destructor)) void __onunload() { LOGGER_LOG(WARNING, "module is unloading..."); }
+__attribute__((destructor)) void onunload() { LOGGER_LOG(WARNING, "module is unloading..."); }
+
+/* run this function on library load */
+__attribute__((constructor)) void onload() {
+  thrd_t g_thread;
+  thrd_create(&g_thread, mchack_main, NULL);
+  thrd_detach(g_thread);
+}

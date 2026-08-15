@@ -1,7 +1,13 @@
 - make logger as a separate module, so that cheat and injector can link against it 
 - fix rva calculation in injector
-- add stop/resume threads in cheat functionality. Because when we remove hooks, we crash 
+- add stop/resume threads in cheat functionality. Because when we remove hooks, we crash - OK
 - add minecraft mappings to the cheat and json parser
 - implement cheat gui  (OK)
 - remove game controls on cheat open (OK)
 - save cheat menu position, so that when we reopen it it opens in the same place (OK)
+- Draw array list 
+- Config system
+- Aimbot bezier curves
+- Scripting capabilities
+- Generate class files on the fly (java hooks)
+- Saving state of the game and then restore it when we uninject (like gamma, player abilities, glow, etc..)

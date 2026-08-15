@@ -1,7 +1,5 @@
 #pragma once
 #include "../game.h"
-#include "../rendering/gui.h"
-#include "../rendering/overlay.h"
 
-bool update(JNIEnv *env, game_t *game, menu_state_t *menu_state, overlay_t *overlay);
-void reset_updates(game_t *game, menu_state_t *menu_state, overlay_t *overlay);
+bool update(game_t *game);
+void reset_updates(game_t *game);

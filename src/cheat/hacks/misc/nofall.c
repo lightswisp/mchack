@@ -1,7 +1,7 @@
 #include "nofall.h"
 
-void nofall(JNIEnv *env, game_t *game, bool on) {
-  if (!on)
+void nofall(JNIEnv *env, jobject this, game_t *game) {
+  if (!game->menu->misc_settings.nofall)
     return;
 
   //  JNIEnv *env = get_env();

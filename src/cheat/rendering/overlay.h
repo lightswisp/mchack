@@ -2,28 +2,19 @@
 #include "draw.h"
 #include "../utils/math.h"
 
+#define TITLE_SIZE (128)
+#define CHEAT_TITLE                                                                                                    \
+  "mchack built on "__DATE__                                                                                           \
+  " "__TIME__
+
 typedef struct {
   struct {
-    float buffer[255];
+    bool set;
+    char buffer[TITLE_SIZE];
     size_t size;
-  } arrows;
+    size_t iteration;
+  } title;
 
-  struct {
-    struct {
-      vec3_t head;
-      vec3_t feet;
-    } buffer[255];
-    size_t size;
-  } boxes;
-
-  struct {
-    struct {
-      float health;
-      vec3_t head;
-      vec3_t feet;
-    } buffer[255];
-    size_t size;
-  } health;
 } overlay_t;
 
 void draw_overlay(rendering_context_t *rctx);

@@ -1,3 +1,4 @@
 #pragma once
 #include "../../game.h"
-void nofall(JNIEnv *env, game_t *game, bool on);
+#include "../../rendering/menu.h"
+void nofall(JNIEnv *env, jobject this, game_t *game);

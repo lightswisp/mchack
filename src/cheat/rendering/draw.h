@@ -19,10 +19,10 @@ typedef struct {
   struct nk_context *ctx;
   struct nk_glfw glfw;
   struct nk_font_atlas *atlas;
+  struct nk_font *overlay_font;
   int width, height;
   int fb_width, fb_height;
   bool initialized;
-  bool open;
 
   _Atomic bool executing;
   _Atomic bool shutting_down;
@@ -31,8 +31,13 @@ typedef struct {
   GLFWcharfun orig_char_callback;
   GLFWcursorposfun orig_cursor_callback;
   GLFWmousebuttonfun orig_mouse_callback;
+  GLFWwindowsizefun orig_window_resize_callback;
+  GLFWframebuffersizefun orig_fb_resize_callback;
+  GLFWscrollfun orig_scroll_callback;
   GLFWwindow *win;
+
 } rendering_context_t;
 
 bool set_draw_hook(void);
 bool remove_draw_hook(void);
+rendering_context_t *get_rendering_context(void);

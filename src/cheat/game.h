@@ -1,5 +1,6 @@
 #pragma once
-#include "rendering/gui.h"
+#include "rendering/menu.h"
+#include "rendering/esp.h"
 #include "rendering/overlay.h"
 #include <jni.h>
 
@@ -27,10 +28,13 @@
 
 typedef struct {
   JNIEnv *env;
-  menu_state_t *menu_state;
+  menu_t *menu;
   overlay_t *overlay;
+  rendering_context_t *rctx;
+  esp_t *esp;
   bool in_game;
   bool paused;
+  float update_time;
 
   struct {
     jclass class;
@@ -43,6 +47,7 @@ typedef struct {
     jfieldID crosshair_field;
     jfieldID game_renderer_field;
     jfieldID client_level_field;
+    jfieldID right_click_delay;
 
     struct {
       jclass class;
@@ -105,6 +110,8 @@ typedef struct {
     jfieldID z_old;
     jfieldID sprint_trigger_time;
     jfieldID tick_count_field;
+    jfieldID input;
+    jfieldID is_using_item;
     jmethodID set_sprinting;
     jmethodID is_moving;
     jmethodID display_client_message;
@@ -116,6 +123,7 @@ typedef struct {
     jmethodID get_attack_strength_scale;
     jmethodID set_pos_raw;
     jmethodID tick;
+    jmethodID get_height;
 
     jint tick_count;
 
@@ -147,6 +155,12 @@ typedef struct {
     jmethodID get_z;
     jmethodID get_health;
   } players;
+
+  struct {
+    jclass class;
+    jfieldID left_impulse;
+    jfieldID forward_impulse;
+  } input;
 
   struct {
     jclass class;

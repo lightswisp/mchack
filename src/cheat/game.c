@@ -148,6 +148,10 @@ static bool init_minecraft(JNIEnv *env) {
       (*env)->GetFieldID(env, minecraft, "level", "Lnet/minecraft/client/multiplayer/ClientLevel;");
   CHECK(client_level_field);
 
+  jfieldID right_click_delay_field = (*env)->GetFieldID(env, minecraft, "rightClickDelay", "I");
+  CHECK(right_click_delay_field);
+
+  g_game.minecraft.right_click_delay = right_click_delay_field;
   g_game.minecraft.options.gamma = gamma_field;
   g_game.minecraft.options.class = options_class;
   g_game.minecraft.options.instance = options_instance;
@@ -163,7 +167,7 @@ static bool init_minecraft(JNIEnv *env) {
   g_game.minecraft.get_frame_time = get_frame_time;
   g_game.minecraft.client_level_field = client_level_field;
   g_game.minecraft.class = minecraft;
-  g_game.minecraft.instance = minecraft_instance;
+  g_game.minecraft.instance = (*env)->NewGlobalRef(env, minecraft_instance);
 
   return true;
 }
@@ -181,15 +185,33 @@ static bool init_client_level(JNIEnv *env) {
 }
 
 static bool init_key_mapping(JNIEnv *env) {
-  jclass key_mapping = (*env)->FindClass(env, "Lnet/minecraft/client/KeyMapping;");
-  CHECK(key_mapping);
+  jclass key_mapping_class = (*env)->FindClass(env, "Lnet/minecraft/client/KeyMapping;");
+  CHECK(key_mapping_class);
 
-  jfieldID is_down = (*env)->GetFieldID(env, key_mapping, "isDown", "Z");
+  jfieldID is_down = (*env)->GetFieldID(env, key_mapping_class, "isDown", "Z");
   CHECK(is_down);
 
-  jfieldID click_count = (*env)->GetFieldID(env, key_mapping, "clickCount", "I");
+  jfieldID click_count = (*env)->GetFieldID(env, key_mapping_class, "clickCount", "I");
   CHECK(click_count);
 
+  g_game.key_mapping.class = key_mapping_class;
+  g_game.key_mapping.is_down = is_down;
+  return true;
+}
+
+static bool init_input(JNIEnv *env) {
+  jclass input_class = (*env)->FindClass(env, "Lnet/minecraft/client/player/Input;");
+  CHECK(input_class);
+
+  jfieldID forward_impulse = (*env)->GetFieldID(env, input_class, "forwardImpulse", "F");
+  CHECK(forward_impulse);
+
+  jfieldID left_impulse = (*env)->GetFieldID(env, input_class, "leftImpulse", "F");
+  CHECK(left_impulse);
+
+  g_game.input.class = input_class;
+  g_game.input.forward_impulse = forward_impulse;
+  g_game.input.left_impulse = left_impulse;
   return true;
 }
 
@@ -432,6 +454,18 @@ static bool init_localplayer(JNIEnv *env) {
   jmethodID tick = (*env)->GetMethodID(env, local_player_class, "tick", "()V");
   CHECK(tick);
 
+  jmethodID get_height = (*env)->GetMethodID(env, local_player_class, "getBbHeight", "()F");
+  CHECK(get_height);
+
+  jfieldID input = (*env)->GetFieldID(env, local_player_class, "input", "Lnet/minecraft/client/player/Input;");
+  CHECK(input);
+
+  jfieldID is_using_item = (*env)->GetFieldID(env, local_player_class, "startedUsingItem", "Z");
+  CHECK(is_using_item);
+
+  g_game.localplayer.is_using_item = is_using_item;
+  g_game.localplayer.input = input;
+  g_game.localplayer.get_height = get_height;
   g_game.localplayer.tick = tick;
   g_game.localplayer.tick_count_field = tick_count_field;
   g_game.localplayer.sprint_trigger_time = sprint_trigger_time;
@@ -467,19 +501,16 @@ static bool init_localplayer(JNIEnv *env) {
 }
 
 JNIEXPORT void JNICALL on_tick(JNIEnv *env, jobject this) {
+  misc(env, this, &g_game);
 
-  // aimbot(env, &g_game, g_game.menu_state);
-end:
   java_unhook(g_game.localplayer.tick);
   (*env)->CallVoidMethod(env, this, g_game.localplayer.tick);
-  // float x = (*env)->CallDoubleMethod(env, this, g_game.localplayer.get_x);
-  // LOGGER_LOG(LOG, "X: %f", x);
   java_rehook(g_game.localplayer.tick);
   return;
 }
 
 bool set_game_hooks() {
-  LOGGER_LOG(LOG, "setting onTick hook");
+  LOGGER_LOG(LOG, "setting tick hook");
   JNINativeMethod method = {"tick", "()V", (void *)on_tick};
   CHECK_BOOL(java_hook_install(g_game.env, g_game.localplayer.tick, &method));
 
@@ -496,8 +527,10 @@ bool remove_game_hooks() {
 bool init_game(void) {
 
   g_game.env = get_env();
-  g_game.menu_state = get_menu_state();
+  g_game.menu = get_menu();
   g_game.overlay = get_overlay();
+  g_game.rctx = get_rendering_context();
+  g_game.esp = get_esp();
 
   CHECK_BOOL(init_minecraft(g_game.env));
   CHECK_BOOL(init_collections(g_game.env));
@@ -510,6 +543,7 @@ bool init_game(void) {
   CHECK_BOOL(init_client_level(g_game.env));
   CHECK_BOOL(init_players(g_game.env));
   CHECK_BOOL(init_camera(g_game.env));
+  CHECK_BOOL(init_input(g_game.env));
 
   return true;
 }
@@ -542,6 +576,7 @@ void deinit_game() {
   DELETE_REF(g_game.env, g_game.entity_renderer.class);
   DELETE_REF(g_game.env, g_game.entity_renderer.instance);
   DELETE_REF(g_game.env, g_game.key_mapping.class);
+  DELETE_REF(g_game.env, g_game.input.class);
 }
 
 game_t *get_game(void) { return &g_game; }

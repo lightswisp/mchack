@@ -1,5 +1,5 @@
 #pragma once
 #include "../../game.h"
-#include "../../rendering/gui.h"
+#include "../../rendering/menu.h"
 
-void aimbot(JNIEnv *env, game_t *game, menu_state_t *menu_state);
+void aimbot(game_t *game);

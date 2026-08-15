@@ -44,7 +44,7 @@ void localplayer_get_viewangles(JNIEnv *env, game_t *game, vec2_t *out) {
   out->y = (*env)->GetFloatField(env, game->localplayer.instance, game->localplayer.y_rot);
 }
 
-void localplayer_get_viewangles2(JNIEnv *env, game_t *game, vec2_t *out) {
+void localplayer_get_viewangles_rad(JNIEnv *env, game_t *game, vec2_t *out) {
   out->x = deg2rad((*env)->GetFloatField(env, game->localplayer.instance, game->localplayer.x_rot));
   out->y = deg2rad((*env)->GetFloatField(env, game->localplayer.instance, game->localplayer.y_rot));
 }
@@ -80,8 +80,6 @@ void localplayer_set_delta_movement(JNIEnv *env, game_t *game, vec3_t *in) {
   (*env)->SetDoubleField(env, delta_movement, game->collections.vec3.x, in->x);
   (*env)->SetDoubleField(env, delta_movement, game->collections.vec3.y, in->y);
   (*env)->SetDoubleField(env, delta_movement, game->collections.vec3.z, in->z);
-  //(*env)->CallVoidMethod(env, game->localplayer.instance, game->localplayer.set_delta_movement, in->x, in->y,
-  //                       in->z);
   (*env)->DeleteLocalRef(env, delta_movement);
 }
 
@@ -97,6 +95,14 @@ void localplayer_set_falling_distance(JNIEnv *env, game_t *game, float value) {
   (*env)->SetFloatField(env, game->localplayer.instance, game->localplayer.falling_distance, value);
 }
 
+float localplayer_get_height(JNIEnv *env, game_t *game) {
+  return (*env)->CallFloatMethod(env, game->localplayer.instance, game->localplayer.get_height);
+}
+
+bool localplayer_is_using_item(JNIEnv *env, game_t *game) {
+  return (*env)->GetBooleanField(env, game->localplayer.instance, game->localplayer.is_using_item);
+}
+
 bool localplayer_is_moving(JNIEnv *env, game_t *game) {
   return (*env)->CallBooleanMethod(env, game->localplayer.instance, game->localplayer.is_moving);
 }
@@ -107,4 +113,52 @@ void localplayer_set_sprinting_time(JNIEnv *env, game_t *game, int val) {
 
 void localplayer_set_mayfly(JNIEnv *env, game_t *game, bool val) {
   (*env)->SetBooleanField(env, game->localplayer.abilities.instance, game->localplayer.abilities.mayfly, val);
+}
+
+void localplayer_set_sprinting2(JNIEnv *env, jobject this, game_t *game) {
+  (*env)->CallNonvirtualVoidMethod(env, this, game->localplayer.super, game->localplayer.set_sprinting, true);
+}
+
+void localplayer_set_mayfly2(JNIEnv *env, jobject this, game_t *game, bool val) {
+  jobject abilities = (*env)->GetObjectField(env, this, game->localplayer.abilities_field);
+  (*env)->SetBooleanField(env, abilities, game->localplayer.abilities.mayfly, val);
+  (*env)->DeleteLocalRef(env, abilities);
+}
+
+void localplayer_set_on_ground2(JNIEnv *env, jobject this, game_t *game, bool value) {
+  (*env)->SetBooleanField(env, this, game->localplayer.on_ground, value);
+}
+
+void localplayer_get_delta_movement2(JNIEnv *env, jobject this, game_t *game, vec3_t *out) {
+  jobject delta_movement = (*env)->GetObjectField(env, this, game->localplayer.delta_movement);
+  float x = (*env)->GetDoubleField(env, delta_movement, game->collections.vec3.x);
+  float y = (*env)->GetDoubleField(env, delta_movement, game->collections.vec3.y);
+  float z = (*env)->GetDoubleField(env, delta_movement, game->collections.vec3.z);
+  out->x = x;
+  out->y = y;
+  out->z = z;
+  (*env)->DeleteLocalRef(env, delta_movement);
+}
+
+void localplayer_set_delta_movement2(JNIEnv *env, jobject this, game_t *game, vec3_t *in) {
+  jobject delta_movement = (*env)->GetObjectField(env, this, game->localplayer.delta_movement);
+  (*env)->SetDoubleField(env, delta_movement, game->collections.vec3.x, in->x);
+  (*env)->SetDoubleField(env, delta_movement, game->collections.vec3.y, in->y);
+  (*env)->SetDoubleField(env, delta_movement, game->collections.vec3.z, in->z);
+  (*env)->DeleteLocalRef(env, delta_movement);
+}
+
+void localplayer_get_viewangles_rad2(JNIEnv *env, jobject this, game_t *game, vec2_t *out) {
+  out->x = deg2rad((*env)->GetFloatField(env, this, game->localplayer.x_rot));
+  out->y = deg2rad((*env)->GetFloatField(env, this, game->localplayer.y_rot));
+}
+
+bool localplayer_get_on_ground2(JNIEnv *env, jobject this, game_t *game) {
+  return (*env)->GetBooleanField(env, this, game->localplayer.on_ground);
+}
+
+void localplayer_set_impulse2(JNIEnv *env, jobject this, game_t *game, vec2_t *impulse) {
+  jobject input = (*env)->GetObjectField(env, this, game->localplayer.input);
+  (*env)->SetFloatField(env, input, game->input.forward_impulse, impulse->x);
+  (*env)->SetFloatField(env, input, game->input.left_impulse, impulse->y);
 }

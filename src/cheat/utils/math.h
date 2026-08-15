@@ -1,5 +1,6 @@
 #pragma once
 #include <math.h>
+#include <stddef.h>
 
 #define TAU 6.283185307179586F
 #define arr_size(a) (sizeof(a) / sizeof(a[0]))
@@ -11,6 +12,16 @@ typedef struct {
 typedef struct {
   float x, y;
 } vec2_t;
+
+typedef struct {
+  vec3_t min;
+  vec3_t max;
+} vec_bb_t;
+
+typedef struct {
+  size_t left;
+  size_t right;
+} node_t;
 
 static inline float calculate_distance_vec3(vec3_t *a, vec3_t *b) {
   return sqrt((b->x - a->x) * (b->x - a->x) + (b->y - a->y) * (b->y - a->y) + (b->z - a->z) * (b->z - a->z));
@@ -67,12 +78,35 @@ static inline float normalize_angle2(float a) {
   return a - M_PI;
 }
 
+static inline float normalize_angle360(float a) { return a >= 0.0f ? a : a + 360.0f; }
+
 static inline float clampf(float a, float min, float max) {
   if (a < min)
     return min;
   if (a > max)
     return max;
   return a;
+}
+
+static inline float clampfd(float a, float min, float max, float def) {
+  if (a < min)
+    return min;
+  if (a > max)
+    return max;
+  return def;
+}
+
+static inline void get_neighbours(int i, int m, node_t *out) {
+  if (i == 0) {
+    out->left = i + 1;
+    out->right = m - 1;
+  } else if (i == m - 1) {
+    out->left = 0;
+    out->right = i - 1;
+  } else {
+    out->left = i + 1;
+    out->right = i - 1;
+  }
 }
 
 static inline int clampi(int a, int min, int max) {
@@ -84,7 +118,7 @@ static inline int clampi(int a, int min, int max) {
 }
 
 static inline void calculate_delta_angle(vec2_t *from, vec2_t *to, vec2_t *out) {
-  out->x = to->x - from->x;
+  out->x = clampf(to->x - from->x, -90.0f, 90.0f);
   out->y = normalize_angle(to->y - from->y);
 }
 
@@ -92,6 +126,24 @@ static inline void calculate_delta_pos_vec3(vec3_t *a, vec3_t *b, vec3_t *out) {
   out->x = a->x - b->x;
   out->y = a->y - b->y;
   out->z = a->z - b->z;
+}
+
+static inline float minf(float a, float b) {
+  if (a < b)
+    return a;
+  return b;
+}
+
+static inline float maxf(float a, float b) {
+  if (a > b)
+    return a;
+  return b;
+}
+
+static inline bool within_range(float value, float from, float to) {
+  if (value >= minf(to, from) && value <= maxf(to, from))
+    return true;
+  return false;
 }
 
 static inline bool w2s(vec3_t *entity, vec3_t *camera, /* must be in radians */ vec2_t *camera_angles, vec3_t *out,

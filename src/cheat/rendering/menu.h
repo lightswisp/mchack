@@ -4,9 +4,17 @@
 #include <GLFW/glfw3.h>
 
 typedef enum { IDLE, ACTIVE } state_t;
+typedef enum { BIND_IDLE, BIND_REQUESTED, BIND_PROCESS, BIND_WAITING } bind_state_t;
+typedef struct {
+  bool set;
+  bind_state_t state;
+  enum { BIND_MOUSE, BIND_KEY } type;
+  int as_code;
+  char as_str[128];
+} bind_t;
 
 typedef struct {
-  rendering_context_t *rctx;
+  bool open;
   char text_buf[512];
   int text_len;
   enum { AIMBOT, ESP, MISC, SCRIPTS } active_tab;
@@ -24,9 +32,11 @@ typedef struct {
 
   struct {
     bool enabled;
-    bool auto_attack;
-    char smoothstep_label[32];
-    float smooth_step;
+    bind_t bind;
+    bool trigger;
+    bool crits;
+    char smooth_time_label[32];
+    float smooth_time;
     char distance_label[32];
     float distance;
     char fov_label[32];
@@ -34,8 +44,8 @@ typedef struct {
     char attack_threshold_label[32];
     float attack_threshold;
 
-    bool trigger;
-    bool crits;
+    enum { BONE_HEAD, BONE_CHEST, BONE_FEET, BONE_NEAREST, BONE_SIZE } bone;
+
   } aimbot_settings;
 
   struct {
@@ -85,9 +95,8 @@ typedef struct {
   struct {
     bool enabled;
   } scripts_settings;
-} menu_state_t;
+} menu_t;
 
-menu_state_t *get_menu_state(void);
-void setup_menu_theme(struct nk_context *ctx);
-void setup_resolution(rendering_context_t *rctx);
-void draw_gui(rendering_context_t *rctx);
+menu_t *get_menu(void);
+void init_menu(rendering_context_t *rctx);
+void draw_menu(rendering_context_t *rctx);

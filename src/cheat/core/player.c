@@ -44,3 +44,23 @@ void player_get_lerped_position(JNIEnv *env, game_t *game, jobject player, vec3_
   out->y = y_old + (y - y_old) * game->minecraft.partial_tick;
   out->z = z_old + (z - z_old) * game->minecraft.partial_tick;
 }
+
+void player_get_bb(JNIEnv *env, game_t *game, jobject player, vec_bb_t *out) {
+  jobject bb = (*env)->GetObjectField(env, player, game->players.bounding_box);
+  float min_x = (*env)->GetDoubleField(env, bb, game->bounding_box.min_x);
+  float max_x = (*env)->GetDoubleField(env, bb, game->bounding_box.max_x);
+
+  float min_y = (*env)->GetDoubleField(env, bb, game->bounding_box.min_y);
+  float max_y = (*env)->GetDoubleField(env, bb, game->bounding_box.max_y);
+
+  float min_z = (*env)->GetDoubleField(env, bb, game->bounding_box.min_z);
+  float max_z = (*env)->GetDoubleField(env, bb, game->bounding_box.max_z);
+
+  out->min.x = min_x;
+  out->min.y = min_y;
+  out->min.z = min_z;
+
+  out->max.x = max_x;
+  out->max.y = max_y;
+  out->max.z = max_z;
+}

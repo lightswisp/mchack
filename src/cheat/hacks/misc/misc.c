@@ -4,18 +4,20 @@
 #include "fly.h"
 #include "infjump.h"
 #include "speed.h"
+#include "fastplace.h"
 #include "misc.h"
 
-void misc(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
-  if (!menu_state->misc_settings.enabled)
+void misc(JNIEnv *env, jobject this, game_t *game) {
+  if (!game->menu->misc_settings.enabled)
     return;
-  if (!get_game()->in_game)
+  if (!game->in_game)
     return;
 
-  sprint(env, game, menu_state->misc_settings.sprint);
-  nofall(env, game, menu_state->misc_settings.nofall);
-  fly(env, game, menu_state);
-  inf_jump(env, game, menu_state);
-  speed(env, game, menu_state);
-  fullbright(env, game, menu_state);
+  sprint(env, this, game);
+  nofall(env, this, game);
+  fly(env, this, game);
+  inf_jump(env, this, game);
+  speed(env, this, game);
+  fullbright(env, game);
+  fastplace(env, game);
 }

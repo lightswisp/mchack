@@ -1,33 +1,34 @@
 #include "glow.h"
 #include "../../core/player.h"
 
-void glow(JNIEnv *env, game_t *game, menu_state_t *menu_state) {
+void glow(game_t *game) {
 
-  if (!menu_state->esp_settings.glow.enabled) {
-    if (menu_state->esp_settings.glow.state == ACTIVE) {
+  if (!game->menu->esp_settings.glow.enabled) {
+    if (game->menu->esp_settings.glow.state == ACTIVE) {
       for (jint i = 0; i < game->players.size; i++) {
-        jobject player = (*env)->CallObjectMethod(env, game->players.instance, game->collections.list.get, i);
+        jobject player =
+            (*game->env)->CallObjectMethod(game->env, game->players.instance, game->collections.list.get, i);
         if (!player)
           continue;
-        if (player_is_localplayer(env, game, player))
+        if (player_is_localplayer(game->env, game, player))
           continue;
 
-        (*env)->SetBooleanField(env, player, game->players.glowing, false);
+        (*game->env)->SetBooleanField(game->env, player, game->players.glowing, false);
       }
-      menu_state->esp_settings.glow.state = IDLE;
+      game->menu->esp_settings.glow.state = IDLE;
     }
     return;
   }
 
   for (jint i = 0; i < game->players.size; i++) {
-    jobject player = (*env)->CallObjectMethod(env, game->players.instance, game->collections.list.get, i);
+    jobject player = (*game->env)->CallObjectMethod(game->env, game->players.instance, game->collections.list.get, i);
     if (!player)
       continue;
-    if (player_is_localplayer(env, game, player))
+    if (player_is_localplayer(game->env, game, player))
       continue;
 
-    (*env)->SetBooleanField(env, player, game->players.glowing, true);
+    (*game->env)->SetBooleanField(game->env, player, game->players.glowing, true);
   }
 
-  menu_state->esp_settings.glow.state = ACTIVE;
+  game->menu->esp_settings.glow.state = ACTIVE;
 }

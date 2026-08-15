@@ -23,8 +23,8 @@ add_library(cheat SHARED main.c
     jvm.h
     game.h
     game.c
-    rendering/gui.c
-    rendering/gui.h
+    rendering/menu.c
+    rendering/menu.h
     hacks/esp/esp.c
     hacks/esp/esp.h
     core/player.c
@@ -65,7 +65,15 @@ add_library(cheat SHARED main.c
     core/keys.c
     core/keys.h
     hooks/java/hooks.c
-    hooks/java/hooks.h)
+    hooks/java/hooks.h
+    hacks/misc/fastplace.c
+    hacks/misc/fastplace.h
+    hacks/aimbot/attack.c
+    hacks/aimbot/attack.h
+    rendering/esp.c
+    rendering/esp.h
+    rendering/input.c
+    rendering/input.h)
 target_include_directories(cheat PRIVATE ${JNI_INCLUDE_DIRS})
 target_compile_options(cheat PRIVATE -g -O0 -fno-omit-frame-pointer)
 
