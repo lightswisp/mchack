@@ -54,6 +54,14 @@ static void draw_bind_button(struct nk_context *ctx, bind_t *bind) {
   }
 }
 
+static void draw_color_picker(struct nk_context *ctx, struct nk_colorf *color) {
+  if (nk_combo_begin_color(ctx, nk_rgb_cf(*color), nk_vec2(400, 400))) {
+    nk_layout_row_dynamic(ctx, 300, 1);
+    nk_color_pick(ctx, color, NK_RGBA);
+    nk_combo_end(ctx);
+  }
+}
+
 static void draw_aimbot_group(struct nk_context *ctx) {
   nk_layout_row(ctx, NK_DYNAMIC, 0, 2, (float[]){0.7, 0.3});
   menu.aimbot_settings.enabled = nk_check_label(ctx, "aimbot", menu.aimbot_settings.enabled);
@@ -123,10 +131,22 @@ static void draw_esp_group(struct nk_context *ctx) {
   nk_label(ctx, menu.esp_settings.arrows.radius_label, NK_TEXT_LEFT);
   nk_slider_int(ctx, 1, &menu.esp_settings.arrows.radius, 300, 1);
 
-  nk_layout_row_dynamic(ctx, NK_DYNAMIC, 3);
-  menu.esp_settings.glow.enabled = nk_check_label(ctx, "glow", menu.esp_settings.glow.enabled);
-  menu.esp_settings.box.enabled = nk_check_label(ctx, "boxes", menu.esp_settings.box.enabled);
-  menu.esp_settings.health_bar.enabled = nk_check_label(ctx, "health", menu.esp_settings.health_bar.enabled);
+  nk_layout_row_dynamic(ctx, NK_DYNAMIC, 2);
+  menu.esp_settings.glow.enabled = nk_check_text_align(ctx, "glow", sizeof("glow") - 1, menu.esp_settings.glow.enabled,
+                                                       NK_WIDGET_ALIGN_RIGHT, NK_TEXT_ALIGN_LEFT);
+  menu.esp_settings.box.enabled = nk_check_text_align(ctx, "boxes", sizeof("boxes") - 1, menu.esp_settings.box.enabled,
+                                                      NK_WIDGET_ALIGN_RIGHT, NK_TEXT_ALIGN_LEFT);
+  draw_color_picker(ctx, &menu.esp_settings.glow.color);
+  draw_color_picker(ctx, &menu.esp_settings.box.color);
+
+  menu.esp_settings.health_bar.enabled =
+      nk_check_text_align(ctx, "health", sizeof("health") - 1, menu.esp_settings.health_bar.enabled,
+                          NK_WIDGET_ALIGN_RIGHT, NK_TEXT_ALIGN_LEFT);
+  menu.esp_settings.snap_lines.enabled =
+      nk_check_text_align(ctx, "snap lines", sizeof("snap lines") - 1, menu.esp_settings.snap_lines.enabled,
+                          NK_WIDGET_ALIGN_RIGHT, NK_TEXT_ALIGN_LEFT);
+  nk_spacing(ctx, 1);
+  draw_color_picker(ctx, &menu.esp_settings.snap_lines.color);
 }
 
 static void draw_misc_group(struct nk_context *ctx) {

@@ -6,47 +6,36 @@ void health(game_t *game) {
   if (!game->menu->esp_settings.health_bar.enabled)
     return;
 
-  vec2_t camera_angles;
-  vec3_t camera_position;
-  vec3_t player_position;
-  vec3_t screen;
+#define MAX_HEALTH (20.0f)
 
-  size_t size = 0;
-  jint max_health_boxes = clampi(game->players.size, 0, arr_size(game->esp->health.buffer));
-  for (jint i = 0; i < max_health_boxes; i++) {
-    jobject player = (*game->env)->CallObjectMethod(game->env, game->players.instance, game->collections.list.get, i);
-    if (!player)
-      continue;
-    if (player_is_localplayer(game->env, game, player))
-      continue;
+  game->esp->health.size = game->esp->core.players.size;
+  for (size_t i = 0; i < game->esp->core.players.size; i++) {
 
-    float health = player_get_health(game->env, game, player);
-    if (health <= 0)
-      continue;
+    float height = (game->esp->core.players.buffer[i].bounds[BOUND_BOTTOM] - game->esp->core.players.buffer[i].bounds[BOUND_TOP]);
+    // width of health box (4%)
+    float health_width = height * 0.04;
 
-    float fov = game->minecraft.options.fov_val * game->game_renderer.fov_val;
-    camera_get_position(game->env, game, &camera_position);
-    camera_get_viewangles2(game->env, game, &camera_angles);
-    player_get_lerped_position(game->env, game, player, &player_position);
-    if (!w2s(&player_position, &camera_position, &camera_angles, &screen, (float)game->rctx->width,
-             (float)game->rctx->height, fov))
-      continue;
+    // x offset
+    float x = game->esp->core.players.buffer[i].bounds[BOUND_LEFT] - (health_width * 2);
+    float y = game->esp->core.players.buffer[i].bounds[BOUND_TOP];
+    float t = 2.5;
 
-    game->esp->health.buffer[size].feet.x = screen.x;
-    game->esp->health.buffer[size].feet.y = screen.y;
-    game->esp->health.buffer[size].feet.z = screen.z;
+    float health_ratio = game->esp->core.players.buffer[i].health / MAX_HEALTH;
 
-    player_position.y += player_get_height(game->env, game, player);
-    if (!w2s(&player_position, &camera_position, &camera_angles, &screen, (float)game->rctx->width,
-             (float)game->rctx->height, fov))
-      continue;
+    // it will decrease with the ratio
+    float health_height = height * health_ratio;
 
-    game->esp->health.buffer[size].head.x = screen.x;
-    game->esp->health.buffer[size].head.y = screen.y;
-    game->esp->health.buffer[size].head.z = screen.z;
+    struct nk_color health_color =
+        nk_rgb((222.0 - (health_ratio * 222.0) + 33.0), 242 * health_ratio, 109 * health_ratio);
 
-    game->esp->health.buffer[size].health = health;
-    size++;
+    // inner bar
+    struct nk_rect inner_rect = {x, y + (height - health_height), health_width, health_height};
+
+    // outline
+    struct nk_rect outer_rect = {x - t, y - t, health_width + 2 * t, height + 2 * t};
+
+    game->esp->health.buffer[i].inner_rect = inner_rect;
+    game->esp->health.buffer[i].outer_rect = outer_rect;
+    game->esp->health.buffer[i].color = health_color;
   }
-  game->esp->health.size = size;
 }

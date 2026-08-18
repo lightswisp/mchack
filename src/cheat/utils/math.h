@@ -2,7 +2,8 @@
 #include <math.h>
 #include <stddef.h>
 
-#define TAU 6.283185307179586F
+#define TAU 6.283185307179586f
+#define HALF_PI 1.5707963267948966f
 #define arr_size(a) (sizeof(a) / sizeof(a[0]))
 
 typedef struct {

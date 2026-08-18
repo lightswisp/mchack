@@ -73,7 +73,9 @@ add_library(cheat SHARED main.c
     rendering/esp.c
     rendering/esp.h
     rendering/input.c
-    rendering/input.h)
+    rendering/input.h
+    hacks/esp/snap.c
+    hacks/esp/snap.h)
 target_include_directories(cheat PRIVATE ${JNI_INCLUDE_DIRS})
 target_compile_options(cheat PRIVATE -g -O0 -fno-omit-frame-pointer)
 

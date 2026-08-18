@@ -10,7 +10,7 @@ void camera_get_position(JNIEnv *env, game_t *game, vec3_t *out) {
   out->z = z;
 }
 
-void camera_get_viewangles(JNIEnv *env, game_t *game, vec2_t *out) {
+void camera_get_viewangles_deg(JNIEnv *env, game_t *game, vec2_t *out) {
   float x_rot = (*env)->GetFloatField(env, game->camera.instance, game->camera.x_rot);
   float y_rot = (*env)->GetFloatField(env, game->camera.instance, game->camera.y_rot);
 
@@ -18,7 +18,7 @@ void camera_get_viewangles(JNIEnv *env, game_t *game, vec2_t *out) {
   out->y = y_rot;
 }
 
-void camera_get_viewangles2(JNIEnv *env, game_t *game, vec2_t *out) {
+void camera_get_viewangles_rad(JNIEnv *env, game_t *game, vec2_t *out) {
   float x_rot = (*env)->GetFloatField(env, game->camera.instance, game->camera.x_rot);
   float y_rot = (*env)->GetFloatField(env, game->camera.instance, game->camera.y_rot);
 

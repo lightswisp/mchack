@@ -53,11 +53,13 @@ typedef struct {
 
     struct {
       bool enabled;
+      struct nk_colorf color;
       state_t state;
     } glow;
 
     struct {
       bool enabled;
+      struct nk_colorf color;
       int distance;
       char distance_label[32];
       int radius;
@@ -66,7 +68,13 @@ typedef struct {
 
     struct {
       bool enabled;
+      struct nk_colorf color;
     } box;
+
+    struct {
+      bool enabled;
+      struct nk_colorf color;
+    } snap_lines;
 
     struct {
       bool enabled;
