@@ -154,6 +154,8 @@ typedef struct {
     jmethodID get_y;
     jmethodID get_z;
     jmethodID get_health;
+    jmethodID get_team;
+    jmethodID get_team_color;
   } players;
 
   struct {
@@ -161,6 +163,16 @@ typedef struct {
     jfieldID left_impulse;
     jfieldID forward_impulse;
   } input;
+
+  struct {
+    jclass class;
+    jmethodID get_color;
+  } team;
+
+  struct {
+    jclass class;
+    jfieldID color;
+  } chat_formatting;
 
   struct {
     jclass class;
@@ -182,6 +194,11 @@ typedef struct {
       jclass class;
       jmethodID clear;
     } map;
+
+    struct {
+      jclass class;
+      jmethodID init;
+    } integer;
 
     struct {
       jclass class;

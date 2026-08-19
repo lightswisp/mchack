@@ -99,3 +99,24 @@ void player_get_bb(JNIEnv *env, game_t *game, jobject player, vec_bb_t *out) {
   out->max.y = y_old_max + (y_max - y_old_max) * game->minecraft.partial_tick;
   out->max.z = z_old_max + (z_max - z_old_max) * game->minecraft.partial_tick;
 }
+
+void player_set_team_color(JNIEnv *env, game_t *game, jobject player, int color) {
+  jobject team = (*env)->CallObjectMethod(env, player, game->players.get_team);
+  jobject chat_formatting = (*env)->CallObjectMethod(env, team, game->team.get_color);
+
+  jobject int_obj = (*env)->NewObject(env, game->collections.integer.class, game->collections.integer.init, color);
+
+  (*env)->SetObjectField(env, chat_formatting, game->chat_formatting.color, int_obj);
+
+  (*env)->DeleteLocalRef(env, int_obj);
+  (*env)->DeleteLocalRef(env, chat_formatting);
+  (*env)->DeleteLocalRef(env, team);
+}
+
+int player_get_team_color(JNIEnv *env, game_t *game, jobject player) {
+  return (*env)->CallIntMethod(env, player, game->players.get_team_color);
+}
+
+void player_set_glowing(JNIEnv *env, game_t *game, jobject player, bool val) {
+  (*env)->SetBooleanField(env, player, game->players.glowing, val);
+}

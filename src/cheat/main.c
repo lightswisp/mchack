@@ -23,11 +23,17 @@
 #error "log path is undefined"
 #endif
 
-bool should_close = false;
+bool g_should_close = false;
+bool g_installed_hooks = false;
+bool g_initialized_game = false;
 
 bool set_hooks() {
   LOGGER_LOG(LOG, "setting hooks..");
-  return set_draw_hook() && set_game_hooks();
+  if (set_draw_hook() && set_game_hooks()) {
+    g_installed_hooks = true;
+    return true;
+  }
+  return false;
 }
 
 bool remove_hooks(void) {
@@ -38,16 +44,22 @@ bool remove_hooks(void) {
 
 void uninject([[maybe_unused]] int sig) {
   LOGGER_LOG(WARNING, "uninjecting!");
-  if (!remove_hooks())
-    LOGGER_LOG(FATAL, "failed to remove hooks! The game will probably crash oops ...");
-  else
-    LOGGER_LOG(WARNING, "hooks are removed");
+  if (g_installed_hooks) {
+    // remove hooks only if they were already installed
+    if (!remove_hooks())
+      LOGGER_LOG(FATAL, "failed to remove hooks! The game will probably crash oops ...");
+    else
+      LOGGER_LOG(WARNING, "hooks are removed");
+  }
 
-  LOGGER_LOG(WARNING, "removing local references...");
-  deinit_game();
+  if (g_initialized_game) {
+    // deinit game only if it was already initialized
+    LOGGER_LOG(WARNING, "removing local references...");
+    deinit_game();
+  }
   LOGGER_LOG(WARNING, "detaching from jvm...");
   detach_jvm();
-  should_close = true;
+  g_should_close = true;
 }
 
 /* our main loop */
@@ -69,6 +81,7 @@ int mchack_main([[maybe_unused]] void *a) {
     LOGGER_LOG(FATAL, "failed to init game");
     goto end;
   }
+  g_initialized_game = true;
 
   LOGGER_LOG(LOG, "injected");
   // send_message("injected!");
@@ -78,6 +91,7 @@ int mchack_main([[maybe_unused]] void *a) {
     // send_message("failed to set hooks");
     goto end;
   }
+  g_installed_hooks = true;
 
   game_t *game = get_game();
 #define UPDATE_TIME_NS (1000000.0)
@@ -86,7 +100,7 @@ int mchack_main([[maybe_unused]] void *a) {
   struct timespec update_ts = {.tv_sec = 1, .tv_nsec = 0};
 
   reset_updates(game);
-  while (!should_close) {
+  while (!g_should_close) {
     if (!update(game)) {
       LOGGER_LOG(WARNING, "update has failed, waiting...");
       reset_updates(game);

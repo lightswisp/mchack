@@ -44,6 +44,15 @@ static bool init_collections(JNIEnv *env) {
   jfieldID vec3_z = (*env)->GetFieldID(env, vec3_class, "z", "D");
   CHECK(vec3_z);
 
+  jclass int_class = (*env)->FindClass(env, "java/lang/Integer");
+  CHECK(int_class);
+
+  jmethodID int_init = (*env)->GetMethodID(env, int_class, "<init>", "(I)V");
+  CHECK(int_init);
+
+  g_game.collections.integer.class = int_class;
+  g_game.collections.integer.init = int_init;
+
   g_game.collections.vec3.class = vec3_class;
   g_game.collections.vec3.x = vec3_x;
   g_game.collections.vec3.y = vec3_y;
@@ -258,6 +267,14 @@ static bool init_players(JNIEnv *env) {
   jfieldID bounding_box_field = (*env)->GetFieldID(env, players_class, "bb", "Lnet/minecraft/world/phys/AABB;");
   CHECK(bounding_box_field);
 
+  jmethodID get_team = (*env)->GetMethodID(env, players_class, "getTeam", "()Lnet/minecraft/world/scores/Team;");
+  CHECK(get_team);
+
+  jmethodID get_team_color = (*env)->GetMethodID(env, players_class, "getTeamColor", "()I");
+  CHECK(get_team_color);
+
+  g_game.players.get_team_color = get_team_color;
+  g_game.players.get_team = get_team;
   g_game.players.bounding_box = bounding_box_field;
   g_game.players.get_health = get_health;
   g_game.players.get_width = get_width;
@@ -289,6 +306,18 @@ static bool init_game_renderer(JNIEnv *env) {
   g_game.game_renderer.class = game_renderer_class;
   g_game.game_renderer.fov = game_renderer_fov;
   g_game.game_renderer.camera_field = camera_field;
+  return true;
+}
+
+static bool init_team(JNIEnv *env) {
+  jclass team_class = (*env)->FindClass(env, "Lnet/minecraft/world/scores/Team;");
+  CHECK(team_class);
+
+  jmethodID get_color = (*env)->GetMethodID(env, team_class, "getColor", "()Lnet/minecraft/ChatFormatting;");
+  CHECK(get_color);
+
+  g_game.team.class = team_class;
+  g_game.team.get_color = get_color;
   return true;
 }
 
@@ -356,6 +385,18 @@ static bool init_bounding_box(JNIEnv *env) {
   g_game.bounding_box.max_x = max_x;
   g_game.bounding_box.max_y = max_y;
   g_game.bounding_box.max_z = max_z;
+  return true;
+}
+
+static bool init_chat_formatting(JNIEnv *env) {
+  jclass chat_formatting = (*env)->FindClass(env, "Lnet/minecraft/ChatFormatting;");
+  CHECK(chat_formatting);
+
+  jfieldID color = (*env)->GetFieldID(env, chat_formatting, "color", "Ljava/lang/Integer;");
+  CHECK(color);
+
+  g_game.chat_formatting.class = chat_formatting;
+  g_game.chat_formatting.color = color;
   return true;
 }
 
@@ -544,6 +585,8 @@ bool init_game(void) {
   CHECK_BOOL(init_players(g_game.env));
   CHECK_BOOL(init_camera(g_game.env));
   CHECK_BOOL(init_input(g_game.env));
+  CHECK_BOOL(init_team(g_game.env));
+  CHECK_BOOL(init_chat_formatting(g_game.env));
 
   return true;
 }
@@ -577,6 +620,8 @@ void deinit_game() {
   DELETE_REF(g_game.env, g_game.entity_renderer.instance);
   DELETE_REF(g_game.env, g_game.key_mapping.class);
   DELETE_REF(g_game.env, g_game.input.class);
+  DELETE_REF(g_game.env, g_game.team.class);
+  DELETE_REF(g_game.env, g_game.chat_formatting.class);
 }
 
 game_t *get_game(void) { return &g_game; }
