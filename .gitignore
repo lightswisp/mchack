@@ -1,3 +1,7 @@
 out/
 Nuklear/
 release/
+CMakePresets.json
+compile_commands.json
+cmake_install.cmake
+test.rb

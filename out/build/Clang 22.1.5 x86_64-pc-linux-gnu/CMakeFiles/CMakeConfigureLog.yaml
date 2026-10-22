@@ -122010,3 +122010,89 @@ events:
         - "/usr/pkg"
         - "/opt"
 ...
+
+---
+events:
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/FindDoxygen.cmake:771 (find_program)"
+      - "/usr/share/cmake/Modules/FindDoxygen.cmake:956 (_Doxygen_find_doxygen)"
+      - "src/libs/zydis/dependencies/zycore/CMakeLists.txt:231 (find_package)"
+    mode: "program"
+    variable: "DOXYGEN_EXECUTABLE"
+    description: "Doxygen documentation generation tool (https://www.doxygen.nl)"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "doxygen"
+    candidate_directories:
+      - "/home/lightswisp/.pyenv/shims/"
+      - "/home/lightswisp/.rbenv/shims/"
+      - "/usr/local/bin/"
+      - "/usr/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/"
+      - "/home/lightswisp/Documents/php/php-8.2.34/sapi/cli/"
+      - "/usr/local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/"
+      - "/usr/bin/"
+      - "/usr/sbin/"
+      - "/usr/"
+      - "/bin/"
+      - "/sbin/"
+      - "/home/lightswisp/Documents/mchack/out/install/Clang 22.1.5 x86_64-pc-linux-gnu/bin/"
+      - "/home/lightswisp/Documents/mchack/out/install/Clang 22.1.5 x86_64-pc-linux-gnu/sbin/"
+      - "/home/lightswisp/Documents/mchack/out/install/Clang 22.1.5 x86_64-pc-linux-gnu/"
+      - "/usr/X11R6/bin/"
+      - "/usr/X11R6/sbin/"
+      - "/usr/X11R6/"
+      - "/usr/pkg/bin/"
+      - "/usr/pkg/sbin/"
+      - "/usr/pkg/"
+      - "/opt/bin/"
+      - "/opt/sbin/"
+      - "/opt/"
+      - "/Applications/Doxygen.app/Contents/Resources/"
+      - "/Applications/Doxygen.app/Contents/MacOS/"
+      - "/Applications/Utilities/Doxygen.app/Contents/Resources/"
+      - "/Applications/Utilities/Doxygen.app/Contents/MacOS/"
+    searched_directories:
+      - "/home/lightswisp/.pyenv/shims/doxygen"
+      - "/home/lightswisp/.rbenv/shims/doxygen"
+      - "/usr/local/bin/doxygen"
+    found: "/usr/bin/doxygen"
+    search_context:
+      ENV{PATH}:
+        - "/home/lightswisp/.pyenv/shims"
+        - "/home/lightswisp/.rbenv/shims"
+        - "/home/lightswisp/.rbenv/shims"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/usr/local/sbin"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/home/lightswisp/Documents/php/php-8.2.34/sapi/cli"
+      CMAKE_INSTALL_PREFIX: "/home/lightswisp/Documents/mchack/out/install/Clang 22.1.5 x86_64-pc-linux-gnu"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/usr"
+        - "/home/lightswisp/Documents/mchack/out/install/Clang 22.1.5 x86_64-pc-linux-gnu"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+...
